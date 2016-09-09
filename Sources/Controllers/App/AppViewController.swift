@@ -3,7 +3,7 @@
 //
 
 import SwiftyUserDefaults
-import Crashlytics
+
 
 struct NavigationNotifications {
     static let showingNotificationsTab = TypedNotification<[String]>(name: "co.ello.NavigationNotification.NotificationsTab")

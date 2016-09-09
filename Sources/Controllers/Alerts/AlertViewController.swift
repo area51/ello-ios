@@ -2,8 +2,8 @@
 ///  AlertViewController.swift
 //
 
-import Crashlytics
 import UIKit
+
 
 private let DesiredWidth: CGFloat = 300
 let MaxHeight = UIScreen.mainScreen().applicationFrame.height - 20

@@ -638,6 +638,7 @@
 		1DE261351B0D38A400475325 /* UIImageViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DE261341B0D38A400475325 /* UIImageViewExtensions.swift */; };
 		1DE261371B0D396600475325 /* ElloOnboardingButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DE261361B0D396600475325 /* ElloOnboardingButtons.swift */; };
 		1DE261421B0EBD8000475325 /* OnboardingUploadImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DE261411B0EBD8000475325 /* OnboardingUploadImageViewController.swift */; };
+		1DE3EC4A1D81CC3400BDE16F /* ElloDev.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 1DE3EC491D81CC3400BDE16F /* ElloDev.entitlements */; };
 		1DE87FC61BB2FFB8007A7325 /* Mentionables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DE87FC51BB2FFB8007A7325 /* Mentionables.swift */; };
 		1DE87FC81BB32060007A7325 /* MentionablesSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DE87FC71BB32060007A7325 /* MentionablesSpec.swift */; };
 		1DEE2BEF1AF96F5300EB9DFA /* SearchViewControllerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DEE2BEE1AF96F5300EB9DFA /* SearchViewControllerSpec.swift */; };
@@ -1486,6 +1487,7 @@
 		1DE261341B0D38A400475325 /* UIImageViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageViewExtensions.swift; sourceTree = "<group>"; };
 		1DE261361B0D396600475325 /* ElloOnboardingButtons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElloOnboardingButtons.swift; sourceTree = "<group>"; };
 		1DE261411B0EBD8000475325 /* OnboardingUploadImageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingUploadImageViewController.swift; sourceTree = "<group>"; };
+		1DE3EC491D81CC3400BDE16F /* ElloDev.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ElloDev.entitlements; sourceTree = "<group>"; };
 		1DE87FC51BB2FFB8007A7325 /* Mentionables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mentionables.swift; sourceTree = "<group>"; };
 		1DE87FC71BB32060007A7325 /* MentionablesSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MentionablesSpec.swift; sourceTree = "<group>"; };
 		1DEE2BEE1AF96F5300EB9DFA /* SearchViewControllerSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewControllerSpec.swift; sourceTree = "<group>"; };
@@ -1522,8 +1524,6 @@
 		1DFF43451A8C171400D43CFF /* NotificationFilterButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationFilterButton.swift; sourceTree = "<group>"; };
 		1DFF43511A8D520E00D43CFF /* NotificationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
 		31A38EE9D399B7D9C67F9E78 /* Pods_Ello.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Ello.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		374426A3A17BC6AE9C4CAD1E /* Pods-Ello.crashlyticsstaging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ello.crashlyticsstaging.xcconfig"; path = "Pods/Target Support Files/Pods-Ello/Pods-Ello.crashlyticsstaging.xcconfig"; sourceTree = "<group>"; };
-		691F1CA5AF45006BEAAABC9B /* Pods-ShareExtension.crashlyticsproduction.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShareExtension.crashlyticsproduction.xcconfig"; path = "Pods/Target Support Files/Pods-ShareExtension/Pods-ShareExtension.crashlyticsproduction.xcconfig"; sourceTree = "<group>"; };
 		6E8EF6ED0A7F6EFFAFA8F5C2 /* Pods-Specs.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Specs.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Specs/Pods-Specs.debug.xcconfig"; sourceTree = "<group>"; };
 		760303551AE17290005F7A08 /* Availability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Availability.swift; sourceTree = "<group>"; };
 		760F66181AD843990071F633 /* Profile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
@@ -1718,7 +1718,6 @@
 		76FF80581A96921100617A1E /* RelationshipControllerSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RelationshipControllerSpec.swift; sourceTree = "<group>"; };
 		76FF805A1A96A28D00617A1E /* RelationshipServiceSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RelationshipServiceSpec.swift; sourceTree = "<group>"; };
 		76FF805C1A96A87A00617A1E /* BlockUserModalViewControllerSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockUserModalViewControllerSpec.swift; sourceTree = "<group>"; };
-		817346E762057650F9D6CC79 /* Pods-Specs.crashlyticsstaging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Specs.crashlyticsstaging.xcconfig"; path = "Pods/Target Support Files/Pods-Specs/Pods-Specs.crashlyticsstaging.xcconfig"; sourceTree = "<group>"; };
 		867B52791B1781D700177084 /* IntroViewControllerSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntroViewControllerSpec.swift; sourceTree = "<group>"; };
 		86D8D8FD1B1798B200CC8D6C /* RelationshipControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RelationshipControl.swift; sourceTree = "<group>"; };
 		86E4F2E61B14E683008EBC5B /* Intro.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Intro.storyboard; sourceTree = "<group>"; };
@@ -1729,10 +1728,8 @@
 		86E4F2F01B150598008EBC5B /* IntroPageController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntroPageController.swift; sourceTree = "<group>"; };
 		91944BE577C550B17C0B263D /* Pods_Specs.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Specs.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		92B8836FCC4C00C326A32B2F /* Pods-ShareExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShareExtension.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ShareExtension/Pods-ShareExtension.debug.xcconfig"; sourceTree = "<group>"; };
-		98EDE5731C59AD3CE905C15F /* Pods-ShareExtension.crashlyticsstaging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShareExtension.crashlyticsstaging.xcconfig"; path = "Pods/Target Support Files/Pods-ShareExtension/Pods-ShareExtension.crashlyticsstaging.xcconfig"; sourceTree = "<group>"; };
 		A824F716382ED3E3CB5E30F4 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B68A8996E520AEC7CA223685 /* Pods-ShareExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShareExtension.release.xcconfig"; path = "Pods/Target Support Files/Pods-ShareExtension/Pods-ShareExtension.release.xcconfig"; sourceTree = "<group>"; };
-		C22B673B4EB0FDBF99B9A52F /* Pods-Ello.crashlyticsproduction.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ello.crashlyticsproduction.xcconfig"; path = "Pods/Target Support Files/Pods-Ello/Pods-Ello.crashlyticsproduction.xcconfig"; sourceTree = "<group>"; };
 		C2787373AD61145193E6BE99 /* IntroViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntroViewController.swift; sourceTree = "<group>"; };
 		D31C162DB64BB76DA28AC6DC /* Pods-Ello.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ello.release.xcconfig"; path = "Pods/Target Support Files/Pods-Ello/Pods-Ello.release.xcconfig"; sourceTree = "<group>"; };
 		EA004C911AC356CB0021B44B /* ElloTextFieldView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElloTextFieldView.swift; sourceTree = "<group>"; };
@@ -1774,7 +1771,6 @@
 		EAF43D931AB0DE080016E110 /* ObjectCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectCache.swift; sourceTree = "<group>"; };
 		EAF43D961AB0DEF70016E110 /* ObjectCacheSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectCacheSpec.swift; sourceTree = "<group>"; };
 		EAF43D981AB0EBE60016E110 /* InviteCacheSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InviteCacheSpec.swift; sourceTree = "<group>"; };
-		F588B5477226BC25A527C29F /* Pods-Specs.crashlyticsproduction.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Specs.crashlyticsproduction.xcconfig"; path = "Pods/Target Support Files/Pods-Specs/Pods-Specs.crashlyticsproduction.xcconfig"; sourceTree = "<group>"; };
 		F8006EE41AB9FE670008BB42 /* Animators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Animators.swift; sourceTree = "<group>"; };
 		F8158C441ACDABF3008C15A1 /* AlertCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AlertCell.xib; sourceTree = "<group>"; };
 		F8158C461ACDAF7F008C15A1 /* AlertCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertCell.swift; sourceTree = "<group>"; };
@@ -2433,6 +2429,7 @@
 			isa = PBXGroup;
 			children = (
 				1205B5D01BBB152700B656ED /* Ello.entitlements */,
+				1DE3EC491D81CC3400BDE16F /* ElloDev.entitlements */,
 				12F0E3A31A4332FB0012CEA2 /* Info.plist */,
 			);
 			path = Support;
@@ -3129,16 +3126,10 @@
 			children = (
 				07A600139D34D015DBD534F9 /* Pods-Ello.debug.xcconfig */,
 				D31C162DB64BB76DA28AC6DC /* Pods-Ello.release.xcconfig */,
-				C22B673B4EB0FDBF99B9A52F /* Pods-Ello.crashlyticsproduction.xcconfig */,
-				374426A3A17BC6AE9C4CAD1E /* Pods-Ello.crashlyticsstaging.xcconfig */,
 				92B8836FCC4C00C326A32B2F /* Pods-ShareExtension.debug.xcconfig */,
 				B68A8996E520AEC7CA223685 /* Pods-ShareExtension.release.xcconfig */,
-				691F1CA5AF45006BEAAABC9B /* Pods-ShareExtension.crashlyticsproduction.xcconfig */,
-				98EDE5731C59AD3CE905C15F /* Pods-ShareExtension.crashlyticsstaging.xcconfig */,
 				6E8EF6ED0A7F6EFFAFA8F5C2 /* Pods-Specs.debug.xcconfig */,
 				FD4886C84683F415EFAC0671 /* Pods-Specs.release.xcconfig */,
-				F588B5477226BC25A527C29F /* Pods-Specs.crashlyticsproduction.xcconfig */,
-				817346E762057650F9D6CC79 /* Pods-Specs.crashlyticsstaging.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -3698,6 +3689,7 @@
 				76F8DED11B6C0BC4009BCF61 /* eye_selected.svg in Resources */,
 				7689B4FE1AD4ED3B00E4A4A3 /* profile_listing_muted_users.json in Resources */,
 				12F6AE9D1A433F2700493660 /* 500.json in Resources */,
+				1DE3EC4A1D81CC3400BDE16F /* ElloDev.entitlements in Resources */,
 				1DFC5DC71AACBFE4008DA855 /* create-post.json in Resources */,
 				76F8DED31B6C0BC4009BCF61 /* flag_selected.svg in Resources */,
 				76F8DECC1B6C0BC4009BCF61 /* ello_normal.svg in Resources */,
@@ -4750,163 +4742,12 @@
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib/system",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = co.ello.ElloDev.ShareExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = co.ello.Ello.ShareExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "$(SHARE_PROFILE_UDID)";
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
-		};
-		124CFBA41C5976E500727D11 /* CrashlyticsProduction */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 691F1CA5AF45006BEAAABC9B /* Pods-ShareExtension.crashlyticsproduction.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEFINES_MODULE = YES;
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = ShareExtension/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../../Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SDKROOT)/usr/lib/system",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = co.ello.ElloDev.ShareExtension;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "$(SHARE_PROFILE_UDID)";
-				SKIP_INSTALL = YES;
-			};
-			name = CrashlyticsProduction;
-		};
-		124CFBA51C5976E500727D11 /* CrashlyticsStaging */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 98EDE5731C59AD3CE905C15F /* Pods-ShareExtension.crashlyticsstaging.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEFINES_MODULE = YES;
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = ShareExtension/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../../Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SDKROOT)/usr/lib/system",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = co.ello.ElloDev.ShareExtension;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "$(SHARE_PROFILE_UDID)";
-				SKIP_INSTALL = YES;
-			};
-			name = CrashlyticsStaging;
-		};
-		12507F4B1B9F6A55008DD479 /* CrashlyticsStaging */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = YES;
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = CrashlyticsStaging;
-		};
-		12507F4C1B9F6A55008DD479 /* CrashlyticsStaging */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 374426A3A17BC6AE9C4CAD1E /* Pods-Ello.crashlyticsstaging.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = StagingBetaAppIcon;
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = Support/Ello.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 4321;
-				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)",
-				);
-				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_VERSION = "";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SDKROOT)/usr/include/libxml2",
-					"\"${PODS_ROOT}/Headers/Public\"",
-					"\"${PODS_ROOT}/Headers/Public/Crashlytics\"",
-					"\"${PODS_ROOT}/Headers/Public/Crashlytics/Crashlytics\"",
-					"\"${PODS_ROOT}/Headers/Public/Fabric\"",
-					"\"${PODS_ROOT}/Headers/Public/Fabric/Fabric\"",
-					"\"${PODS_ROOT}/Headers/Public/Firebase\"",
-				);
-				INFOPLIST_FILE = Support/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"DEBUG\"";
-				PRODUCT_BUNDLE_IDENTIFIER = co.ello.ElloDev;
-				PRODUCT_NAME = Ello;
-				PROVISIONING_PROFILE = "$(PROFILE_UDID)";
-				SWIFT_OBJC_BRIDGING_HEADER = "Sources/Ello-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-			};
-			name = CrashlyticsStaging;
-		};
-		12507F4D1B9F6A55008DD479 /* CrashlyticsStaging */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 817346E762057650F9D6CC79 /* Pods-Specs.crashlyticsstaging.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)",
-				);
-				INFOPLIST_FILE = Specs/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "co.ello.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				REZ_SEARCH_PATHS = "$(SRCROOT)/Specs/Resources";
-				SWIFT_OBJC_BRIDGING_HEADER = "Specs/Utilities/Specs-Bridging-Header.h";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Ello.app/Ello";
-			};
-			name = CrashlyticsStaging;
 		};
 		12D14C581A43752200C6F8E8 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -5036,11 +4877,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = BetaAppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = Support/Ello.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Support/ElloDev.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 4321;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -5103,7 +4944,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"RELEASE\"";
-				PRODUCT_BUNDLE_IDENTIFIER = co.ello.ElloDev;
+				PRODUCT_BUNDLE_IDENTIFIER = co.ello.Ello;
 				PRODUCT_NAME = Ello;
 				PROVISIONING_PROFILE = "$(PROFILE_UDID)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Sources/Ello-Bridging-Header.h";
@@ -5113,103 +4954,6 @@
 			};
 			name = Release;
 		};
-		76BC59111B3DE6CD003D5FC0 /* CrashlyticsProduction */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = YES;
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = CrashlyticsProduction;
-		};
-		76BC59121B3DE6CD003D5FC0 /* CrashlyticsProduction */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = C22B673B4EB0FDBF99B9A52F /* Pods-Ello.crashlyticsproduction.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = BetaAppIcon;
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = Support/Ello.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 4321;
-				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)",
-				);
-				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_VERSION = "";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SDKROOT)/usr/include/libxml2",
-					"\"${PODS_ROOT}/Headers/Public\"",
-					"\"${PODS_ROOT}/Headers/Public/Crashlytics\"",
-					"\"${PODS_ROOT}/Headers/Public/Crashlytics/Crashlytics\"",
-					"\"${PODS_ROOT}/Headers/Public/Fabric\"",
-					"\"${PODS_ROOT}/Headers/Public/Fabric/Fabric\"",
-					"\"${PODS_ROOT}/Headers/Public/Firebase\"",
-				);
-				INFOPLIST_FILE = Support/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"DEBUG\"";
-				PRODUCT_BUNDLE_IDENTIFIER = co.ello.ElloDev;
-				PRODUCT_NAME = Ello;
-				PROVISIONING_PROFILE = "$(PROFILE_UDID)";
-				SWIFT_OBJC_BRIDGING_HEADER = "Sources/Ello-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-			};
-			name = CrashlyticsProduction;
-		};
-		76BC59131B3DE6CD003D5FC0 /* CrashlyticsProduction */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = F588B5477226BC25A527C29F /* Pods-Specs.crashlyticsproduction.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)",
-				);
-				INFOPLIST_FILE = Specs/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "co.ello.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				REZ_SEARCH_PATHS = "$(SRCROOT)/Specs/Resources";
-				SWIFT_OBJC_BRIDGING_HEADER = "Specs/Utilities/Specs-Bridging-Header.h";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Ello.app/Ello";
-			};
-			name = CrashlyticsProduction;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -5218,8 +4962,6 @@
 			buildConfigurations = (
 				124CFBA21C5976E500727D11 /* Debug */,
 				124CFBA31C5976E500727D11 /* Release */,
-				124CFBA41C5976E500727D11 /* CrashlyticsProduction */,
-				124CFBA51C5976E500727D11 /* CrashlyticsStaging */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -5229,8 +4971,6 @@
 			buildConfigurations = (
 				12D14C581A43752200C6F8E8 /* Debug */,
 				12D14C591A43752200C6F8E8 /* Release */,
-				76BC59131B3DE6CD003D5FC0 /* CrashlyticsProduction */,
-				12507F4D1B9F6A55008DD479 /* CrashlyticsStaging */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -5240,8 +4980,6 @@
 			buildConfigurations = (
 				12FEBD1E1A4225F600933A02 /* Debug */,
 				12FEBD1F1A4225F600933A02 /* Release */,
-				76BC59111B3DE6CD003D5FC0 /* CrashlyticsProduction */,
-				12507F4B1B9F6A55008DD479 /* CrashlyticsStaging */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -5251,8 +4989,6 @@
 			buildConfigurations = (
 				12FEBD211A4225F600933A02 /* Debug */,
 				12FEBD221A4225F600933A02 /* Release */,
-				76BC59121B3DE6CD003D5FC0 /* CrashlyticsProduction */,
-				12507F4C1B9F6A55008DD479 /* CrashlyticsStaging */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

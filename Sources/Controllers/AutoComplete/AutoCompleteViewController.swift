@@ -2,7 +2,6 @@
 ///  AutoCompleteViewController.swift
 //
 
-import Crashlytics
 
 public protocol AutoCompleteDelegate: NSObjectProtocol {
     func itemSelected(item: AutoCompleteItem)
