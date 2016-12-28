@@ -3,19 +3,19 @@
 //
 
 public enum CategoryLevel: String, Equatable {
-    case Meta = "meta"
-    case Primary = "primary"
-    case Secondary = "secondary"
-    case Tertiary = "tertiary"
-    case Unknown = ""
+    case meta = "meta"
+    case primary = "primary"
+    case secondary = "secondary"
+    case tertiary = "tertiary"
+    case unknown = ""
 
     var order: Int {
         switch self {
-        case Meta: return 0
-        case Primary: return 1
-        case Secondary: return 2
-        case Tertiary: return 3
-        case Unknown: return 1_048_576
+        case .meta: return 0
+        case .primary: return 1
+        case .secondary: return 2
+        case .tertiary: return 3
+        case .unknown: return 1_048_576
         }
     }
 }

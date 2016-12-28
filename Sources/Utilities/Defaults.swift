@@ -7,10 +7,10 @@ import Foundation
 public let ElloGroupName = "group.ello.Ello"
 public let GroupDefaults = defaults()
 
-private func defaults() -> NSUserDefaults {
+private func defaults() -> UserDefaults {
     if AppSetup.sharedState.isTesting {
-        return NSUserDefaults.standardUserDefaults()
+        return UserDefaults.standard
     }
 
-    return NSUserDefaults(suiteName: ElloGroupName) ?? NSUserDefaults.standardUserDefaults()
+    return UserDefaults(suiteName: ElloGroupName) ?? UserDefaults.standard
 }

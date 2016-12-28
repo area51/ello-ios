@@ -5,15 +5,15 @@
 public struct TextHeaderCellPresenter {
 
     static func configure(
-        cell: UICollectionViewCell,
+        _ cell: UICollectionViewCell,
         streamCellItem: StreamCellItem,
         streamKind: StreamKind,
-        indexPath: NSIndexPath,
+        indexPath: IndexPath,
         currentUser: User?)
     {
         guard let
             cell = cell as? TextHeaderCell,
-            header = streamCellItem.type.data as? NSAttributedString
+            let header = streamCellItem.type.data as? NSAttributedString
         else { return}
 
         cell.header = header

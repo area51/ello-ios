@@ -2,7 +2,7 @@
 ///  ElloNavigationBar.swift
 //
 
-public class ElloNavigationBar: UINavigationBar {
+open class ElloNavigationBar: UINavigationBar {
     struct Size {
         static let height: CGFloat = 64
     }
@@ -16,38 +16,38 @@ public class ElloNavigationBar: UINavigationBar {
         super.init(coder: coder)
     }
 
-    override public func awakeFromNib() {
+    override open func awakeFromNib() {
         super.awakeFromNib()
         privateInit()
     }
 
-    private func privateInit() {
+    fileprivate func privateInit() {
         self.tintColor = UIColor.greyA()
         self.clipsToBounds = true
-        self.shadowImage = UIImage.imageWithColor(UIColor.whiteColor())
-        self.backgroundColor = UIColor.whiteColor()
-        self.translucent = false
-        self.opaque = true
-        self.barTintColor = UIColor.whiteColor()
+        self.shadowImage = UIImage.imageWithColor(UIColor.white)
+        self.backgroundColor = UIColor.white
+        self.isTranslucent = false
+        self.isOpaque = true
+        self.barTintColor = UIColor.white
 
         let bar = BlackBar(frame: CGRect(x: 0, y: 0, width: frame.width, height: 20))
         addSubview(bar)
     }
 
-    override public func intrinsicContentSize() -> CGSize {
-        var size = super.intrinsicContentSize()
+    override open var intrinsicContentSize: CGSize {
+        var size = super.intrinsicContentSize
         size.height = Size.height
         return size
     }
 
-    override public func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
 
-        if let navItem = topItem, items = navItem.rightBarButtonItems {
+        if let navItem = topItem, let items = navItem.rightBarButtonItems {
             var x: CGFloat = frame.width - 5.5
             let width: CGFloat = 39
 
-            let views = items.flatMap { $0.customView }.sort { $0.frame.maxX > $1.frame.maxX }
+            let views = items.flatMap { $0.customView }.sorted { $0.frame.maxX > $1.frame.maxX }
             for view in views {
                 x -= width
                 view.frame = CGRect(

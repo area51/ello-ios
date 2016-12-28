@@ -25,18 +25,18 @@ public final class DynamicSettingCategory: JSONAble {
         super.init(coder: decoder.coder)
     }
 
-    public override func encodeWithCoder(encoder: NSCoder) {
+    public override func encode(with encoder: NSCoder) {
         let coder = Coder(encoder)
         coder.encodeObject(label, forKey: "label")
         coder.encodeObject(settings, forKey: "settings")
-        super.encodeWithCoder(coder.coder)
+        super.encode(with: coder.coder)
     }
 }
 
 extension DynamicSettingCategory {
-    override public class func fromJSON(data: [String: AnyObject]) -> DynamicSettingCategory {
+    override public class func fromJSON(_ data: [String: AnyObject]) -> DynamicSettingCategory {
         let json = JSON(data)
-        Crashlytics.sharedInstance().setObjectValue(json.rawString(), forKey: CrashlyticsKey.DynamicSettingCategoryFromJSON.rawValue)
+        Crashlytics.sharedInstance().setObjectValue(json.rawString(), forKey: CrashlyticsKey.dynamicSettingCategoryFromJSON.rawValue)
         let label = json["label"].stringValue
         let settings: [DynamicSetting] = json["items"].arrayValue.map { DynamicSetting.fromJSON($0.object as! [String: AnyObject]) }
 

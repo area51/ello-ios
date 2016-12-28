@@ -2,6 +2,7 @@
 ///  ProfileGeneratorSpec.swift
 //
 
+@testable
 import Ello
 import Quick
 import Nimble
@@ -21,18 +22,18 @@ class ProfileGeneratorSpec: QuickSpec {
             placeholderItems = items
         }
 
-        func replacePlaceholder(type: StreamCellType.PlaceholderType, items: [StreamCellItem], completion: ElloEmptyCompletion) {
+        func replacePlaceholder(type: StreamCellType.PlaceholderType, items: [StreamCellItem], completion: @escaping ElloEmptyCompletion) {
             switch type {
-            case .ProfileHeader:
+            case .profileHeader:
                 headerItems = items
-            case .ProfilePosts:
+            case .profilePosts:
                 postItems = items
             default:
                 otherPlaceholderLoaded = true
             }
         }
 
-        func setPrimaryJSONAble(jsonable: JSONAble) {
+        func setPrimary(jsonable: JSONAble) {
             guard let user = jsonable as? User else { return }
             self.user = user
         }
@@ -55,7 +56,7 @@ class ProfileGeneratorSpec: QuickSpec {
             beforeEach {
                 destination = MockProfileDestination()
                 currentUser = User.stub(["id": "42"])
-                streamKind = .CurrentUserStream
+                streamKind = .currentUserStream
                 subject = ProfileGenerator(
                     currentUser: currentUser,
                     userParam: "42",

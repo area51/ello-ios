@@ -23,11 +23,11 @@ public final class TextRegion: JSONAble, Regionable {
 
 // MARK: NSCoding
 
-    public override func encodeWithCoder(encoder: NSCoder) {
+    public override func encode(with encoder: NSCoder) {
         let coder = Coder(encoder)
         coder.encodeObject(content, forKey: "content")
         coder.encodeObject(isRepost, forKey: "isRepost")
-        super.encodeWithCoder(coder.coder)
+        super.encode(with: coder.coder)
     }
 
     public required init(coder aDecoder: NSCoder) {
@@ -39,16 +39,16 @@ public final class TextRegion: JSONAble, Regionable {
 
 // MARK: JSONAble
 
-    override public class func fromJSON(data: [String: AnyObject]) -> JSONAble {
+    override public class func fromJSON(_ data: [String: AnyObject]) -> JSONAble {
         let json = JSON(data)
-        Crashlytics.sharedInstance().setObjectValue(json.rawString(), forKey: CrashlyticsKey.TextRegionFromJSON.rawValue)
+        Crashlytics.sharedInstance().setObjectValue(json.rawString(), forKey: CrashlyticsKey.textRegionFromJSON.rawValue)
         let content = json["data"].stringValue
         return TextRegion(content: content)
     }
 
 // MARK: Regionable
 
-    public var kind: String { return RegionKind.Text.rawValue }
+    public var kind: String { return RegionKind.text.rawValue }
 
     public func coding() -> NSCoding {
         return self
@@ -56,15 +56,15 @@ public final class TextRegion: JSONAble, Regionable {
 
     public func toJSON() -> [String: AnyObject] {
         return [
-            "kind": self.kind,
-            "data": self.content
+            "kind": self.kind as AnyObject,
+            "data": self.content as AnyObject
         ]
     }
 }
 
 extension TextRegion {
     override public var description: String {
-        return "<\(self.dynamicType): \"\(content)\">"
+        return "<\(type(of: self)): \"\(content)\">"
     }
 
     override public var debugDescription: String { return description }

@@ -13,26 +13,26 @@ public final class Love: JSONAble, PostActionable {
 
     // active record
     public let id: String
-    public let createdAt: NSDate
-    public let updatedAt: NSDate
+    public let createdAt: Date
+    public let updatedAt: Date
     // required
     public var deleted: Bool
     public let postId: String
     public let userId: String
 
     public var post: Post? {
-        return ElloLinkedStore.sharedInstance.getObject(self.postId, type: .PostsType) as? Post
+        return ElloLinkedStore.sharedInstance.getObject(self.postId, type: .postsType) as? Post
     }
 
     public var user: User? {
-        return ElloLinkedStore.sharedInstance.getObject(self.userId, type: .UsersType) as? User
+        return ElloLinkedStore.sharedInstance.getObject(self.userId, type: .usersType) as? User
     }
 
 // MARK: Initialization
 
     public init(id: String,
-        createdAt: NSDate,
-        updatedAt: NSDate,
+        createdAt: Date,
+        updatedAt: Date,
         deleted: Bool,
         postId: String,
         userId: String )
@@ -63,7 +63,7 @@ public final class Love: JSONAble, PostActionable {
         super.init(coder: decoder.coder)
     }
 
-    public override func encodeWithCoder(encoder: NSCoder) {
+    public override func encode(with encoder: NSCoder) {
         let coder = Coder(encoder)
         // active record
         coder.encodeObject(id, forKey: "id")
@@ -73,31 +73,31 @@ public final class Love: JSONAble, PostActionable {
         coder.encodeObject(deleted, forKey: "deleted")
         coder.encodeObject(postId, forKey: "postId")
         coder.encodeObject(userId, forKey: "userId")
-        super.encodeWithCoder(coder.coder)
+        super.encode(with: coder.coder)
     }
 
 // MARK: JSONAble
 
-    override public class func fromJSON(data: [String: AnyObject]) -> JSONAble {
+    override public class func fromJSON(_ data: [String: AnyObject]) -> JSONAble {
         let json = JSON(data)
-        Crashlytics.sharedInstance().setObjectValue(json.rawString(), forKey: CrashlyticsKey.LoveFromJSON.rawValue)
-        var createdAt: NSDate
-        var updatedAt: NSDate
-        if let date = json["created_at"].stringValue.toNSDate() {
+        Crashlytics.sharedInstance().setObjectValue(json.rawString(), forKey: CrashlyticsKey.loveFromJSON.rawValue)
+        var createdAt: Date
+        var updatedAt: Date
+        if let date = json["created_at"].stringValue.toDate() {
             // good to go
             createdAt = date
         }
         else {
-            createdAt = NSDate()
+            createdAt = Date()
             // send data to segment to try to get more data about this
             Tracker.sharedTracker.createdAtCrash("Love", json: json.rawString())
         }
-        if let date = json["updated_at"].stringValue.toNSDate() {
+        if let date = json["updated_at"].stringValue.toDate() {
             // good to go
             updatedAt = date
         }
         else {
-            updatedAt = NSDate()
+            updatedAt = Date()
             // send data to segment to try to get more data about this
             Tracker.sharedTracker.createdAtCrash("Love Updated", json: json.rawString())
         }

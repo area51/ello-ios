@@ -5,28 +5,28 @@
 import Foundation
 
 public enum ContentType: String {
-    case Post = "Post"
-    case Comment = "Comment"
-    case User = "User"
+    case post = "Post"
+    case comment = "Comment"
+    case user = "User"
 }
 
-func logPresentingAlert(name: String) {}
+func logPresentingAlert(_ name: String) {}
 
-public class Tracker {
-    public static let sharedTracker = Tracker()
+open class Tracker {
+    open static let sharedTracker = Tracker()
 
     public init() {}
 
-    static func trackRequest(headers headers: String, statusCode: Int, responseJSON: String) {}
+    static func trackRequest(headers: String, statusCode: Int, responseJSON: String) {}
 
-    func contentFlagged(type: ContentType, flag: ContentFlagger.AlertOption, contentId: String) {}
-    func contentFlaggingFailed(type: ContentType, message: String, contentId: String) {}
-    func contentFlaggingCanceled(type: ContentType, contentId: String) {}
-    func createdAtCrash(identifier: String, json: String?) {}
-    func encounteredNetworkError(path: String, error: NSError, statusCode: Int?) {}
+    func contentFlagged(_ type: ContentType, flag: ContentFlagger.AlertOption, contentId: String) {}
+    func contentFlaggingFailed(_ type: ContentType, message: String, contentId: String) {}
+    func contentFlaggingCanceled(_ type: ContentType, contentId: String) {}
+    func createdAtCrash(_ identifier: String, json: String?) {}
+    func encounteredNetworkError(_ path: String, error: NSError, statusCode: Int?) {}
 }
 
-public class Window {
-    static public func isWide(width: Float) -> Bool { return false }
-    static public var width: Float { return 0 }
+open class Window {
+    static open func isWide(_ width: Float) -> Bool { return false }
+    static open var width: Float { return 0 }
 }

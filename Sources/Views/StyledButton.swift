@@ -2,7 +2,7 @@
 ///  StyledButton.swift
 //
 
-public class StyledButton: UIButton {
+open class StyledButton: UIButton {
     public struct Style {
         let disabledBackgroundColor: UIColor?
         let highlightedBackgroundColor: UIColor?
@@ -71,28 +71,28 @@ public class StyledButton: UIButton {
         }
     }
 
-    public var style: Style = .Default {
+    open var style: Style = .Default {
         didSet { updateStyle() }
     }
-    public var styleName: String = "Default" {
+    open var styleName: String = "Default" {
         didSet { style = Style.byName(styleName) }
     }
 
-    override public var enabled: Bool {
+    override open var isEnabled: Bool {
         didSet { updateStyle() }
     }
-    override public var highlighted: Bool {
+    override open var isHighlighted: Bool {
         didSet { updateStyle() }
     }
-    override public var selected: Bool {
+    override open var isSelected: Bool {
         didSet { updateStyle() }
     }
-    public var title: String? {
+    open var title: String? {
         get { return currentTitle }
-        set { setTitle(newValue, forState: .Normal) }
+        set { setTitle(newValue, for: .normal) }
     }
 
-    override public func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
 
         if let cornerRadius = style.cornerRadius {
@@ -103,17 +103,17 @@ public class StyledButton: UIButton {
         }
     }
 
-    private func updateStyle() {
+    fileprivate func updateStyle() {
         let layerBorder: UIColor?
-        if !enabled {
+        if !isEnabled {
             backgroundColor = style.disabledBackgroundColor ?? style.backgroundColor
             layerBorder = style.disabledBorderColor ?? style.borderColor
         }
-        else if highlighted {
+        else if isHighlighted {
             backgroundColor = style.highlightedBackgroundColor ?? style.backgroundColor
             layerBorder = style.highlightedBorderColor ?? style.borderColor
         }
-        else if selected {
+        else if isSelected {
             backgroundColor = style.selectedBackgroundColor ?? style.backgroundColor
             layerBorder = style.selectedBorderColor ?? style.borderColor
         }
@@ -124,7 +124,7 @@ public class StyledButton: UIButton {
 
 
         if let layerBorder = layerBorder {
-            layer.borderColor = layerBorder.CGColor
+            layer.borderColor = layerBorder.cgColor
             layer.borderWidth = 1
         }
         else {
@@ -134,11 +134,11 @@ public class StyledButton: UIButton {
 
         titleLabel?.font = style.font
 
-        if let title = titleForState(.Normal) {
-            let states: [UIControlState] = [.Disabled, .Highlighted, .Selected, .Normal]
+        if let title = self.title(for: .normal) {
+            let states: [UIControlState] = [.normal, .disabled, .highlighted, .selected]
             for state in states {
                 let attrdTitle = NSAttributedString(button: title, style: style, state: state)
-                setAttributedTitle(attrdTitle, forState: state)
+                setAttributedTitle(attrdTitle, for: state)
             }
         }
     }
@@ -159,10 +159,10 @@ public class StyledButton: UIButton {
         updateStyle()
     }
 
-    public override func awakeFromNib() {
+    open override func awakeFromNib() {
         super.awakeFromNib()
 
-        if buttonType != .Custom {
+        if buttonType != .custom {
             print("Warning, StyledButton instance '\(currentTitle)' should be configured as 'Custom', not \(buttonType)")
         }
     }
@@ -175,9 +175,9 @@ public class StyledButton: UIButton {
 
 extension StyledButton {
 
-    public override func setTitle(title: String?, forState state: UIControlState) {
-        super.setTitle(title, forState: state)
-        if state == .Normal {
+    open override func setTitle(_ title: String?, for state: UIControlState) {
+        super.setTitle(title, for: state)
+        if state == .normal {
             updateStyle()
         }
         else {
@@ -185,8 +185,8 @@ extension StyledButton {
         }
     }
 
-    public override func titleRectForContentRect(contentRect: CGRect) -> CGRect {
-        var titleRect = super.titleRectForContentRect(contentRect)
+    open override func titleRect(forContentRect contentRect: CGRect) -> CGRect {
+        var titleRect = super.titleRect(forContentRect: contentRect)
         let delta: CGFloat = 4
         titleRect.size.height += 2 * delta
         titleRect.origin.y -= delta
@@ -196,52 +196,52 @@ extension StyledButton {
 
 extension StyledButton.Style {
     public static let Default = StyledButton.Style(
-        backgroundColor: .blackColor(), disabledBackgroundColor: .grey231F20(),
-        titleColor: .whiteColor(), disabledTitleColor: .greyA()
+        backgroundColor: .black, disabledBackgroundColor: .grey231F20(),
+        titleColor: .white, disabledTitleColor: .greyA()
         )
     public static let ClearWhite = StyledButton.Style(
-        titleColor: .whiteColor(), disabledTitleColor: .greyA()
+        titleColor: .white, disabledTitleColor: .greyA()
         )
     public static let ClearBlack = StyledButton.Style(
-        titleColor: .blackColor(), disabledTitleColor: .greyC()
+        titleColor: .black, disabledTitleColor: .greyC()
         )
     public static let LightGray = StyledButton.Style(
         backgroundColor: .greyE5(), disabledBackgroundColor: .greyF1(),
-        titleColor: .grey6(), highlightedTitleColor: .blackColor(), disabledTitleColor: .greyC()
+        titleColor: .grey6(), highlightedTitleColor: .black, disabledTitleColor: .greyC()
         )
     public static let White = StyledButton.Style(
-        backgroundColor: .whiteColor(), disabledBackgroundColor: .greyA(),
-        titleColor: .blackColor(), highlightedTitleColor: .grey6(), disabledTitleColor: .greyC()
+        backgroundColor: .white, disabledBackgroundColor: .greyA(),
+        titleColor: .black, highlightedTitleColor: .grey6(), disabledTitleColor: .greyC()
         )
     public static let WhiteUnderlined = StyledButton.Style(
-        backgroundColor: .clearColor(),
-        titleColor: .whiteColor(),
+        backgroundColor: .clear,
+        titleColor: .white,
         underline: true
         )
     public static let SquareBlack = StyledButton.Style(
-        backgroundColor: .whiteColor(), selectedBackgroundColor: .blackColor(), disabledBackgroundColor: .greyA(),
-        titleColor: .blackColor(), selectedTitleColor: .whiteColor(), highlightedTitleColor: .grey6(), disabledTitleColor: .greyC(),
-        borderColor: .blackColor(), highlightedBorderColor: .greyE5()
+        backgroundColor: .white, selectedBackgroundColor: .black, disabledBackgroundColor: .greyA(),
+        titleColor: .black, highlightedTitleColor: .grey6(), selectedTitleColor: .white, disabledTitleColor: .greyC(),
+        borderColor: .black, highlightedBorderColor: .greyE5()
         )
     public static let BlackPill = StyledButton.Style(
-        backgroundColor: .blackColor(), disabledBackgroundColor: .greyF2(),
-        titleColor: .whiteColor(), highlightedTitleColor: .grey6(), disabledTitleColor: .greyC(),
+        backgroundColor: .black, disabledBackgroundColor: .greyF2(),
+        titleColor: .white, highlightedTitleColor: .grey6(), disabledTitleColor: .greyC(),
         cornerRadius: nil
         )
     public static let BlackPillOutline = StyledButton.Style(
-        titleColor: .blackColor(), highlightedTitleColor: .grey6(), disabledTitleColor: .greyF2(),
-        borderColor: .blackColor(), disabledBorderColor: .greyF2(),
+        titleColor: .black, highlightedTitleColor: .grey6(), disabledTitleColor: .greyF2(),
+        borderColor: .black, disabledBorderColor: .greyF2(),
         cornerRadius: nil
         )
     public static let RoundedGray = StyledButton.Style(
-        backgroundColor: .clearColor(),
-        titleColor: .greyA(), highlightedTitleColor: .blackColor(),
+        backgroundColor: .clear,
+        titleColor: .greyA(), highlightedTitleColor: .black,
         borderColor: .greyA(),
         cornerRadius: 5
         )
     public static let InviteFriend = StyledButton.Style(
         backgroundColor: .greyA(),
-        titleColor: .whiteColor(),
+        titleColor: .white,
         cornerRadius: nil
         )
     public static let Invited = StyledButton.Style(
@@ -250,34 +250,34 @@ extension StyledButton.Style {
         cornerRadius: nil
         )
     public static let BlockUserModal = StyledButton.Style(
-        backgroundColor: .whiteColor(), selectedBackgroundColor: .blackColor(), disabledBackgroundColor: .greyA(),
-        titleColor: .blackColor(), highlightedTitleColor: .grey6(), selectedTitleColor: .whiteColor(), disabledTitleColor: .greyC()
+        backgroundColor: .white, selectedBackgroundColor: .black, disabledBackgroundColor: .greyA(),
+        titleColor: .black, highlightedTitleColor: .grey6(), selectedTitleColor: .white, disabledTitleColor: .greyC()
         )
     public static let GrayText = StyledButton.Style(
         titleColor: .greyA()
         )
     public static let Green = StyledButton.Style(
         backgroundColor: .greenD1(), disabledBackgroundColor: .grey6(),
-        titleColor: .whiteColor(), highlightedTitleColor: .greyA(), disabledTitleColor: .whiteColor(),
+        titleColor: .white, highlightedTitleColor: .greyA(), disabledTitleColor: .white,
         cornerRadius: 5
         )
     public static let GreenPill = StyledButton.Style(
         backgroundColor: .greenD1(), disabledBackgroundColor: .grey6(),
-        titleColor: .whiteColor(), highlightedTitleColor: .greyA(), disabledTitleColor: .whiteColor(),
+        titleColor: .white, highlightedTitleColor: .greyA(), disabledTitleColor: .white,
         cornerRadius: nil
         )
     public static let RedPill = StyledButton.Style(
-        backgroundColor: .redColor(), disabledBackgroundColor: .grey6(),
-        titleColor: .whiteColor(), highlightedTitleColor: .greyA(), disabledTitleColor: .whiteColor(),
+        backgroundColor: .red, disabledBackgroundColor: .grey6(),
+        titleColor: .white, highlightedTitleColor: .greyA(), disabledTitleColor: .white,
         cornerRadius: nil
         )
     public static let GrayPill = StyledButton.Style(
         backgroundColor: .greyA(),
-        titleColor: .whiteColor(),
+        titleColor: .white,
         cornerRadius: nil
         )
 
-    public static func byName(name: String) -> StyledButton.Style {
+    public static func byName(_ name: String) -> StyledButton.Style {
         switch name {
         case "LightGray": return .LightGray
         case "White": return .White

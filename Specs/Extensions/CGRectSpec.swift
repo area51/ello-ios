@@ -2,6 +2,7 @@
 ///  CGRectSpec.swift
 //
 
+@testable
 import Ello
 import Quick
 import Nimble
@@ -25,17 +26,38 @@ class CGRectExtensionSpec: QuickSpec {
         describe("factories") {
             describe("CGRect w/ right & bottom") {
                 let newFrame = CGRect(x: 1, y: 2, right: 4, bottom: 6)
-                it("should set x")      { expect(newFrame.origin.x).to(equal(CGFloat(1)))}
-                it("should set y")      { expect(newFrame.origin.y).to(equal(CGFloat(2)))}
-                it("should set width")     { expect(newFrame.size.width).to(equal(CGFloat(3)))}
-                it("should set height") { expect(newFrame.size.height).to(equal(CGFloat(4)))}
+                it("should set x")      { expect(newFrame.origin.x) == 1 }
+                it("should set y")      { expect(newFrame.origin.y) == 2 }
+                it("should set width")  { expect(newFrame.size.width) == 3 }
+                it("should set height") { expect(newFrame.size.height) == 4 }
             }
             describe("CGRect w/ x & y (size zero)") {
                 let newFrame = CGRect(x: 1, y: 2)
-                it("should set x")      { expect(newFrame.origin.x).to(equal(CGFloat(1)))}
-                it("should set y")      { expect(newFrame.origin.y).to(equal(CGFloat(2)))}
-                it("should set width")     { expect(newFrame.size.width).to(equal(CGFloat(0)))}
-                it("should set height") { expect(newFrame.size.height).to(equal(CGFloat(0)))}
+                it("should set x")      { expect(newFrame.origin.x) == 1 }
+                it("should set y")      { expect(newFrame.origin.y) == 2 }
+                it("should set width")     { expect(newFrame.size.width) == 0 }
+                it("should set height") { expect(newFrame.size.height) == 0 }
+            }
+            describe("CGRect w/ origin (size zero)") {
+                let newFrame = CGRect(origin: CGPoint(x: 1, y: 2))
+                it("should set x")      { expect(newFrame.origin.x) == 1 }
+                it("should set y")      { expect(newFrame.origin.y) == 2 }
+                it("should set width")     { expect(newFrame.size.width) == 0 }
+                it("should set height") { expect(newFrame.size.height) == 0 }
+            }
+            describe("CGRect w/ width & height (origin zero)") {
+                let newFrame = CGRect(width: 1, height: 2)
+                it("should set x")      { expect(newFrame.origin.x) == 0 }
+                it("should set y")      { expect(newFrame.origin.y) == 0 }
+                it("should set width")     { expect(newFrame.size.width) == 1 }
+                it("should set height") { expect(newFrame.size.height) == 2 }
+            }
+            describe("CGRect w/ size (origin zero)") {
+                let newFrame = CGRect(size: CGSize(width: 1, height: 2))
+                it("should set x")      { expect(newFrame.origin.x) == 0 }
+                it("should set y")      { expect(newFrame.origin.y) == 0 }
+                it("should set width")     { expect(newFrame.size.width) == 1 }
+                it("should set height") { expect(newFrame.size.height) == 2 }
             }
         }
 
@@ -116,22 +138,22 @@ class CGRectExtensionSpec: QuickSpec {
                 expect(newFrame).to(equal(CGRect(x: 7, y: 8, width: 4, height: 10)))
             }
         }
-        describe("shrinkXyz") {
+        describe("shrink(direction:)") {
             let frame = CGRect(x: 5, y: 7, width: 10, height: 14)
-            it("-shrinkLeft:") {
-                let newFrame = frame.shrinkLeft(1)
+            it("-shrink(left:)") {
+                let newFrame = frame.shrink(left: 1)
                 expect(newFrame).to(equal(CGRect(x: 5, y: 7, width: 9, height: 14)))
             }
-            it("-shrinkRight:") {
-                let newFrame = frame.shrinkRight(1)
+            it("-shrink(right:)") {
+                let newFrame = frame.shrink(right: 1)
                 expect(newFrame).to(equal(CGRect(x: 6, y: 7, width: 9, height: 14)))
             }
-            it("-shrinkDown:") {
-                let newFrame = frame.shrinkDown(1)
+            it("-shrink(down:)") {
+                let newFrame = frame.shrink(down: 1)
                 expect(newFrame).to(equal(CGRect(x: 5, y: 8, width: 10, height: 13)))
             }
-            it("-shrinkUp:") {
-                let newFrame = frame.shrinkUp(1)
+            it("-shrink(up:)") {
+                let newFrame = frame.shrink(up: 1)
                 expect(newFrame).to(equal(CGRect(x: 5, y: 7, width: 10, height: 13)))
             }
         }
@@ -162,19 +184,19 @@ class CGRectExtensionSpec: QuickSpec {
         describe("growXyz") {
             let frame = CGRect(x: 5, y: 7, width: 10, height: 14)
             it("-growLeft:") {
-                let newFrame = frame.growLeft(1)
+                let newFrame = frame.grow(left: 1)
                 expect(newFrame).to(equal(CGRect(x: 4, y: 7, width: 11, height: 14)))
             }
             it("-growRight:") {
-                let newFrame = frame.growRight(1)
+                let newFrame = frame.grow(right: 1)
                 expect(newFrame).to(equal(CGRect(x: 5, y: 7, width: 11, height: 14)))
             }
             it("-growUp:") {
-                let newFrame = frame.growUp(1)
+                let newFrame = frame.grow(up: 1)
                 expect(newFrame).to(equal(CGRect(x: 5, y: 6, width: 10, height: 15)))
             }
             it("-growDown:") {
-                let newFrame = frame.growDown(1)
+                let newFrame = frame.grow(down: 1)
                 expect(newFrame).to(equal(CGRect(x: 5, y: 7, width: 10, height: 15)))
             }
         }

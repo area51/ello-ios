@@ -5,15 +5,15 @@
 public struct NoPostsCellPresenter {
 
     static func configure(
-        cell: UICollectionViewCell,
+        _ cell: UICollectionViewCell,
         streamCellItem: StreamCellItem,
         streamKind: StreamKind,
-        indexPath: NSIndexPath,
+        indexPath: IndexPath,
         currentUser: User?)
     {
         guard let
             cell = cell as? NoPostsCell,
-            user = streamCellItem.jsonable as? User
+            let user = streamCellItem.jsonable as? User
         else { return }
 
         cell.isCurrentUser = currentUser?.id == user.id

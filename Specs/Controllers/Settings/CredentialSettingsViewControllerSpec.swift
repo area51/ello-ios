@@ -2,6 +2,7 @@
 ///  CredentialSettingsViewControllerSpec.swift
 //
 
+@testable
 import Ello
 import Quick
 import Nimble
@@ -114,7 +115,7 @@ class CredentialSettingsViewControllerSpec: QuickSpec {
                     let fake = FakeCredentialSettingsDelegate()
                     subject.delegate = fake
                     subject.emailView.textField.text = "email@example.com"
-                    subject.emailView.textField.sendActionsForControlEvents(.EditingChanged)
+                    subject.emailView.textField.sendActions(for: .editingChanged)
                     expect(fake.didCall).to(beTrue())
                 }
 
@@ -123,7 +124,7 @@ class CredentialSettingsViewControllerSpec: QuickSpec {
                     let fake = FakeCredentialSettingsDelegate()
                     subject.delegate = fake
                     subject.usernameView.textField.text = "username"
-                    subject.usernameView.textField.sendActionsForControlEvents(.EditingChanged)
+                    subject.usernameView.textField.sendActions(for: .editingChanged)
                     expect(fake.didCall).to(beTrue())
                 }
 
@@ -132,7 +133,7 @@ class CredentialSettingsViewControllerSpec: QuickSpec {
                     let fake = FakeCredentialSettingsDelegate()
                     subject.delegate = fake
                     subject.passwordView.textField.text = "pa$$w0rd"
-                    subject.passwordView.textField.sendActionsForControlEvents(.EditingChanged)
+                    subject.passwordView.textField.sendActions(for: .editingChanged)
                     expect(fake.didCall).to(beTrue())
                 }
             }
@@ -179,7 +180,7 @@ class FakeCredentialSettingsDelegate: CredentialSettingsDelegate {
     var didCall = false
     var didSetUser = false
 
-    func credentialSettingsUserChanged(user: User) {
+    func credentialSettingsUserChanged(_ user: User) {
         didSetUser = true
     }
 

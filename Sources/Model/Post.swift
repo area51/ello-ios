@@ -15,7 +15,7 @@ public final class Post: JSONAble, Authorable, Groupable {
 
     // active record
     public let id: String
-    public let createdAt: NSDate
+    public let createdAt: Date
     // required
     public let authorId: String
     public let href: String
@@ -44,7 +44,7 @@ public final class Post: JSONAble, Authorable, Groupable {
         return getLinkArray("assets") as? [Asset]
     }
     public var author: User? {
-        return ElloLinkedStore.sharedInstance.getObject(self.authorId, type: .UsersType) as? User
+        return ElloLinkedStore.sharedInstance.getObject(self.authorId, type: .usersType) as? User
     }
     public var categories: [Category] {
         guard let categories = getLinkArray("categories") as? [Category] else {
@@ -88,12 +88,12 @@ public final class Post: JSONAble, Authorable, Groupable {
     public var isRepost: Bool {
         return (repostContent?.count ?? 0) > 0
     }
-    private var commentsCountChangedNotification: NotificationObserver?
+    fileprivate var commentsCountChangedNotification: NotificationObserver?
 
 // MARK: Initialization
 
     public init(id: String,
-        createdAt: NSDate,
+        createdAt: Date,
         authorId: String,
         href: String,
         token: String,
@@ -178,7 +178,7 @@ public final class Post: JSONAble, Authorable, Groupable {
         }
     }
 
-    public override func encodeWithCoder(encoder: NSCoder) {
+    public override func encode(with encoder: NSCoder) {
         let coder = Coder(encoder)
         // active record
         coder.encodeObject(id, forKey: "id")
@@ -206,22 +206,22 @@ public final class Post: JSONAble, Authorable, Groupable {
         coder.encodeObject(commentsCount, forKey: "commentsCount")
         coder.encodeObject(repostsCount, forKey: "repostsCount")
         coder.encodeObject(lovesCount, forKey: "lovesCount")
-        super.encodeWithCoder(coder.coder)
+        super.encode(with: coder.coder)
     }
 
 // MARK: JSONAble
 
-    override public class func fromJSON(data: [String: AnyObject]) -> JSONAble {
+    override public class func fromJSON(_ data: [String: AnyObject]) -> JSONAble {
         let json = JSON(data)
-        Crashlytics.sharedInstance().setObjectValue(json.rawString(), forKey: CrashlyticsKey.PostFromJSON.rawValue)
+        Crashlytics.sharedInstance().setObjectValue(json.rawString(), forKey: CrashlyticsKey.postFromJSON.rawValue)
         let repostContent = RegionParser.regions("repost_content", json: json)
-        var createdAt: NSDate
-        if let date = json["created_at"].stringValue.toNSDate() {
+        var createdAt: Date
+        if let date = json["created_at"].stringValue.toDate() {
             // good to go
             createdAt = date
         }
         else {
-            createdAt = NSDate()
+            createdAt = Date()
             // send data to segment to try to get more data about this
             Tracker.sharedTracker.createdAtCrash("Post", json: json.rawString())
         }

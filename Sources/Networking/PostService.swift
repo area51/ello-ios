@@ -5,12 +5,12 @@
 import Foundation
 import FutureKit
 
-public typealias PostSuccessCompletion = (post: Post, responseConfig: ResponseConfig) -> Void
-public typealias PostCommentsSuccessCompletion = (comments: [ElloComment], responseConfig: ResponseConfig) -> Void
-public typealias PostLoversSuccessCompletion = (users: [User], responseConfig: ResponseConfig) -> Void
-public typealias PostRepostersSuccessCompletion = (users: [User], responseConfig: ResponseConfig) -> Void
-public typealias UsernamesSuccessCompletion = (usernames: [String]) -> Void
-public typealias CommentSuccessCompletion = (comment: ElloComment, responseConfig: ResponseConfig) -> Void
+public typealias PostSuccessCompletion = (_ post: Post, _ responseConfig: ResponseConfig) -> Void
+public typealias PostCommentsSuccessCompletion = (_ comments: [ElloComment], _ responseConfig: ResponseConfig) -> Void
+public typealias PostLoversSuccessCompletion = (_ users: [User], _ responseConfig: ResponseConfig) -> Void
+public typealias PostRepostersSuccessCompletion = (_ users: [User], _ responseConfig: ResponseConfig) -> Void
+public typealias UsernamesSuccessCompletion = (_ usernames: [String]) -> Void
+public typealias CommentSuccessCompletion = (_ comment: ElloComment, _ responseConfig: ResponseConfig) -> Void
 public typealias DeletePostSuccessCompletion = () -> Void
 
 public struct PostService {
@@ -18,13 +18,13 @@ public struct PostService {
     public init(){}
 
     public func loadPost(
-        postParam: String,
+        _ postParam: String,
         needsComments: Bool) -> Future<Post>
     {
         let commentCount = needsComments ? 10 : 0
         let promise = Promise<Post>()
         ElloProvider.shared.elloRequest(
-            ElloAPI.PostDetail(postParam: postParam, commentCount: commentCount),
+            ElloAPI.postDetail(postParam: postParam, commentCount: commentCount),
             success: { (data, responseConfig) in
                 if let post = data as? Post {
                     Preloader().preloadImages([post])
@@ -42,103 +42,103 @@ public struct PostService {
     }
 
     public func loadPostComments(
-        postId: String,
-        success: PostCommentsSuccessCompletion,
-        failure: ElloFailureCompletion? = nil)
+        _ postId: String,
+        success: @escaping PostCommentsSuccessCompletion,
+        failure: @escaping ElloFailureCompletion = { _ in })
     {
         ElloProvider.shared.elloRequest(
-            ElloAPI.PostComments(postId: postId),
+            ElloAPI.postComments(postId: postId),
             success: { (data, responseConfig) in
                 if let comments = data as? [ElloComment] {
                     Preloader().preloadImages(comments)
-                    success(comments: comments, responseConfig: responseConfig)
+                    success(comments, responseConfig)
                 }
-                else if let failure = failure {
+                else {
                     ElloProvider.unCastableJSONAble(failure)
                 }
             },
             failure: { (error, statusCode) in
-                failure?(error: error, statusCode: statusCode)
+                failure(error, statusCode)
         })
     }
 
     public func loadPostLovers(
-        postId: String,
-        success: PostLoversSuccessCompletion,
-        failure: ElloFailureCompletion? = nil)
+        _ postId: String,
+        success: @escaping PostLoversSuccessCompletion,
+        failure: @escaping ElloFailureCompletion = { _ in })
     {
         ElloProvider.shared.elloRequest(
-            ElloAPI.PostLovers(postId: postId),
+            ElloAPI.postLovers(postId: postId),
             success: { (data, responseConfig) in
                 if let users = data as? [User] {
                     Preloader().preloadImages(users)
-                    success(users: users, responseConfig: responseConfig)
+                    success(users, responseConfig)
                 }
-                else if let failure = failure {
+                else {
                     ElloProvider.unCastableJSONAble(failure)
                 }
             },
             failure: { (error, statusCode) in
-                failure?(error: error, statusCode: statusCode)
-        })
+                failure(error, statusCode)
+            })
     }
 
     public func loadPostReposters(
-        postId: String,
-        success: PostRepostersSuccessCompletion,
-        failure: ElloFailureCompletion? = nil)
+        _ postId: String,
+        success: @escaping PostRepostersSuccessCompletion,
+        failure: @escaping ElloFailureCompletion = { _ in })
     {
         ElloProvider.shared.elloRequest(
-            ElloAPI.PostReposters(postId: postId),
+            ElloAPI.postReposters(postId: postId),
             success: { (data, responseConfig) in
                 if let users = data as? [User] {
                     Preloader().preloadImages(users)
-                    success(users: users, responseConfig: responseConfig)
+                    success(users, responseConfig)
                 }
-                else if let failure = failure {
+                else {
                     ElloProvider.unCastableJSONAble(failure)
                 }
             },
             failure: { (error, statusCode) in
-                failure?(error: error, statusCode: statusCode)
+                failure(error, statusCode)
         })
     }
 
     public func loadComment(
-        postId: String,
+        _ postId: String,
         commentId: String,
-        success: CommentSuccessCompletion,
-        failure: ElloFailureCompletion? = nil)
+        success: @escaping CommentSuccessCompletion,
+        failure: @escaping ElloFailureCompletion = { _ in })
     {
         ElloProvider.shared.elloRequest(
-            ElloAPI.CommentDetail(postId: postId, commentId: commentId),
+            ElloAPI.commentDetail(postId: postId, commentId: commentId),
             success: { (data, responseConfig) in
                 if let comment = data as? ElloComment {
                     comment.loadedFromPostId = postId
-                    success(comment: comment, responseConfig: responseConfig)
+                    success(comment, responseConfig)
                 }
-                else if let failure = failure {
-                    ElloProvider.unCastableJSONAble(failure)
+                else {
+                    ElloProvider.unCastableJSONAble(failure) // FIXME - These were optional pre Swift 3, are we preared for this fire?
                 }
             },
             failure: { (error, statusCode) in
-                failure?(error: error, statusCode: statusCode)
+                failure(error, statusCode)
             })
     }
 
     public func loadReplyAll(
-        postId: String,
-        success: UsernamesSuccessCompletion,
-        failure: ElloEmptyCompletion)
+        _ postId: String,
+        success: @escaping UsernamesSuccessCompletion,
+        failure: @escaping ElloEmptyCompletion)
     {
         ElloProvider.shared.elloRequest(
-            ElloAPI.PostReplyAll(postId: postId),
+            ElloAPI.postReplyAll(postId: postId),
             success: { (usernames, _) in
                 if let usernames = usernames as? [Username] {
                     let strings = usernames
                         .map { $0.username }
                     let uniq = strings.unique()
-                    success(usernames: uniq)
+                    success(uniq)
                 }
                 else {
                     failure()
@@ -147,46 +147,47 @@ public struct PostService {
     }
 
     public func deletePost(
-        postId: String,
-        success: ElloEmptyCompletion?,
-        failure: ElloFailureCompletion)
+        _ postId: String,
+        success: @escaping ElloEmptyCompletion,
+        failure: @escaping ElloFailureCompletion)
     {
-        ElloProvider.shared.elloRequest(ElloAPI.DeletePost(postId: postId),
+        ElloProvider.shared.elloRequest(ElloAPI.deletePost(postId: postId),
             success: { (_, _) in
-                NSURLCache.sharedURLCache().removeAllCachedResponses()
-                success?()
+                URLCache.shared.removeAllCachedResponses()
+                success()
             }, failure: failure
         )
     }
 
-    public func deleteComment(postId: String, commentId: String, success: ElloEmptyCompletion?, failure: ElloFailureCompletion) {
-        ElloProvider.shared.elloRequest(ElloAPI.DeleteComment(postId: postId, commentId: commentId),
+    public func deleteComment(_ postId: String, commentId: String, success: @escaping ElloEmptyCompletion, failure: @escaping ElloFailureCompletion) {
+        ElloProvider.shared.elloRequest(ElloAPI.deleteComment(postId: postId, commentId: commentId),
             success: { (_, _) in
-                success?()
+                success()
             }, failure: failure
         )
     }
 
-    public func toggleWatchPost(post: Post, watching: Bool) -> Future<Post> {
+    public func toggleWatchPost(_ post: Post, watching: Bool) -> Future<Post> {
         let api: ElloAPI
         if watching {
-            api = ElloAPI.CreateWatchPost(postId: post.id)
+            api = ElloAPI.createWatchPost(postId: post.id)
         }
         else {
-            api = ElloAPI.DeleteWatchPost(postId: post.id)
+            api = ElloAPI.deleteWatchPost(postId: post.id)
         }
 
         let promise = Promise<Post>()
         ElloProvider.shared.elloRequest(api,
             success: { data, _ in
-                if let watch = data as? Watch,
-                    post = watch.post
-                where watching {
+                if watching,
+                    let watch = data as? Watch,
+                    let post = watch.post
+                {
                     promise.completeWithSuccess(post)
                 }
                 else if !watching {
                     post.watching = false
-                    ElloLinkedStore.sharedInstance.setObject(post, forKey: post.id, type: .PostsType)
+                    ElloLinkedStore.sharedInstance.setObject(post, forKey: post.id, type: .postsType)
                     promise.completeWithSuccess(post)
                 }
                 else {

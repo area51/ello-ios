@@ -7,18 +7,18 @@ import Foundation
 public let ElloErrorDomain = "co.ello.Ello"
 
 public enum ElloErrorCode: Int {
-    case ImageMapping = 0
-    case JSONMapping
-    case StringMapping
-    case StatusCode
-    case Data
-    case NetworkFailure
+    case imageMapping = 0
+    case jsonMapping
+    case stringMapping
+    case statusCode
+    case data
+    case networkFailure
 }
 
 extension NSError {
 
-    class func networkError(error: AnyObject?, code: ElloErrorCode) -> NSError {
-        var userInfo: [NSObject : AnyObject]?
+    class func networkError(_ error: AnyObject?, code: ElloErrorCode) -> NSError {
+        var userInfo: [AnyHashable: Any]?
         if let error: AnyObject = error {
             userInfo = [NSLocalizedFailureReasonErrorKey: error]
         }

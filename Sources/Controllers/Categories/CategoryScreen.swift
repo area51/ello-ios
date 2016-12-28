@@ -5,13 +5,13 @@
 import SnapKit
 
 
-public class CategoryScreen: StreamableScreen, CategoryScreenProtocol {
+open class CategoryScreen: StreamableScreen, CategoryScreenProtocol {
     weak var delegate: CategoryScreenDelegate?
 
-    private let categoryCardList = CategoryCardListView()
+    fileprivate let categoryCardList = CategoryCardListView()
 
-    public var topInsetView: UIView {
-        if categoryCardList.hidden {
+    open var topInsetView: UIView {
+        if categoryCardList.isHidden {
             return navigationBar
         }
         else {
@@ -19,8 +19,8 @@ public class CategoryScreen: StreamableScreen, CategoryScreenProtocol {
         }
     }
 
-    public var categoryCardsVisible: Bool {
-        return !categoryCardList.hidden
+    open var categoryCardsVisible: Bool {
+        return !categoryCardList.isHidden
     }
 
     override func bindActions() {
@@ -32,20 +32,20 @@ public class CategoryScreen: StreamableScreen, CategoryScreenProtocol {
         super.arrange()
         addSubview(categoryCardList)
         addSubview(navigationBar)
-        categoryCardList.hidden = true
+        categoryCardList.isHidden = true
 
-        categoryCardList.snp_makeConstraints { make in
-            make.top.equalTo(navigationBar.snp_bottom)
+        categoryCardList.snp.makeConstraints { make in
+            make.top.equalTo(navigationBar.snp.bottom)
             make.leading.trailing.equalTo(self)
             make.height.equalTo(CategoryCardListView.Size.height)
         }
     }
 
-    public func setCategoriesInfo(newValue: [CategoryCardListView.CategoryInfo], animated: Bool, completion: ElloEmptyCompletion) {
-        categoryCardList.hidden = newValue.isEmpty
+    open func set(categoriesInfo newValue: [CategoryCardListView.CategoryInfo], animated: Bool, completion: @escaping ElloEmptyCompletion) {
+        categoryCardList.isHidden = newValue.isEmpty
         categoryCardList.categoriesInfo = newValue
 
-        if !categoryCardList.hidden && animated {
+        if !categoryCardList.isHidden && animated {
             let originalY = categoryCardList.frame.origin.y
             categoryCardList.frame.origin.y = -categoryCardList.frame.size.height
             animate(completion: { _ in completion() }) {
@@ -57,7 +57,7 @@ public class CategoryScreen: StreamableScreen, CategoryScreenProtocol {
         }
     }
 
-    public func animateCategoriesList(navBarVisible navBarVisible: Bool) {
+    open func animateCategoriesList(navBarVisible: Bool) {
         animate {
             if navBarVisible {
                 self.categoryCardList.frame.origin.y = self.navigationBar.frame.height
@@ -68,17 +68,17 @@ public class CategoryScreen: StreamableScreen, CategoryScreenProtocol {
         }
     }
 
-    public func scrollToCategoryIndex(index: Int) {
+    open func scrollToCategory(index: Int) {
         self.categoryCardList.scrollToIndex(index, animated: false)
     }
 
-    public func selectCategoryIndex(index: Int) {
+    open func selectCategory(index: Int) {
         self.categoryCardList.selectCategoryIndex(index)
     }
 }
 
 extension CategoryScreen: CategoryCardListDelegate {
-    public func categoryCardSelected(index: Int) {
-        delegate?.categorySelected(index)
+    public func categoryCardSelected(_ index: Int) {
+        delegate?.categorySelected(index: index)
     }
 }

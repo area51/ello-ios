@@ -5,10 +5,10 @@
 import FutureKit
 
 
-public class HireViewController: BaseElloViewController {
+open class HireViewController: BaseElloViewController {
     public enum UserEmailType {
-        case Hire
-        case Collaborate
+        case hire
+        case collaborate
     }
 
     let user: User
@@ -24,10 +24,10 @@ public class HireViewController: BaseElloViewController {
         super.init(nibName: nil, bundle: nil)
 
         switch contactType {
-        case .Hire:
-            title = NSString.localizedStringWithFormat(InterfaceString.Hire.HireTitleTemplate, user.atName) as String
-        case .Collaborate:
-            title = NSString.localizedStringWithFormat(InterfaceString.Hire.CollaborateTitleTemplate, user.atName) as String
+        case .hire:
+            title = NSString.localizedStringWithFormat(InterfaceString.Hire.HireTitleTemplate as NSString, user.atName) as String
+        case .collaborate:
+            title = NSString.localizedStringWithFormat(InterfaceString.Hire.CollaborateTitleTemplate as NSString, user.atName) as String
         }
     }
 
@@ -35,7 +35,7 @@ public class HireViewController: BaseElloViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override public func loadView() {
+    override open func loadView() {
         let item = UIBarButtonItem.backChevron(withController: self)
         elloNavigationItem.leftBarButtonItems = [item]
         elloNavigationItem.fixNavBarItemPadding()
@@ -47,11 +47,11 @@ public class HireViewController: BaseElloViewController {
         self.view = screen
     }
 
-    override public func viewWillAppear(animated: Bool) {
+    override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        UIApplication.sharedApplication().setStatusBarHidden(false, withAnimation: .None)
-        UIApplication.sharedApplication().statusBarStyle = .LightContent
+        postNotification(StatusBarNotifications.statusBarShouldChange, value: (false, .slide))
+        UIApplication.shared.statusBarStyle = .lightContent
 
         elloTabBarController?.tabBarHidden = false
 
@@ -60,7 +60,7 @@ public class HireViewController: BaseElloViewController {
         screen.toggleKeyboard(visible: Keyboard.shared.active)
     }
 
-    override public func viewWillDisappear(animated: Bool) {
+    override open func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
         keyboardWillShowObserver?.removeObserver()
@@ -69,23 +69,23 @@ public class HireViewController: BaseElloViewController {
         keyboardWillHideObserver = nil
     }
 
-    public func keyboardWillShow(keyboard: Keyboard) {
+    open func keyboardWillShow(_ keyboard: Keyboard) {
         screen.toggleKeyboard(visible: true)
     }
 
-    public func keyboardWillHide(keyboard: Keyboard) {
+    open func keyboardWillHide(_ keyboard: Keyboard) {
         screen.toggleKeyboard(visible: false)
     }
 
 }
 
 extension HireViewController: HireDelegate {
-    func submit(body body: String) {
+    func submit(body: String) {
         guard !body.isEmpty else { return }
 
         self.screen.showSuccess()
         let hireSuccess = after(2) {
-            self.navigationController?.popViewControllerAnimated(true)
+            _ = self.navigationController?.popViewController(animated: true)
             delay(DefaultAppleAnimationDuration) {
                 self.screen.hideSuccess()
             }
@@ -97,9 +97,9 @@ extension HireViewController: HireDelegate {
 
         let endpoint: Future<Void>
         switch contactType {
-        case .Hire:
+        case .hire:
             endpoint = HireService().hire(user: user, body: body)
-        case .Collaborate:
+        case .collaborate:
             endpoint = HireService().collaborate(user: user, body: body)
         }
 
@@ -111,7 +111,7 @@ extension HireViewController: HireDelegate {
             .onFail { error in
                 self.screen.hideSuccess()
                 let alertController = AlertViewController(error: InterfaceString.GenericError)
-                self.presentViewController(alertController, animated: true, completion: nil)
+                self.present(alertController, animated: true, completion: nil)
             }
     }
 }

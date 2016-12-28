@@ -15,8 +15,8 @@ public final class ImageRegion: JSONAble, Regionable {
     // required
     public let alt: String?
     // optional
-    public var url: NSURL?
-    public var buyButtonURL: NSURL?
+    public var url: URL?
+    public var buyButtonURL: URL?
 
     // links
     public var asset: Asset? { return getLinkObject("assets") as? Asset }
@@ -42,7 +42,7 @@ public final class ImageRegion: JSONAble, Regionable {
         super.init(coder: decoder.coder)
     }
 
-    public override func encodeWithCoder(encoder: NSCoder) {
+    public override func encode(with encoder: NSCoder) {
         let coder = Coder(encoder)
         // required
         coder.encodeObject(alt, forKey: "alt")
@@ -50,14 +50,14 @@ public final class ImageRegion: JSONAble, Regionable {
         // optional
         coder.encodeObject(url, forKey: "url")
         coder.encodeObject(buyButtonURL, forKey: "buyButtonURL")
-        super.encodeWithCoder(coder.coder)
+        super.encode(with: coder.coder)
     }
 
 // MARK: JSONAble
 
-    override public class func fromJSON(data: [String: AnyObject]) -> JSONAble {
+    override public class func fromJSON(_ data: [String: AnyObject]) -> JSONAble {
         let json = JSON(data)
-        Crashlytics.sharedInstance().setObjectValue(json.rawString(), forKey: CrashlyticsKey.ImageRegionFromJSON.rawValue)
+        Crashlytics.sharedInstance().setObjectValue(json.rawString(), forKey: CrashlyticsKey.imageRegionFromJSON.rawValue)
         // create region
         let imageRegion = ImageRegion(
             alt: json["data"]["alt"].string
@@ -67,10 +67,10 @@ public final class ImageRegion: JSONAble, Regionable {
             if urlStr.hasPrefix("//") {
                 urlStr = "https:\(urlStr)"
             }
-            imageRegion.url = NSURL(string: urlStr)
+            imageRegion.url = URL(string: urlStr)
         }
         if let urlStr = json["link_url"].string {
-            imageRegion.buyButtonURL = NSURL(string: urlStr)
+            imageRegion.buyButtonURL = URL(string: urlStr)
         }
         // links
         imageRegion.links = data["links"] as? [String: AnyObject]
@@ -79,7 +79,7 @@ public final class ImageRegion: JSONAble, Regionable {
 
 // MARK: Regionable
 
-    public var kind: String { return RegionKind.Image.rawValue }
+    public var kind: String { return RegionKind.image.rawValue }
 
     public func coding() -> NSCoding {
         return self
@@ -89,22 +89,22 @@ public final class ImageRegion: JSONAble, Regionable {
         var json: [String: AnyObject]
         if let url = self.url?.absoluteString {
             json = [
-                "kind": self.kind,
+                "kind": self.kind as AnyObject,
                 "data": [
                     "alt": alt ?? "",
                     "url": url
-                ],
+                ] as AnyObject,
             ]
         }
         else {
             json = [
-                "kind": self.kind,
-                "data": [:]
+                "kind": self.kind as AnyObject,
+                "data": [:] as AnyObject
             ]
         }
 
         if let buyButtonURL = buyButtonURL {
-            json["link_url"] = buyButtonURL.absoluteString
+            json["link_url"] = buyButtonURL.absoluteString as AnyObject?
         }
         return json
     }

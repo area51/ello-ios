@@ -13,15 +13,15 @@ public let CurrentUserChangedNotification = TypedNotification<User>(name: "curre
 public let SettingChangedNotification = TypedNotification<User>(name: "settingChangedNotification")
 
 public enum ContentChange {
-    case Create
-    case Read
-    case Update
-    case Loved
-    case Watching
-    case Replaced
-    case Delete
+    case create
+    case read
+    case update
+    case loved
+    case watching
+    case replaced
+    case delete
 
-    public static func updateCommentCount(comment: ElloComment, delta: Int) {
+    public static func updateCommentCount(_ comment: ElloComment, delta: Int) {
         var affectedPosts: [Post?]
         if comment.postId == comment.loadedFromPostId {
             affectedPosts = [comment.parentPost]
@@ -30,15 +30,15 @@ public enum ContentChange {
             affectedPosts = [comment.parentPost, comment.loadedFromPost]
         }
         for post in affectedPosts {
-            if let post = post, count = post.commentsCount {
+            if let post = post, let count = post.commentsCount {
                 postNotification(PostCommentsCountChangedNotification, value: (post, delta))
-                postNotification(PostChangedNotification, value: (post, .Update))
+                postNotification(PostChangedNotification, value: (post, .update))
 
                 // this must happen AFTER the notification, otherwise the
                 // storedPost will be in-memory, and the notification will update the comment count
-                if let storedPost = ElloLinkedStore.sharedInstance.getObject(post.id, type: .PostsType) as? Post {
+                if let storedPost = ElloLinkedStore.sharedInstance.getObject(post.id, type: .postsType) as? Post {
                     storedPost.commentsCount = count + delta
-                    ElloLinkedStore.sharedInstance.setObject(storedPost, forKey: post.id, type: .PostsType)
+                    ElloLinkedStore.sharedInstance.setObject(storedPost, forKey: post.id, type: .postsType)
                 }
             }
         }

@@ -5,8 +5,8 @@
 import Foundation
 
 public enum RegionKind: String {
-    case Text = "text"
-    case Image = "image"
-    case Embed = "embed"
-    case Unknown = "Unknown"
+    case text = "text"
+    case image = "image"
+    case embed = "embed"
+    case unknown = "Unknown"
 }

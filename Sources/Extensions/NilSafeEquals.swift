@@ -2,20 +2,18 @@
 ///  NilSafeEquals.swift
 //
 
-infix operator =?= {
-    associativity none
-    precedence 130
-}
-func =?= <T where T: Equatable>(lhs: Optional<T>, rhs: Optional<T>) -> Bool {
+infix operator =?= : ComparisonPrecedence
+
+func =?= <T>(lhs: Optional<T>, rhs: Optional<T>) -> Bool where T: Equatable {
     guard let
         lhs = lhs,
-        rhs = rhs
+        let rhs = rhs
     else {
         return false
     }
     return lhs == rhs
 }
-func =?= <T where T: Equatable>(lhs: T, rhs: Optional<T>) -> Bool {
+func =?= <T>(lhs: T, rhs: Optional<T>) -> Bool where T: Equatable {
     guard let
         rhs = rhs
     else {
@@ -23,7 +21,7 @@ func =?= <T where T: Equatable>(lhs: T, rhs: Optional<T>) -> Bool {
     }
     return lhs == rhs
 }
-func =?= <T where T: Equatable>(lhs: Optional<T>, rhs: T) -> Bool {
+func =?= <T>(lhs: Optional<T>, rhs: T) -> Bool where T: Equatable {
     guard let
         lhs = lhs
     else {
@@ -31,6 +29,6 @@ func =?= <T where T: Equatable>(lhs: Optional<T>, rhs: T) -> Bool {
     }
     return lhs == rhs
 }
-func =?= <T where T: Equatable>(lhs: T, rhs: T) -> Bool {
+func =?= <T>(lhs: T, rhs: T) -> Bool where T: Equatable {
     return lhs == rhs
 }

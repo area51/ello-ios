@@ -2,6 +2,7 @@
 ///  UsernameSpec.swift
 //
 
+@testable
 import Ello
 import Quick
 import Nimble
@@ -43,13 +44,13 @@ class UsernameSpec: QuickSpec {
             context("NSCoding") {
 
                 var filePath = ""
-                if let url = NSURL(string: NSFileManager.ElloDocumentsDir()) {
-                    filePath = url.URLByAppendingPathComponent("UsernameSpec")!.absoluteString!
+                if let url = URL(string: FileManager.ElloDocumentsDir()) {
+                    filePath = url.appendingPathComponent("UsernameSpec").absoluteString
                 }
 
                 afterEach {
                     do {
-                        try NSFileManager.defaultManager().removeItemAtPath(filePath)
+                        try FileManager.default.removeItem(atPath: filePath)
                     }
                     catch {
 
@@ -73,7 +74,7 @@ class UsernameSpec: QuickSpec {
                         let username: Username = stub(["username":"rob"])
 
                         NSKeyedArchiver.archiveRootObject(username, toFile: filePath)
-                        let unArchivedUsername = NSKeyedUnarchiver.unarchiveObjectWithFile(filePath) as! Username
+                        let unArchivedUsername = NSKeyedUnarchiver.unarchiveObject(withFile: filePath) as! Username
 
                         expect(unArchivedUsername).toNot(beNil())
                         expect(unArchivedUsername.version) == 1

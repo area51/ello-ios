@@ -15,16 +15,16 @@ import UIKit
 //
 // UG
 //
-public class ElloCollectionView: UICollectionView {
-    private var uikitOverride = false
-    public var elloContentInset: UIEdgeInsets = UIEdgeInsetsZero {
+open class ElloCollectionView: UICollectionView {
+    fileprivate var uikitOverride = false
+    open var elloContentInset: UIEdgeInsets = UIEdgeInsets.zero {
         didSet {
             uikitOverride = true
             contentInset = elloContentInset
             uikitOverride = false
         }
     }
-    override public var contentInset: UIEdgeInsets {
+    override open var contentInset: UIEdgeInsets {
         didSet {
             if !uikitOverride {
                 uikitOverride = true

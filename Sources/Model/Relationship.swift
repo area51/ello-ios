@@ -13,19 +13,19 @@ public final class Relationship: JSONAble {
 
     // active record
     public let id: String
-    public let createdAt: NSDate
+    public let createdAt: Date
     // required
     public let ownerId: String
     public let subjectId: String
     // computed
     public var owner: User? {
-        return ElloLinkedStore.sharedInstance.getObject(self.ownerId, type: .UsersType) as? User
+        return ElloLinkedStore.sharedInstance.getObject(self.ownerId, type: .usersType) as? User
     }
     public var subject: User? {
-        return ElloLinkedStore.sharedInstance.getObject(self.subjectId, type: .UsersType) as? User
+        return ElloLinkedStore.sharedInstance.getObject(self.subjectId, type: .usersType) as? User
     }
 
-    public init(id: String, createdAt: NSDate, ownerId: String, subjectId: String) {
+    public init(id: String, createdAt: Date, ownerId: String, subjectId: String) {
         self.id = id
         self.createdAt = createdAt
         self.ownerId = ownerId
@@ -46,7 +46,7 @@ public final class Relationship: JSONAble {
         super.init(coder: decoder.coder)
     }
 
-    public override func encodeWithCoder(encoder: NSCoder) {
+    public override func encode(with encoder: NSCoder) {
         let coder = Coder(encoder)
         // active record
         coder.encodeObject(id, forKey: "id")
@@ -54,21 +54,21 @@ public final class Relationship: JSONAble {
         // required
         coder.encodeObject(ownerId, forKey: "ownerId")
         coder.encodeObject(subjectId, forKey: "subjectId")
-        super.encodeWithCoder(coder.coder)
+        super.encode(with: coder.coder)
     }
 
 // MARK: JSONAble
 
-    override public class func fromJSON(data: [String: AnyObject]) -> JSONAble {
+    override public class func fromJSON(_ data: [String: AnyObject]) -> JSONAble {
         let json = JSON(data)
-        Crashlytics.sharedInstance().setObjectValue(json.rawString(), forKey: CrashlyticsKey.RelationshipFromJSON.rawValue)
-        var createdAt: NSDate
-        if let date = json["created_at"].stringValue.toNSDate() {
+        Crashlytics.sharedInstance().setObjectValue(json.rawString(), forKey: CrashlyticsKey.relationshipFromJSON.rawValue)
+        var createdAt: Date
+        if let date = json["created_at"].stringValue.toDate() {
             // good to go
             createdAt = date
         }
         else {
-            createdAt = NSDate()
+            createdAt = Date()
             // send data to segment to try to get more data about this
             Tracker.sharedTracker.createdAtCrash("Relationship", json: json.rawString())
         }

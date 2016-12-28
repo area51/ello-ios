@@ -2,7 +2,7 @@
 ///  ProfileBaseView.swift
 //
 
-public class ProfileBaseView: UIView {
+open class ProfileBaseView: UIView {
     struct Size {
         static let grayInset: CGFloat = 15
     }
@@ -20,7 +20,7 @@ public class ProfileBaseView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func privateInit() {
+    fileprivate func privateInit() {
         style()
         bindActions()
         setText()

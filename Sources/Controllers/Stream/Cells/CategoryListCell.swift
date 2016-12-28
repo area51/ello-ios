@@ -4,7 +4,7 @@
 
 import SnapKit
 
-public class CategoryListCell: UICollectionViewCell {
+open class CategoryListCell: UICollectionViewCell {
     static let reuseIdentifier = "CategoryListCell"
     weak var delegate: CategoryListCellDelegate?
 
@@ -14,9 +14,9 @@ public class CategoryListCell: UICollectionViewCell {
     }
 
     public typealias CategoryInfo = (title: String, slug: String)
-    public var categoriesInfo: [CategoryInfo] = [] {
+    open var categoriesInfo: [CategoryInfo] = [] {
         didSet {
-            let changed: Bool = (categoriesInfo.count != oldValue.count) || oldValue.enumerate().any { (index, info) in
+            let changed: Bool = (categoriesInfo.count != oldValue.count) || oldValue.enumerated().any { (index, info) in
                 return info.title != categoriesInfo[index].title || info.slug != categoriesInfo[index].slug
             }
             if changed {
@@ -25,13 +25,13 @@ public class CategoryListCell: UICollectionViewCell {
         }
     }
 
-    private var buttonCategoryLookup: [UIButton: CategoryInfo] = [:]
-    private var categoryButtons: [UIButton] = []
+    fileprivate var buttonCategoryLookup: [UIButton: CategoryInfo] = [:]
+    fileprivate var categoryButtons: [UIButton] = []
 
-    private class func buttonTitle(category: String) -> NSAttributedString {
+    fileprivate class func buttonTitle(_ category: String) -> NSAttributedString {
         let attrs: [String: AnyObject] = [
             NSFontAttributeName: UIFont.defaultFont(),
-            NSForegroundColorAttributeName: UIColor.blackColor()
+            NSForegroundColorAttributeName: UIColor.black
         ]
         let attributedString = NSAttributedString(string: category, attributes: attrs)
         return attributedString
@@ -49,27 +49,27 @@ public class CategoryListCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override public func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
     }
 
-    private func style() {
-        backgroundColor = .whiteColor()
+    fileprivate func style() {
+        backgroundColor = .white
     }
 
-    private func bindActions() {
+    fileprivate func bindActions() {
     }
 
-    private func arrange() {
+    fileprivate func arrange() {
     }
 
     @objc
-    func categoryButtonTapped(button: UIButton) {
+    func categoryButtonTapped(_ button: UIButton) {
         guard let categoryInfo = buttonCategoryLookup[button] else { return }
         delegate?.categoryListCellTapped(slug: categoryInfo.slug, name: categoryInfo.title)
     }
 
-    private func updateCategoryViews() {
+    fileprivate func updateCategoryViews() {
         for view in categoryButtons {
             view.removeFromSuperview()
         }
@@ -79,9 +79,9 @@ public class CategoryListCell: UICollectionViewCell {
             let button = UIButton()
             buttonCategoryLookup[button] = categoryInfo
             button.backgroundColor = .greyF2()
-            button.addTarget(self, action: #selector(categoryButtonTapped(_:)), forControlEvents: .TouchUpInside)
+            button.addTarget(self, action: #selector(categoryButtonTapped(_:)), for: .touchUpInside)
             let attributedString = CategoryListCell.buttonTitle(categoryInfo.title)
-            button.setAttributedTitle(attributedString, forState: UIControlState.Normal)
+            button.setAttributedTitle(attributedString, for: .normal)
 
             return button
         }
@@ -90,11 +90,11 @@ public class CategoryListCell: UICollectionViewCell {
         for view in categoryButtons {
             contentView.addSubview(view)
 
-            view.snp_makeConstraints { make in
+            view.snp.makeConstraints { make in
                 make.top.bottom.equalTo(contentView)
 
                 if let prevView = prevView {
-                    make.leading.equalTo(prevView.snp_trailing).offset(Size.spacing)
+                    make.leading.equalTo(prevView.snp.trailing).offset(Size.spacing)
                     make.width.equalTo(prevView)
                 }
                 else {
@@ -106,7 +106,7 @@ public class CategoryListCell: UICollectionViewCell {
         }
 
         if let prevView = prevView {
-            prevView.snp_makeConstraints { make in
+            prevView.snp.makeConstraints { make in
                 make.trailing.equalTo(contentView)
             }
         }

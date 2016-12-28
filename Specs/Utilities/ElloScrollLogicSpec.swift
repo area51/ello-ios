@@ -2,6 +2,7 @@
 ///  ElloScrollLogicSpec.swift
 //
 
+@testable
 import Ello
 import Quick
 import Nimble
@@ -12,7 +13,7 @@ class ElloScrollLogicSpec: QuickSpec {
     var didScrollToBottom : Bool?
     var didHide : Bool?
 
-    private func resetShowHide() {
+    fileprivate func resetShowHide() {
         didShow = nil
         didScrollToBottom = nil
         didHide = nil

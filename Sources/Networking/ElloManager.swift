@@ -20,20 +20,20 @@ public struct ElloManager {
         return policyDict
     }
 
-    public static var manager: Manager {
-        let config = NSURLSessionConfiguration.defaultSessionConfiguration()
+    public static var manager: SessionManager {
+        let config = URLSessionConfiguration.default
         config.sharedContainerIdentifier = ElloGroupName
-        return Manager(
+        return SessionManager(
             configuration: config,
             serverTrustPolicyManager: ServerTrustPolicyManager(policies: ElloManager.serverTrustPolicies)
         )
     }
 
-    public static var shareExtensionManager: Manager {
-        let config = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("co.ello.shareextension.background")
+    public static var shareExtensionManager: SessionManager {
+        let config = URLSessionConfiguration.background(withIdentifier: "co.ello.shareextension.background")
         config.sharedContainerIdentifier = ElloGroupName
         config.sessionSendsLaunchEvents = false
-        return Manager(
+        return SessionManager(
             configuration: config,
             serverTrustPolicyManager: ServerTrustPolicyManager(policies: ElloManager.serverTrustPolicies)
         )

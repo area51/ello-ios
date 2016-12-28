@@ -4,6 +4,7 @@
 
 import Foundation
 
+@testable
 import Ello
 import Quick
 import Moya

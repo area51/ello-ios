@@ -11,11 +11,11 @@ public final class Announcement: JSONAble, Groupable {
     public let id: String
     public let header: String
     public let body: String
-    public let ctaURL: NSURL?
+    public let ctaURL: URL?
     public let ctaCaption: String
-    public let createdAt: NSDate
+    public let createdAt: Date
     public var image: Asset?
-    public var imageURL: NSURL? { return image?.hdpi?.url }
+    public var imageURL: URL? { return image?.hdpi?.url as URL? }
 
     public var groupId: String { return "Announcement-\(id)" }
 
@@ -23,9 +23,9 @@ public final class Announcement: JSONAble, Groupable {
         id: String,
         header: String,
         body: String,
-        ctaURL: NSURL?,
+        ctaURL: URL?,
         ctaCaption: String,
-        createdAt: NSDate) {
+        createdAt: Date) {
         self.id = id
         self.header = header
         self.body = body
@@ -47,7 +47,7 @@ public final class Announcement: JSONAble, Groupable {
         super.init(coder: coder)
     }
 
-    public override func encodeWithCoder(coder: NSCoder) {
+    public override func encode(with coder: NSCoder) {
         let encoder = Coder(coder)
         encoder.encodeObject(id, forKey: "id")
         encoder.encodeObject(header, forKey: "header")
@@ -56,17 +56,17 @@ public final class Announcement: JSONAble, Groupable {
         encoder.encodeObject(ctaCaption, forKey: "ctaCaption")
         encoder.encodeObject(createdAt, forKey: "createdAt")
         encoder.encodeObject(image, forKey: "image")
-        super.encodeWithCoder(coder)
+        super.encode(with: coder)
     }
 
-    override public class func fromJSON(data: [String: AnyObject]) -> JSONAble {
+    override public class func fromJSON(_ data: [String: AnyObject]) -> JSONAble {
         let json = JSON(data)
         let id = json["id"].stringValue
         let header = json["header"].stringValue
         let body = json["body"].stringValue
-        let ctaURL = json["cta_href"].string.flatMap { NSURL(string: $0) }
+        let ctaURL = json["cta_href"].string.flatMap { URL(string: $0) }
         let ctaCaption = json["cta_caption"].stringValue
-        let createdAt: NSDate = json["created_at"].string?.toNSDate() ?? NSDate()
+        let createdAt: Date = json["created_at"].string?.toDate() ?? Date()
 
         let announcement = Announcement(id: id,
             header: header,

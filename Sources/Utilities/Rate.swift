@@ -5,11 +5,11 @@
 import Foundation
 import iRate
 
-public class Rate: NSObject {
+open class Rate: NSObject {
 
-    public static let sharedRate = Rate()
+    open static let sharedRate = Rate()
 
-    public func setup() {
+    open func setup() {
         iRate.sharedInstance().delegate = self
         iRate.sharedInstance().onlyPromptIfLatestVersion = true
         iRate.sharedInstance().previewMode = false
@@ -25,17 +25,17 @@ public class Rate: NSObject {
         iRate.sharedInstance().remindPeriod = 7
     }
 
-    public func prompt() {
+    open func prompt() {
         iRate.sharedInstance().promptForRating()
     }
 
-    public func logEvent() {
+    open func logEvent() {
         iRate.sharedInstance().logEvent(false)
     }
 }
 
 extension Rate: iRateDelegate {
-    public func iRateCouldNotConnectToAppStore(error: NSError!){
+    public func iRateCouldNotConnect(toAppStore error: Error!){
         Tracker.sharedTracker.ratePromptCouldNotConnectToAppStore()
     }
 

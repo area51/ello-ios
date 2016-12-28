@@ -3,10 +3,10 @@ import Ello
 
 
 class FakeKeychain: KeychainType {
-    var pushToken: NSData?
+    var pushToken: Data?
     var authToken: String?
     var refreshAuthToken: String?
-    var authTokenExpires: NSDate?
+    var authTokenExpires: Date?
     var authTokenType: String?
     var isPasswordBased: Bool?
     var username: String?

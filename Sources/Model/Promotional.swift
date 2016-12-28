@@ -36,16 +36,16 @@ public final class Promotional: JSONAble {
         super.init(coder: coder)
     }
 
-    public override func encodeWithCoder(coder: NSCoder) {
+    public override func encode(with coder: NSCoder) {
         let encoder = Coder(coder)
         encoder.encodeObject(id, forKey: "id")
         encoder.encodeObject(userId, forKey: "userId")
         encoder.encodeObject(categoryId, forKey: "categoryId")
         encoder.encodeObject(image, forKey: "image")
-        super.encodeWithCoder(coder)
+        super.encode(with: coder)
     }
 
-    override public class func fromJSON(data: [String: AnyObject]) -> JSONAble {
+    override public class func fromJSON(_ data: [String: AnyObject]) -> JSONAble {
         let json = JSON(data)
         let id = json["id"].stringValue
         let userId = json["user_id"].stringValue

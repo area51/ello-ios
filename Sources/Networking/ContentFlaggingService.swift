@@ -11,7 +11,7 @@ public struct ContentFlaggingService {
 
     public init(){}
 
-    public func flagContent(endpoint: ElloAPI, success: ContentFlaggingSuccessCompletion, failure: ElloFailureCompletion) {
+    public func flagContent(_ endpoint: ElloAPI, success: @escaping ContentFlaggingSuccessCompletion, failure: @escaping ElloFailureCompletion) {
         ElloProvider.shared.elloRequest(endpoint,
             success: { data in
                 success()

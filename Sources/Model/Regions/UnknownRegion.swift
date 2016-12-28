@@ -11,7 +11,7 @@ public final class UnknownRegion: NSObject, Regionable, NSCoding {
     public let version = UnknownRegionVersion
     public var isRepost: Bool = false
 
-    public var kind: String { return RegionKind.Unknown.rawValue }
+    public var kind: String { return RegionKind.unknown.rawValue }
 
     public func coding() -> NSCoding {
         return self
@@ -23,7 +23,7 @@ public final class UnknownRegion: NSObject, Regionable, NSCoding {
 
 // MARK: NSCoding
 
-    public func encodeWithCoder(encoder: NSCoder) {
+    public func encode(with encoder: NSCoder) {
     }
 
     required public init?(coder decoder: NSCoder) {

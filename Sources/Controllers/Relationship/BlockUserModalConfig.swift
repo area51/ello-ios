@@ -8,7 +8,7 @@ public struct BlockUserModalConfig {
     let relationshipPriority: RelationshipPriority
     let changeClosure: RelationshipChangeClosure
 
-    public init(userId: String, userAtName: String, relationshipPriority: RelationshipPriority, changeClosure: RelationshipChangeClosure) {
+    public init(userId: String, userAtName: String, relationshipPriority: RelationshipPriority, changeClosure: @escaping RelationshipChangeClosure) {
         self.userId = userId
         self.userAtName = userAtName
         self.relationshipPriority = relationshipPriority

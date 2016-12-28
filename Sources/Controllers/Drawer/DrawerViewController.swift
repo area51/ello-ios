@@ -5,16 +5,16 @@
 import Crashlytics
 
 public class DrawerViewController: StreamableViewController {
-    @IBOutlet weak public var tableView: UITableView!
-    weak public var navigationBar: ElloNavigationBar!
-    public var isLoggingOut = false
+    @IBOutlet weak open var tableView: UITableView!
+    weak open var navigationBar: ElloNavigationBar!
+    open var isLoggingOut = false
 
-    override var backGestureEdges: UIRectEdge { return .Right }
+    override var backGestureEdges: UIRectEdge { return .right }
 
-    public let dataSource = DrawerViewDataSource()
+    open let dataSource = DrawerViewDataSource()
 
     required public init() {
-        super.init(nibName: "DrawerViewController", bundle: .None)
+        super.init(nibName: "DrawerViewController", bundle: .none)
     }
 
     required public init?(coder aDecoder: NSCoder) {
@@ -39,31 +39,27 @@ extension DrawerViewController {
         registerCells()
     }
 
-    override public func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        UIApplication.sharedApplication().setStatusBarHidden(false, withAnimation: .Slide)
-    }
-
-    override public func viewDidAppear(animated: Bool) {
+    override open func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        Crashlytics.sharedInstance().setObjectValue("Drawer", forKey: CrashlyticsKey.StreamName.rawValue)
+        postNotification(StatusBarNotifications.statusBarShouldChange, value: (false, .slide))
+        Crashlytics.sharedInstance().setObjectValue("Drawer", forKey: CrashlyticsKey.streamName.rawValue)
     }
 }
 
 // MARK: UITableViewDelegate
 extension DrawerViewController: UITableViewDelegate {
-    public func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let item = dataSource.itemForIndexPath(indexPath) {
             switch item.type {
-            case let .External(link):
+            case let .external(link):
                 postNotification(ExternalWebNotification, value: link)
-            case .Invite:
-                let responder = targetForAction(#selector(InviteResponder.onInviteFriends), withSender: self) as? InviteResponder
+            case .invite:
+                let responder = target(forAction: #selector(InviteResponder.onInviteFriends), withSender: self) as? InviteResponder
                 responder?.onInviteFriends()
-            case .Logout:
+            case .logout:
                 isLoggingOut = true
                 nextTick {
-                    self.dismissViewControllerAnimated(true, completion: { _ in
+                    self.dismiss(animated: true, completion: { _ in
                          postNotification(AuthenticationNotifications.userLoggedOut, value: ())
                     })
                 }
@@ -93,12 +89,12 @@ private extension DrawerViewController {
     }
 
     func addLeftButtons() {
-        let logoView = UIImageView(image: InterfaceImage.ElloLogo.normalImage)
+        let logoView = UIImageView(image: InterfaceImage.elloLogo.normalImage)
         logoView.frame = CGRect(x: 15, y: 30, width: 24, height: 24)
         navigationBar.addSubview(logoView)
     }
 
     func registerCells() {
-        tableView.registerNib(DrawerCell.nib(), forCellReuseIdentifier: DrawerCell.reuseIdentifier)
+        tableView.register(DrawerCell.nib(), forCellReuseIdentifier: DrawerCell.reuseIdentifier)
     }
 }

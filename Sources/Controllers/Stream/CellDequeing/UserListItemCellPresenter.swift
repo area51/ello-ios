@@ -7,19 +7,19 @@ import Foundation
 public struct UserListItemCellPresenter {
 
     public static func configure(
-        cell: UICollectionViewCell,
+        _ cell: UICollectionViewCell,
         streamCellItem: StreamCellItem,
         streamKind: StreamKind,
-        indexPath: NSIndexPath,
+        indexPath: IndexPath,
         currentUser: User?)
     {
         if let cell = cell as? UserListItemCell,
-            user = streamCellItem.jsonable as? User
+            let user = streamCellItem.jsonable as? User
         {
-            cell.relationshipControl.hidden = false
+            cell.relationshipControl.isHidden = false
 
             if let currentUser = currentUser {
-                cell.relationshipControl.hidden = user.id == currentUser.id
+                cell.relationshipControl.isHidden = user.id == currentUser.id
             }
 
             cell.relationshipControl.showStarButton = streamKind.showStarButton

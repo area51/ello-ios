@@ -3,18 +3,18 @@
 //
 
 public enum DiscoverType: String {
-    case Featured = "recommended"
-    case Trending = "trending"
-    case Recent = "recent"
+    case featured = "recommended"
+    case trending = "trending"
+    case recent = "recent"
 
-    static func fromURL(slug: String) -> DiscoverType? {
+    static func fromURL(_ slug: String) -> DiscoverType? {
         switch slug {
         case "featured", "recommended", "":
-            return .Featured
+            return .featured
         case "trending":
-            return .Trending
+            return .trending
         case "recent":
-            return .Recent
+            return .recent
         default:
             return nil
         }
@@ -23,9 +23,9 @@ public enum DiscoverType: String {
     public var slug: String { return rawValue }
     public var name: String {
         switch self {
-        case Featured: return InterfaceString.Discover.Featured
-        case Trending: return InterfaceString.Discover.Trending
-        case Recent: return InterfaceString.Discover.Recent
+        case .featured: return InterfaceString.Discover.Featured
+        case .trending: return InterfaceString.Discover.Trending
+        case .recent: return InterfaceString.Discover.Recent
         }
     }
 }

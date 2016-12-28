@@ -3,22 +3,22 @@
 //
 
 
-public class NotificationsViewController: StreamableViewController, NotificationDelegate, NotificationsScreenDelegate {
+open class NotificationsViewController: StreamableViewController, NotificationDelegate, NotificationsScreenDelegate {
     var generator: NotificationsGenerator?
     var hasNewContent = false
     var fromTabBar = false
-    private var reloadNotificationsObserver: NotificationObserver?
-    private var newAnnouncementsObserver: NotificationObserver?
-    public var categoryFilterType = NotificationFilterType.All
-    public var categoryStreamKind: StreamKind { return .Notifications(category: categoryFilterType.category) }
+    fileprivate var reloadNotificationsObserver: NotificationObserver?
+    fileprivate var newAnnouncementsObserver: NotificationObserver?
+    open var categoryFilterType = NotificationFilterType.all
+    open var categoryStreamKind: StreamKind { return .notifications(category: categoryFilterType.category) }
 
-    override public var tabBarItem: UITabBarItem? {
-        get { return UITabBarItem.item(.Bolt) }
+    override open var tabBarItem: UITabBarItem? {
+        get { return UITabBarItem.item(.bolt) }
         set { self.tabBarItem = newValue }
     }
 
-    override public func loadView() {
-        self.view = NotificationsScreen(frame: UIScreen.mainScreen().bounds)
+    override open func loadView() {
+        self.view = NotificationsScreen(frame: UIScreen.main.bounds)
     }
 
     var screen: NotificationsScreen {
@@ -48,12 +48,12 @@ public class NotificationsViewController: StreamableViewController, Notification
         newAnnouncementsObserver?.removeObserver()
     }
 
-    override public func didSetCurrentUser() {
+    override open func didSetCurrentUser() {
         generator?.currentUser = currentUser
         super.didSetCurrentUser()
     }
 
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
 
         screen.delegate = self
@@ -66,7 +66,7 @@ public class NotificationsViewController: StreamableViewController, Notification
         reload()
     }
 
-    override public func viewWillAppear(animated: Bool) {
+    override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
         if hasNewContent && fromTabBar {
@@ -104,7 +104,7 @@ public class NotificationsViewController: StreamableViewController, Notification
         streamViewController.reloadClosure = { [weak self] in self?.reload() }
     }
 
-    override public func showNavBars(scrollToBottom: Bool) {
+    override open func showNavBars(_ scrollToBottom: Bool) {
         super.showNavBars(scrollToBottom)
         screen.animateNavigationBar(visible: true)
         updateInsets()
@@ -114,7 +114,7 @@ public class NotificationsViewController: StreamableViewController, Notification
         }
     }
 
-    override public func hideNavBars() {
+    override open func hideNavBars() {
         super.hideNavBars()
         screen.animateNavigationBar(visible: false)
         updateInsets()
@@ -127,12 +127,12 @@ public class NotificationsViewController: StreamableViewController, Notification
         return self.screen.streamContainer
     }
 
-    public func activatedCategory(filterTypeStr: String) {
+    open func activatedCategory(_ filterTypeStr: String) {
         let filterType = NotificationFilterType(rawValue: filterTypeStr)!
         activatedCategory(filterType)
     }
 
-    public func activatedCategory(filterType: NotificationFilterType) {
+    open func activatedCategory(_ filterType: NotificationFilterType) {
         screen.selectFilterButton(filterType)
         categoryFilterType = filterType
 
@@ -143,7 +143,7 @@ public class NotificationsViewController: StreamableViewController, Notification
         reload()
     }
 
-    public func commentTapped(comment: ElloComment) {
+    open func commentTapped(_ comment: ElloComment) {
         if let post = comment.loadedFromPost {
             postTapped(post)
         }
@@ -152,7 +152,7 @@ public class NotificationsViewController: StreamableViewController, Notification
         }
     }
 
-    public func respondToNotification(components: [String]) {
+    open func respondToNotification(_ components: [String]) {
         var popToRoot: Bool = true
         if let path = components.safeValue(0) {
             switch path {
@@ -172,7 +172,7 @@ public class NotificationsViewController: StreamableViewController, Notification
         }
 
         if popToRoot {
-            navigationController?.popToRootViewControllerAnimated(true)
+            _ = navigationController?.popToRootViewController(animated: true)
         }
 
         reload()
@@ -219,7 +219,7 @@ extension NotificationsViewController: StreamDestination {
         set { streamViewController.pagingEnabled = newValue }
     }
 
-    public func replacePlaceholder(type: StreamCellType.PlaceholderType, items: [StreamCellItem], completion: ElloEmptyCompletion) {
+    public func replacePlaceholder(type: StreamCellType.PlaceholderType, items: [StreamCellItem], completion: @escaping ElloEmptyCompletion) {
         streamViewController.replacePlaceholder(type, with: items, completion: completion)
     }
 
@@ -234,7 +234,7 @@ extension NotificationsViewController: StreamDestination {
         }
     }
 
-    public func setPrimaryJSONAble(jsonable: JSONAble) {
+    public func setPrimary(jsonable: JSONAble) {
         self.streamViewController.doneLoading()
     }
 
@@ -249,9 +249,9 @@ extension NotificationsViewController: StreamDestination {
 
 // MARK: NotificationsViewController:
 extension NotificationsViewController: AnnouncementDelegate {
-    public func markAnnouncementAsRead(_ announcement: Announcement) {
+    public func markAnnouncementAsRead(announcement: Announcement) {
         Tracker.sharedTracker.announcementDismissed(announcement)
         generator?.markAnnouncementAsRead(announcement)
-        postNotification(JSONAbleChangedNotification, value: (announcement, .Delete))
+        postNotification(JSONAbleChangedNotification, value: (announcement, .delete))
     }
 }

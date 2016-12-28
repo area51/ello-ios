@@ -68,7 +68,7 @@ class RegexExtensionsSpec: QuickSpec {
                         "BOO!": ["BOO"],
                     ]
                     for (test, expectation) in expectations {
-                        let expected = expectation.joinWithSeparator(",")
+                        let expected = expectation.joined(separator: ",")
                         it("'\(test)' should return \(expected)") {
                             expect(regex.matches(test)) == expectation
                         }
@@ -83,7 +83,7 @@ class RegexExtensionsSpec: QuickSpec {
                         "BOO1!": ["BOO1"],
                     ]
                     for (test, expectation) in expectations {
-                        let expected = expectation.joinWithSeparator(",")
+                        let expected = expectation.joined(separator: ",")
                         it("'\(test)' should return \(expected)") {
                             expect(regex.matches(test)) == expectation
                         }
@@ -97,7 +97,7 @@ class RegexExtensionsSpec: QuickSpec {
                         "!test1/test2!": ["test1/test2", "test1", "test2"],
                     ]
                     for (test, expectation) in expectations {
-                        let expected = expectation.joinWithSeparator(",")
+                        let expected = expectation.joined(separator: ",")
                         it("'\(test)' should return \(expected)") {
                             expect(regex.matchingGroups(test)) == expectation
                         }

@@ -65,7 +65,7 @@ class RateSpec: QuickSpec {
             context("analytics") {
                 it("tracks when it cannot connect to the app store") {
                     let error = NSError(domain: "test", code: 0, userInfo: nil)
-                    Rate.sharedRate.iRateCouldNotConnectToAppStore(error)
+                    Rate.sharedRate.iRateCouldNotConnect(toAppStore: error)
 
                     expect(agent.lastEvent) == "rate prompt could not connect to app store"
                 }

@@ -13,9 +13,9 @@ public final class PagePromotional: JSONAble {
     public let header: String
     public let subheader: String
     public let ctaCaption: String
-    public let ctaURL: NSURL?
+    public let ctaURL: URL?
     public let image: Asset?
-    public var tileURL: NSURL? { return image?.xhdpi?.url }
+    public var tileURL: URL? { return image?.xhdpi?.url as URL? }
 
     // links
     public var user: User? { return getLinkObject("user") as? User }
@@ -25,7 +25,7 @@ public final class PagePromotional: JSONAble {
         header: String,
         subheader: String,
         ctaCaption: String,
-        ctaURL: NSURL?,
+        ctaURL: URL?,
         image: Asset?
     ) {
         self.id = id
@@ -48,7 +48,7 @@ public final class PagePromotional: JSONAble {
         super.init(coder: coder)
     }
 
-    public override func encodeWithCoder(coder: NSCoder) {
+    public override func encode(with coder: NSCoder) {
         let encoder = Coder(coder)
         encoder.encodeObject(id, forKey: "id")
         encoder.encodeObject(header, forKey: "header")
@@ -56,16 +56,16 @@ public final class PagePromotional: JSONAble {
         encoder.encodeObject(ctaCaption, forKey: "ctaCaption")
         encoder.encodeObject(ctaURL, forKey: "ctaURL")
         encoder.encodeObject(image, forKey: "image")
-        super.encodeWithCoder(coder)
+        super.encode(with: coder)
     }
 
-    override public class func fromJSON(data: [String: AnyObject]) -> JSONAble {
+    override public class func fromJSON(_ data: [String: AnyObject]) -> JSONAble {
         let json = JSON(data)
         let id = json["id"].stringValue
         let header = json["header"].stringValue
         let subheader = json["subheader"].stringValue
         let ctaCaption = json["cta_caption"].stringValue
-        let ctaURL = json["cta_href"].string.flatMap { NSURL(string: $0) }
+        let ctaURL = json["cta_href"].string.flatMap { URL(string: $0) }
 
         let image = Asset.parseAsset(id, node: data["image"] as? [String: AnyObject])
 

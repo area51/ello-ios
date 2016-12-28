@@ -8,8 +8,8 @@ public final class ProfileCategoriesViewController: BaseElloViewController {
     public init(categories: [Category]) {
         super.init(nibName: nil, bundle: nil)
         self.categories = categories
-        modalTransitionStyle = .CrossDissolve
-        modalPresentationStyle = .Custom
+        modalTransitionStyle = .crossDissolve
+        modalPresentationStyle = .custom
         transitioningDelegate = self
     }
 
@@ -30,9 +30,9 @@ public final class ProfileCategoriesViewController: BaseElloViewController {
 // MARK: UIViewControllerTransitioningDelegate
 extension ProfileCategoriesViewController: UIViewControllerTransitioningDelegate {
 
-    public func presentationControllerForPresentedViewController(presented: UIViewController, presentingViewController presenting: UIViewController?, sourceViewController source: UIViewController) -> UIPresentationController? {
+    public func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         guard presented == self
-            else { return .None }
+            else { return .none }
 
         return ProfileCategoriesPresentationController(presentedViewController: presented, presentingViewController: presenting, backgroundColor: .modalBackground())
     }
@@ -40,7 +40,7 @@ extension ProfileCategoriesViewController: UIViewControllerTransitioningDelegate
 
 extension ProfileCategoriesViewController: ProfileCategoriesDelegate {
 
-    public func categoryTapped(category: Category) {
+    public func categoryTapped(_ category: Category) {
 		Tracker.sharedTracker.categoryOpened(category.slug)
         let vc = CategoryViewController(slug: category.slug, name: category.name)
         vc.currentUser = currentUser
@@ -49,6 +49,6 @@ extension ProfileCategoriesViewController: ProfileCategoriesDelegate {
     }
 
     public func dismiss() {
-        dismissViewControllerAnimated(true, completion: .None)
+        self.dismiss(animated: true, completion: .none)
     }
 }

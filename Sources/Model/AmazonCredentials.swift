@@ -7,12 +7,12 @@ import Crashlytics
 let AmazonCredentialsVersion = 2
 
 @objc(AmazonCredentials)
-public class AmazonCredentials: JSONAble {
-    public let accessKey: String
-    public let endpoint: String
-    public let policy: String
-    public let prefix: String
-    public let signature: String
+open class AmazonCredentials: JSONAble {
+    open let accessKey: String
+    open let endpoint: String
+    open let policy: String
+    open let prefix: String
+    open let signature: String
 
     public init(accessKey: String, endpoint: String, policy: String, prefix: String, signature: String) {
         self.accessKey = accessKey
@@ -43,7 +43,7 @@ public class AmazonCredentials: JSONAble {
         super.init(coder: aDecoder)
     }
 
-    public override func encodeWithCoder(encoder: NSCoder) {
+    open override func encode(with encoder: NSCoder) {
         let coder = Coder(encoder)
         coder.encodeObject(accessKey, forKey: "accessKey")
         coder.encodeObject(endpoint, forKey: "endpoint")
@@ -52,8 +52,8 @@ public class AmazonCredentials: JSONAble {
         coder.encodeObject(signature, forKey: "signature")
     }
 
-    override public class func fromJSON(data: [String : AnyObject]) -> JSONAble {
-        Crashlytics.sharedInstance().setObjectValue(data.description, forKey: CrashlyticsKey.AmazonCredentialsFromJSON.rawValue)
+    override open class func fromJSON(_ data: [String : AnyObject]) -> JSONAble {
+        Crashlytics.sharedInstance().setObjectValue(data.description, forKey: CrashlyticsKey.amazonCredentialsFromJSON.rawValue)
         return AmazonCredentials(
             accessKey: data["access_key"] as! String,
             endpoint:  data["endpoint"] as! String,

@@ -2,53 +2,53 @@
 ///  NarrationView.swift
 //
 
-public class NarrationView: UIView {
+open class NarrationView: UIView {
     struct Size {
         static let margins = CGFloat(15)
         static let height = CGFloat(112)
         static let pointer = CGSize(width: 12, height: 6)
     }
-    private let closeButton: StyledButton = {
+    fileprivate let closeButton: StyledButton = {
         let closeButton = StyledButton()
-        closeButton.setTitle("\u{2573}", forState: .Normal)
+        closeButton.setTitle("\u{2573}", for: .normal)
         closeButton.sizeToFit()
-        closeButton.userInteractionEnabled = false
+        closeButton.isUserInteractionEnabled = false
         return closeButton
     }()
-    private let bg: UIView = {
+    fileprivate let bg: UIView = {
         let bg = UIView()
-        bg.backgroundColor = .blackColor()
+        bg.backgroundColor = .black
         return bg
     }()
-    private let label: ElloTextView = {
+    fileprivate let label: ElloTextView = {
         let label = ElloTextView()
-        label.userInteractionEnabled = false
-        label.editable = false
+        label.isUserInteractionEnabled = false
+        label.isEditable = false
         label.allowsEditingTextAttributes = false
-        label.selectable = false
-        label.textColor = .whiteColor()
+        label.isSelectable = false
+        label.textColor = .white
         label.textContainer.lineFragmentPadding = 0
-        label.backgroundColor = .clearColor()
+        label.backgroundColor = .clear
         return label
     }()
-    private let pointer: UIImageView = {
+    fileprivate let pointer: UIImageView = {
         let pointer = UIImageView()
-        pointer.contentMode = .ScaleAspectFit
-        pointer.image = InterfaceImage.NarrationPointer.normalImage
+        pointer.contentMode = .scaleAspectFit
+        pointer.image = InterfaceImage.narrationPointer.normalImage
         return pointer
     }()
 
-    public var pointerX: CGFloat {
+    open var pointerX: CGFloat {
         get { return pointer.frame.midX }
         set { pointer.frame.origin.x = newValue - pointer.frame.size.width / 2 }
     }
 
-    public var title: String = "" {
+    open var title: String = "" {
         didSet {
             updateTitleAndText()
         }
     }
-    public var text: String = "" {
+    open var text: String = "" {
         didSet {
             updateTitleAndText()
         }
@@ -66,25 +66,25 @@ public class NarrationView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func updateTitleAndText() {
+    fileprivate func updateTitleAndText() {
         let style = NSMutableParagraphStyle()
         style.lineSpacing = 6
 
         let titleAttributes = [
             NSFontAttributeName : UIFont.defaultBoldFont(),
-            NSForegroundColorAttributeName : UIColor.whiteColor(),
+            NSForegroundColorAttributeName : UIColor.white,
             NSParagraphStyleAttributeName : style
         ]
         let textAttributes = [
             NSFontAttributeName : UIFont.defaultFont(),
-            NSForegroundColorAttributeName : UIColor.whiteColor(),
+            NSForegroundColorAttributeName : UIColor.white,
             NSParagraphStyleAttributeName : style
         ]
 
         label.attributedText = NSMutableAttributedString(string: title + "\n", attributes: titleAttributes) + NSMutableAttributedString(string: text, attributes: textAttributes)
     }
 
-    override public func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
 
         pointer.frame.size = Size.pointer

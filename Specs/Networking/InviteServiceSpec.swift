@@ -2,6 +2,7 @@
 ///  InviteServiceSpec.swift
 //
 
+@testable
 import Ello
 import Quick
 import Moya
@@ -12,7 +13,7 @@ class InviteServiceSpec: QuickSpec {
     struct FakeAddressBook: AddressBookProtocol {
         var localPeople: [LocalPerson]
 
-        init(_ people: [Int32: [String]]) {
+        init(_ people: [String: [String]]) {
             localPeople = people.map { id, emails in
                 return LocalPerson(name: "\(id)", emails: emails, id: id)
             }
@@ -52,7 +53,7 @@ class InviteServiceSpec: QuickSpec {
 
             it("succeeds") {
                 var expectedUsers: [(LocalPerson, User?)] = []
-                let addressBook = FakeAddressBook([1: ["blah"], 2: ["blah"]])
+                let addressBook = FakeAddressBook(["1": ["blah"], "2": ["blah"]])
                 subject.find(addressBook, currentUser: nil, success: {
                     users in
                     expectedUsers = users
@@ -65,7 +66,7 @@ class InviteServiceSpec: QuickSpec {
                 ElloProvider.sharedProvider = ElloProvider.ErrorStubbingProvider()
                 var loadedSuccessfully = true
 
-                let addressBook = FakeAddressBook([1: ["blah"], 2: ["blah"]])
+                let addressBook = FakeAddressBook(["1": ["blah"], "2": ["blah"]])
                 subject.find(addressBook, currentUser: nil, success: {
                     users in
                     loadedSuccessfully = true

@@ -2,6 +2,7 @@
 ///  MapperSpec.swift
 //
 
+@testable
 import Ello
 import Quick
 import Nimble
@@ -13,11 +14,11 @@ class MapperSpec: QuickSpec {
 
         describe("+mapJSON:") {
 
-            var loadedData:NSData!
+            var loadedData: Data!
 
             context("valid json") {
 
-                it("returns a valid nsdata, nil error tuple") {
+                it("returns a valid data, nil error tuple") {
                     loadedData = stubbedData("user")
                     let (mappedJSON, error) = Mapper.mapJSON(loadedData)
 
@@ -29,7 +30,7 @@ class MapperSpec: QuickSpec {
             context("invalid json") {
 
                 it("returns a nil nsdata, valid error tuple") {
-                    loadedData = ("invalid json" as NSString).dataUsingEncoding(NSUTF8StringEncoding)
+                    loadedData = "invalid".data(using: String.Encoding.utf8)
                     let (mappedJSON, error) = Mapper.mapJSON(loadedData)
 
                     expect(mappedJSON).to(beNil())
@@ -37,9 +38,9 @@ class MapperSpec: QuickSpec {
                 }
             }
 
-            context("empty nsdata") {
+            context("empty data") {
 
-                it("returns a nil nsdata, valid error tuple") {
+                it("returns a nil data, valid error tuple") {
                     loadedData = stubbedData("empty")
                     let (mappedJSON, error) = Mapper.mapJSON(loadedData)
 
@@ -56,7 +57,7 @@ class MapperSpec: QuickSpec {
 
                 it("returns an array of mapped domain objects") {
                     let friendData = stubbedJSONDataArray("friends", "activities")
-                    let activities = Mapper.mapToObjectArray(friendData, type: .ActivitiesType)
+                    let activities = Mapper.mapToObjectArray(friendData, type: .activitiesType)
 
                     expect(activities.first).to(beAKindOf(Activity.self))
                 }
@@ -69,7 +70,7 @@ class MapperSpec: QuickSpec {
 
                 it("returns a mapped domain objects") {
                     let userData = stubbedJSONData("user", "users")
-                    let user = Mapper.mapToObject(userData, type: .UsersType)
+                    let user = Mapper.mapToObject(userData as AnyObject, type: .usersType)
 
                     expect(user).toNot(beNil())
                     expect(user).to(beAKindOf(User.self))
@@ -81,7 +82,7 @@ class MapperSpec: QuickSpec {
                 it("returns nil") {
                     let invalidAnyObject: AnyObject = NSString(string: "invalid") as AnyObject
 
-                    expect(Mapper.mapToObject(invalidAnyObject, type: .UsersType)).to(beNil())
+                    expect(Mapper.mapToObject(invalidAnyObject, type: .usersType)).to(beNil())
                 }
             }
         }

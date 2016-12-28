@@ -5,17 +5,17 @@
 import Foundation
 
 public enum StreamCellState: CustomStringConvertible, CustomDebugStringConvertible {
-    case None
-    case Loading
-    case Expanded
-    case Collapsed
+    case none
+    case loading
+    case expanded
+    case collapsed
 
     public var description: String {
         switch self {
-        case None: return "None"
-        case Loading: return "Loading"
-        case Expanded: return "Expanded"
-        case Collapsed: return "Collapsed"
+        case .none: return "None"
+        case .loading: return "Loading"
+        case .expanded: return "Expanded"
+        case .collapsed: return "Collapsed"
         }
     }
     public var debugDescription: String { return "StreamCellState.\(description)" }
@@ -27,7 +27,7 @@ public final class StreamCellItem: NSObject, NSCopying {
     public var type: StreamCellType
     public var placeholderType: StreamCellType.PlaceholderType?
     public var calculatedCellHeights = CalculatedCellHeights()
-    public var state: StreamCellState = .None
+    public var state: StreamCellState = .none
 
     public convenience init(type: StreamCellType) {
         self.init(jsonable: JSONAble(version: 1), type: type)
@@ -47,8 +47,8 @@ public final class StreamCellItem: NSObject, NSCopying {
         self.type = type
     }
 
-    public func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = self.dynamicType.init(
+    public func copy(with zone: NSZone?) -> Any {
+        let copy = type(of: self).init(
             jsonable: self.jsonable,
             type: self.type
             )
@@ -59,7 +59,7 @@ public final class StreamCellItem: NSObject, NSCopying {
     }
 
     public func alwaysShow() -> Bool {
-        if type == .StreamLoading {
+        if type == .streamLoading {
             return true
         }
         return false
@@ -67,7 +67,7 @@ public final class StreamCellItem: NSObject, NSCopying {
 
     public override var description: String {
         switch type {
-        case let .Text(data):
+        case let .text(data):
             let text: String
             if let textRegion = data as? TextRegion {
                 text = textRegion.content
@@ -76,9 +76,9 @@ public final class StreamCellItem: NSObject, NSCopying {
                 text = "unknown"
             }
 
-            return "StreamCellItem(type: \(type.name), jsonable: \(jsonable.dynamicType), state: \(state), text: \(text))"
+            return "StreamCellItem(type: \(type.name), jsonable: \(type(of: jsonable)), state: \(state), text: \(text))"
         default:
-            return "StreamCellItem(type: \(type.name), jsonable: \(jsonable.dynamicType), state: \(state))"
+            return "StreamCellItem(type: \(type.name), jsonable: \(type(of: jsonable)), state: \(state))"
         }
     }
 
@@ -87,7 +87,7 @@ public final class StreamCellItem: NSObject, NSCopying {
 
 func == (lhs: StreamCellItem, rhs: StreamCellItem) -> Bool {
     switch (lhs.type, rhs.type) {
-    case (.Placeholder, .Placeholder):
+    case (.placeholder, .placeholder):
         return lhs.placeholderType == rhs.placeholderType
     default:
         return lhs === rhs

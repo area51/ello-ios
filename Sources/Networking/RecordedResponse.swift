@@ -7,9 +7,9 @@ import Moya
 
 public struct RecordedResponse {
     let endpoint: ElloAPI
-    let responseClosure: (target: ElloAPI) -> EndpointSampleResponse
+    let responseClosure: (_ target: ElloAPI) -> EndpointSampleResponse
 
-    public init(endpoint: ElloAPI, responseClosure: (target: ElloAPI) -> EndpointSampleResponse) {
+    public init(endpoint: ElloAPI, responseClosure: @escaping (_ target: ElloAPI) -> EndpointSampleResponse) {
         self.endpoint = endpoint
         self.responseClosure = responseClosure
     }

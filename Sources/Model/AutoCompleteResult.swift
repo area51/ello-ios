@@ -13,7 +13,7 @@ let AutoCompleteResultVersion: Int = 2
 public final class AutoCompleteResult: JSONAble {
 
     public var name: String?
-    public var url: NSURL?
+    public var url: URL?
     public var image: UIImage?
 
     // MARK: Initialization
@@ -25,7 +25,7 @@ public final class AutoCompleteResult: JSONAble {
 
     public convenience init(name: String, url: String) {
         self.init(name: name)
-        self.url = NSURL(string: url)
+        self.url = URL(string: url)
     }
 
     // MARK: NSCoding
@@ -40,28 +40,28 @@ public final class AutoCompleteResult: JSONAble {
         super.init(coder: decoder.coder)
     }
 
-    public override func encodeWithCoder(encoder: NSCoder) {
+    public override func encode(with encoder: NSCoder) {
         let coder = Coder(encoder)
         coder.encodeObject(url, forKey: "url")
         coder.encodeObject(name, forKey: "name")
         coder.encodeObject(image, forKey: "image")
-        super.encodeWithCoder(coder.coder)
+        super.encode(with: coder.coder)
     }
 
     // MARK: JSONAble
 
-    override public class func fromJSON(data: [String: AnyObject]) -> JSONAble {
+    override public class func fromJSON(_ data: [String: AnyObject]) -> JSONAble {
         let json = JSON(data)
-        Crashlytics.sharedInstance().setObjectValue(json.rawString(), forKey: CrashlyticsKey.AutoCompleteResultFromJSON.rawValue)
+        Crashlytics.sharedInstance().setObjectValue(json.rawString(), forKey: CrashlyticsKey.autoCompleteResultFromJSON.rawValue)
         let name = json["name"].string ?? json["location"].string
         let result = AutoCompleteResult(name: name)
         if let imageUrl = json["image_url"].string,
-            url = NSURL(string: imageUrl)
+            let url = URL(string: imageUrl)
         {
             result.url = url
         }
         else if json["location"].string != nil {
-            result.image = InterfaceImage.Marker.normalImage
+            result.image = InterfaceImage.marker.normalImage
         }
         return result
     }

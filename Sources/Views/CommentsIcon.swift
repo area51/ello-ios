@@ -2,20 +2,20 @@
 ///  CommentsIcon.swift
 //
 
-public class CommentsIcon: BasicIcon {
-    private let commentTailView: UIView
+open class CommentsIcon: BasicIcon {
+    fileprivate let commentTailView: UIView
 
     public init() {
-        let iconImage = InterfaceImage.BubbleBody.normalImage
-        let iconSelectedImage = InterfaceImage.BubbleBody.selectedImage
+        let iconImage = InterfaceImage.bubbleBody.normalImage
+        let iconSelectedImage = InterfaceImage.bubbleBody.selectedImage
         let icon = UIImageView(image: iconImage)
         let iconSelected = UIImageView(image: iconSelectedImage)
 
-        let commentTail = InterfaceImage.BubbleTail.normalImage
+        let commentTail = InterfaceImage.bubbleTail.normalImage
         commentTailView = UIImageView(image: commentTail)
         super.init(normalIconView: icon, selectedIconView: iconSelected)
         addSubview(commentTailView)
-        commentTailView.hidden = true
+        commentTailView.isHidden = true
     }
 
     required public init(coder aDecoder: NSCoder) {
@@ -23,9 +23,9 @@ public class CommentsIcon: BasicIcon {
     }
 
     // MARK: Private
-    override func updateIcon(selected selected: Bool, enabled: Bool) {
+    override func updateIcon(selected: Bool, enabled: Bool) {
         super.updateIcon(selected: selected, enabled: enabled)
-        commentTailView.hidden = !selected
+        commentTailView.isHidden = !selected
     }
 }
 
@@ -37,11 +37,11 @@ extension CommentsIcon {
         animation.keyTimes = [0, 0.25, 0.45, 0.55, 0.75, 0.95, 0]
         animation.duration = 0.6
         animation.repeatCount = Float.infinity
-        animation.additive = true
-        commentTailView.layer.addAnimation(animation, forKey: "comments")
+        animation.isAdditive = true
+        commentTailView.layer.add(animation, forKey: "comments")
     }
 
     public func finishAnimation() {
-        commentTailView.layer.removeAnimationForKey("comments")
+        commentTailView.layer.removeAnimation(forKey: "comments")
     }
 }

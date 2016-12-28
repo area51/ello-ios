@@ -6,18 +6,18 @@ import Foundation
 
 private let ElloTextFieldViewHeight: CGFloat = 89.0
 
-public class ElloTextFieldView: UIView {
-    public weak var label: StyledLabel!
-    @IBOutlet public weak var textField: ElloTextField!
-    public weak var errorLabel: StyledLabel!
-    public weak var messageLabel: StyledLabel!
+open class ElloTextFieldView: UIView {
+    open weak var label: StyledLabel!
+    @IBOutlet open weak var textField: ElloTextField!
+    open weak var errorLabel: StyledLabel!
+    open weak var messageLabel: StyledLabel!
 
-    @IBOutlet private var errorLabelHeight: NSLayoutConstraint!
-    @IBOutlet private var messageLabelHeight: NSLayoutConstraint!
-    @IBOutlet private weak var errorLabelSeparationSpacing: NSLayoutConstraint!
+    @IBOutlet fileprivate var errorLabelHeight: NSLayoutConstraint!
+    @IBOutlet fileprivate var messageLabelHeight: NSLayoutConstraint!
+    @IBOutlet fileprivate weak var errorLabelSeparationSpacing: NSLayoutConstraint!
 
-    public var textFieldDidChange: (String -> Void)?
-    public var firstResponderDidChange: (Bool -> Void)? {
+    open var textFieldDidChange: ((String) -> Void)?
+    open var firstResponderDidChange: ((Bool) -> Void)? {
         get { return textField.firstResponderDidChange }
         set { textField.firstResponderDidChange = newValue }
     }
@@ -39,8 +39,8 @@ public class ElloTextFieldView: UIView {
         return height
     }
 
-    public var hasError: Bool { return !(errorLabel.text?.isEmpty ?? true) }
-    public var hasMessage: Bool { return !(messageLabel.text?.isEmpty ?? true) }
+    open var hasError: Bool { return !(errorLabel.text?.isEmpty ?? true) }
+    open var hasMessage: Bool { return !(messageLabel.text?.isEmpty ?? true) }
     var errorHeight: CGFloat {
         if hasError {
             return errorLabel.sizeThatFits(CGSize(width: errorLabel.frame.width, height: 0)).height
@@ -68,45 +68,45 @@ public class ElloTextFieldView: UIView {
         sharedInit()
     }
 
-    private func sharedInit() {
+    fileprivate func sharedInit() {
         let view: UIView = loadFromNib()
         view.frame = bounds
-        view.autoresizingMask = [.FlexibleHeight, .FlexibleWidth]
+        view.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         addSubview(view)
 
-        textField.addTarget(self, action: #selector(valueChanged), forControlEvents: .EditingChanged)
+        textField.addTarget(self, action: #selector(valueChanged), for: .editingChanged)
     }
 
-    override public func updateConstraints() {
+    override open func updateConstraints() {
         updateErrorConstraints()
         super.updateConstraints()
     }
 
-    func setState(state: ValidationState) {
+    func setState(_ state: ValidationState) {
         textField.validationState = state
     }
 
     func valueChanged() {
         setNeedsUpdateConstraints()
-        if let textFieldDidChange = textFieldDidChange, text = textField.text {
+        if let textFieldDidChange = textFieldDidChange, let text = textField.text {
             textFieldDidChange(text)
         }
     }
 
-    func setErrorMessage(message: String) {
+    func setErrorMessage(_ message: String) {
         errorLabel.text = message
         setNeedsUpdateConstraints()
         self.invalidateIntrinsicContentSize()
     }
 
-    func setMessage(message: String) {
+    func setMessage(_ message: String) {
         messageLabel.text = message
-        messageLabel.textColor = UIColor.blackColor()
+        messageLabel.textColor = UIColor.black
         setNeedsUpdateConstraints()
         self.invalidateIntrinsicContentSize()
     }
 
-    override public func layoutIfNeeded() {
+    override open func layoutIfNeeded() {
         super.layoutIfNeeded()
         self.label.layoutIfNeeded()
         self.textField.layoutIfNeeded()
@@ -114,27 +114,27 @@ public class ElloTextFieldView: UIView {
         self.errorLabel.layoutIfNeeded()
     }
 
-    override public func intrinsicContentSize() -> CGSize {
+    override open var intrinsicContentSize: CGSize {
         return CGSize(width: UIViewNoIntrinsicMetric, height: height)
     }
 
-    private func updateErrorConstraints() {
-        errorLabelSeparationSpacing.active = errorHeight > 0 && messageHeight > 0
+    fileprivate func updateErrorConstraints() {
+        errorLabelSeparationSpacing.isActive = errorHeight > 0 && messageHeight > 0
         errorLabelHeight.constant = errorHeight
         messageLabelHeight.constant = messageHeight
     }
 
     func clearState() {
-        textField.validationState = .None
+        textField.validationState = .none
         setErrorMessage("")
         setMessage("")
     }
 
-    override public func becomeFirstResponder() -> Bool {
+    override open func becomeFirstResponder() -> Bool {
         return textField.becomeFirstResponder()
     }
 
-    override public func resignFirstResponder() -> Bool {
+    override open func resignFirstResponder() -> Bool {
         return textField.resignFirstResponder()
     }
 
@@ -142,44 +142,44 @@ public class ElloTextFieldView: UIView {
 
 
 public extension ElloTextFieldView {
-    private class func styleCommonField(textField: UITextField) {
+    fileprivate class func styleCommonField(_ textField: UITextField) {
         textField.text = ""
-        textField.autocapitalizationType = .None
-        textField.autocorrectionType = .No
-        textField.spellCheckingType = .No
+        textField.autocapitalizationType = .none
+        textField.autocorrectionType = .no
+        textField.spellCheckingType = .no
         textField.enablesReturnKeyAutomatically = true
-        textField.keyboardAppearance = .Dark
+        textField.keyboardAppearance = .dark
     }
 
-    class func styleAsUsername(usernameView: ElloTextFieldView) {
+    class func styleAsUsername(_ usernameView: ElloTextFieldView) {
         usernameView.label.text = InterfaceString.Join.Username
         styleAsUsernameField(usernameView.textField)
     }
-    class func styleAsUsernameField(textField: UITextField) {
+    class func styleAsUsernameField(_ textField: UITextField) {
         styleCommonField(textField)
-        textField.returnKeyType = .Next
-        textField.keyboardType = .ASCIICapable
+        textField.returnKeyType = .next
+        textField.keyboardType = .asciiCapable
     }
 
-    class func styleAsEmail(emailView: ElloTextFieldView) {
+    class func styleAsEmail(_ emailView: ElloTextFieldView) {
         emailView.label.text = InterfaceString.Join.Email
         styleAsEmailField(emailView.textField)
     }
-    class func styleAsEmailField(textField: UITextField) {
+    class func styleAsEmailField(_ textField: UITextField) {
         styleCommonField(textField)
-        textField.returnKeyType = .Next
-        textField.keyboardType = .EmailAddress
+        textField.returnKeyType = .next
+        textField.keyboardType = .emailAddress
     }
 
-    class func styleAsPassword(passwordView: ElloTextFieldView) {
+    class func styleAsPassword(_ passwordView: ElloTextFieldView) {
         passwordView.label.text = InterfaceString.Join.Password
         styleAsPasswordField(passwordView.textField)
     }
-    class func styleAsPasswordField(textField: UITextField) {
+    class func styleAsPasswordField(_ textField: UITextField) {
         styleCommonField(textField)
-        textField.returnKeyType = .Go
-        textField.keyboardType = .Default
-        textField.secureTextEntry = true
+        textField.returnKeyType = .go
+        textField.keyboardType = .default
+        textField.isSecureTextEntry = true
     }
 
 }

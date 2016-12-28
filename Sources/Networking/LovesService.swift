@@ -4,22 +4,22 @@
 
 import Foundation
 
-public typealias LovesCreateSuccessCompletion = (love: Love, responseConfig: ResponseConfig) -> Void
+public typealias LovesCreateSuccessCompletion = (_ love: Love, _ responseConfig: ResponseConfig) -> Void
 
 public struct LovesService {
 
     public init(){}
 
     public func lovePost(
-        postId postId: String,
-        success: LovesCreateSuccessCompletion,
-        failure: ElloFailureCompletion)
+        postId: String,
+        success: @escaping LovesCreateSuccessCompletion,
+        failure: @escaping ElloFailureCompletion)
     {
-        let endpoint = ElloAPI.CreateLove(postId: postId)
+        let endpoint = ElloAPI.createLove(postId: postId)
         ElloProvider.shared.elloRequest(endpoint,
             success: { (data, responseConfig) in
                 if let love = data as? Love {
-                    success(love: love, responseConfig: responseConfig)
+                    success(love, responseConfig)
                 }
                 else {
                     ElloProvider.unCastableJSONAble(failure)
@@ -30,11 +30,11 @@ public struct LovesService {
     }
 
     public func unlovePost(
-        postId postId: String,
-        success: ElloEmptyCompletion,
-        failure: ElloFailureCompletion)
+        postId: String,
+        success: @escaping ElloEmptyCompletion,
+        failure: @escaping ElloFailureCompletion)
     {
-        let endpoint = ElloAPI.DeleteLove(postId: postId)
+        let endpoint = ElloAPI.deleteLove(postId: postId)
         ElloProvider.shared.elloRequest(endpoint,
             success: { _, _ in
                 success()

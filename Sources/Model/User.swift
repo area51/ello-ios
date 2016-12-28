@@ -170,14 +170,14 @@ public final class User: JSONAble {
         super.init(coder: decoder.coder)
     }
 
-    class func empty(id id: String = NSUUID().UUIDString) -> User {
+    class func empty(id: String = UUID().uuidString) -> User {
         return User(
             id: id,
             href: "",
             username: "",
             name: "",
             experimentalFeatures: false,
-            relationshipPriority: RelationshipPriority.None,
+            relationshipPriority: RelationshipPriority.none,
             postsAdultContent: false,
             viewsAdultContent: false,
             hasCommentingEnabled: true,
@@ -188,7 +188,7 @@ public final class User: JSONAble {
             isHireable: false)
     }
 
-    public override func encodeWithCoder(encoder: NSCoder) {
+    public override func encode(with encoder: NSCoder) {
         let coder = Coder(encoder)
 
         // active record
@@ -226,12 +226,12 @@ public final class User: JSONAble {
 
         // profile
         coder.encodeObject(profile, forKey: "profile")
-        super.encodeWithCoder(coder.coder)
+        super.encode(with: coder.coder)
     }
 
 // MARK: JSONAble
 
-    public override func merge(other: JSONAble) -> JSONAble {
+    public override func merge(_ other: JSONAble) -> JSONAble {
         if let otherUser = other as? User {
             if otherUser.formattedShortBio == nil {
                 otherUser.formattedShortBio = formattedShortBio
@@ -244,9 +244,9 @@ public final class User: JSONAble {
         return other
     }
 
-    override public class func fromJSON(data: [String: AnyObject]) -> JSONAble {
+    override public class func fromJSON(_ data: [String: AnyObject]) -> JSONAble {
         let json = JSON(data)
-        Crashlytics.sharedInstance().setObjectValue(json.rawString(), forKey: CrashlyticsKey.UserFromJSON.rawValue)
+        Crashlytics.sharedInstance().setObjectValue(json.rawString(), forKey: CrashlyticsKey.userFromJSON.rawValue)
         // create user
         let user = User(
             id: json["id"].stringValue,
@@ -300,9 +300,9 @@ public final class User: JSONAble {
 extension User {
 
     func hasProperty(key: String) -> Bool {
-        if respondsToSelector(Selector(key.camelCase)) {
+        if responds(to: Selector(key.camelCase)) {
             return true
-        } else if profile?.respondsToSelector(Selector(key.camelCase)) == true {
+        } else if profile?.responds(to: Selector(key.camelCase)) == true {
             return true
         }
         return false
@@ -312,10 +312,10 @@ extension User {
         let kvo = key.camelCase
         let selector = Selector(kvo)
         let value: Bool?
-        if profile?.respondsToSelector(selector) == true {
-            value = profile?.valueForKey(kvo) as? Bool
-        } else if respondsToSelector(selector) {
-            value = valueForKey(kvo) as? Bool
+        if profile?.responds(to: selector) == true {
+            value = profile?.value(forKey: kvo) as? Bool
+        } else if responds(to: selector) {
+            value = self.value(forKey: kvo) as? Bool
         }
         else {
             value = false
@@ -326,20 +326,20 @@ extension User {
     func setPropertyForSettingsKey(key: String, value: Bool) {
         let kvo = key.camelCase
         let selector = Selector(kvo)
-        if profile?.respondsToSelector(selector) == true {
+        if profile?.responds(to: selector) == true {
             profile?.setValue(value, forKey: kvo)
-        } else if respondsToSelector(selector) {
+        } else if responds(to: selector) {
             setValue(value, forKey: kvo)
         }
     }
 }
 
 extension User {
-    func isOwnPost(post: Post) -> Bool {
+    func isOwn(post: Post) -> Bool {
         return id == post.authorId
     }
 
-    func isOwnComment(comment: ElloComment) -> Bool {
+    func isOwn(comment: ElloComment) -> Bool {
         return id == comment.authorId
     }
 
@@ -349,18 +349,18 @@ extension User {
 }
 
 extension User {
-    public func coverImageURL(viewsAdultContent viewsAdultContent: Bool? = false, animated: Bool = false) -> NSURL? {
-        if animated && (!postsAdultContent || viewsAdultContent == true) && coverImage?.original?.url.absoluteString?.endsWith(".gif") == true {
-            return coverImage?.original?.url
+    public func coverImageURL(viewsAdultContent: Bool? = false, animated: Bool = false) -> URL? {
+        if animated && (!postsAdultContent || viewsAdultContent == true) && coverImage?.original?.url.absoluteString.hasSuffix(".gif") == true {
+            return coverImage?.original?.url as URL?
         }
-        return coverImage?.xhdpi?.url
+        return coverImage?.xhdpi?.url as URL?
     }
 
-    public func avatarURL(viewsAdultContent viewsAdultContent: Bool? = false, animated: Bool = false) -> NSURL? {
-        if animated && (!postsAdultContent || viewsAdultContent == true) && avatar?.original?.url.absoluteString?.endsWith(".gif") == true {
-            return avatar?.original?.url
+    public func avatarURL(viewsAdultContent: Bool? = false, animated: Bool = false) -> URL? {
+        if animated && (!postsAdultContent || viewsAdultContent == true) && avatar?.original?.url.absoluteString.hasSuffix(".gif") == true {
+            return avatar?.original?.url as URL?
         }
-        return avatar?.largeOrBest?.url
+        return avatar?.largeOrBest?.url as URL?
     }
 }
 

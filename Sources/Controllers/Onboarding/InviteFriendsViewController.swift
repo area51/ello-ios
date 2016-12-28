@@ -2,14 +2,14 @@
 ///  InviteFriendsViewController.swift
 //
 
-public class InviteFriendsViewController: StreamableViewController {
+open class InviteFriendsViewController: StreamableViewController {
     let addressBook: AddressBookProtocol
     var mockScreen: Screen?
     var screen: Screen { return mockScreen ?? (self.view as! Screen) }
     var parentAppController: AppViewController?
     var searchString = SearchString(text: "")
-    public var onboardingViewController: OnboardingViewController?
-    public var onboardingData: OnboardingData!
+    open var onboardingViewController: OnboardingViewController?
+    open var onboardingData: OnboardingData!
 
     required public init(addressBook: AddressBookProtocol) {
         self.addressBook = addressBook
@@ -24,13 +24,13 @@ public class InviteFriendsViewController: StreamableViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override public func loadView() {
+    override open func loadView() {
         let screen = Screen()
         self.view = screen
         viewContainer = screen
     }
 
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
 
         streamViewController.searchStreamDelegate = self
@@ -38,12 +38,12 @@ public class InviteFriendsViewController: StreamableViewController {
         streamViewController.loadInitialPage()
     }
 
-    override public func showNavBars(scrollToBottom: Bool) {}
-    override public func hideNavBars() {}
+    override open func showNavBars(_ scrollToBottom: Bool) {}
+    override open func hideNavBars() {}
 }
 
 extension InviteFriendsViewController {
-    private func findFriendsFromContacts() {
+    fileprivate func findFriendsFromContacts() {
         ElloHUD.showLoadingHudInView(view)
         InviteService().find(addressBook,
             currentUser: self.currentUser,
@@ -53,25 +53,25 @@ extension InviteFriendsViewController {
                 self.streamViewController.doneLoading()
             },
             failure: { _ in
-                let mixedContacts: [(LocalPerson, User?)] = self.addressBook.localPeople.map { ($0, .None) }
+                let mixedContacts: [(LocalPerson, User?)] = self.addressBook.localPeople.map { ($0, .none) }
                 self.setContacts(mixedContacts)
                 self.streamViewController.doneLoading()
             })
     }
 
-    private func setContacts(contacts: [(LocalPerson, User?)]) {
+    fileprivate func setContacts(_ contacts: [(LocalPerson, User?)]) {
         ElloHUD.hideLoadingHudInView(view)
 
         let header = NSAttributedString(
             primaryHeader: InterfaceString.Onboard.InviteFriendsPrimary,
             secondaryHeader: InterfaceString.Onboard.InviteFriendsSecondary
             )
-        let headerCellItem = StreamCellItem(type: .TextHeader(header))
-        let searchItem = StreamCellItem(jsonable: searchString, type: .Search(placeholder: InterfaceString.Onboard.Search))
+        let headerCellItem = StreamCellItem(type: .textHeader(header))
+        let searchItem = StreamCellItem(jsonable: searchString, type: .search(placeholder: InterfaceString.Onboard.Search))
 
         let addressBookItems: [StreamCellItem] = AddressBookHelpers.process(contacts, currentUser: currentUser).map { item in
-            if item.type == .InviteFriends {
-                item.type = .OnboardingInviteFriends
+            if item.type == .inviteFriends {
+                item.type = .onboardingInviteFriends
             }
             return item
         }
@@ -86,8 +86,8 @@ extension InviteFriendsViewController: OnboardingStepController {
         onboardingViewController?.canGoNext = true
     }
 
-    public func onboardingWillProceed(abort: Bool, proceedClosure: (success: OnboardingViewController.OnboardingProceed) -> Void) {
-        proceedClosure(success: .Continue)
+    public func onboardingWillProceed(abort: Bool, proceedClosure: @escaping (_ success: OnboardingViewController.OnboardingProceed) -> Void) {
+        proceedClosure(.continue)
     }
 }
 

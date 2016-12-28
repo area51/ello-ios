@@ -5,10 +5,10 @@
 public struct EmptyStreamCellPresenter {
 
     public static func configure(
-        cell: UICollectionViewCell,
+        _ cell: UICollectionViewCell,
         streamCellItem: StreamCellItem,
         streamKind: StreamKind,
-        indexPath: NSIndexPath,
+        indexPath: IndexPath,
         currentUser: User?)
     {
         guard let cell = cell as? EmptyStreamCell else { return }

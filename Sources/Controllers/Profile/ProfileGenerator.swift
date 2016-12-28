@@ -8,24 +8,24 @@ public final class ProfileGenerator: StreamGenerator {
     public var streamKind: StreamKind
     weak public var destination: StreamDestination?
 
-    private var user: User?
-    private let userParam: String
-    private var posts: [Post]?
-    private var hasPosts: Bool?
-    private var localToken: String!
-    private var loadingToken = LoadingToken()
+    fileprivate var user: User?
+    fileprivate let userParam: String
+    fileprivate var posts: [Post]?
+    fileprivate var hasPosts: Bool?
+    fileprivate var localToken: String!
+    fileprivate var loadingToken = LoadingToken()
 
-    private let queue = NSOperationQueue()
+    fileprivate let queue = OperationQueue()
 
     func headerItems() -> [StreamCellItem] {
         guard let user = user else { return [] }
 
         var items = [
-            StreamCellItem(jsonable: user, type: .ProfileHeader),
+            StreamCellItem(jsonable: user, type: .profileHeader),
         ]
         if hasPosts != false {
             items += [
-                StreamCellItem(jsonable: user, type: .FullWidthSpacer(height: 5))
+                StreamCellItem(jsonable: user, type: .fullWidthSpacer(height: 5))
             ]
         }
         return items
@@ -46,7 +46,7 @@ public final class ProfileGenerator: StreamGenerator {
         self.destination = destination
     }
 
-    public func load(reload reload: Bool = false) {
+    public func load(reload: Bool = false) {
         let doneOperation = AsyncOperation()
         queue.addOperation(doneOperation)
 
@@ -58,12 +58,12 @@ public final class ProfileGenerator: StreamGenerator {
     }
 
     public func toggleGrid() {
-        if let posts = posts where hasPosts == true {
-            destination?.replacePlaceholder(.ProfilePosts, items: parse(posts)) {}
+        if let posts = posts, hasPosts == true {
+            destination?.replacePlaceholder(type: .profilePosts, items: parse(jsonables: posts)) {}
         }
-        else if let user = user where hasPosts == false {
-            let noItems = [StreamCellItem(jsonable: user, type: .NoPosts)]
-            destination?.replacePlaceholder(.ProfilePosts, items: noItems) {}
+        else if let user = user, hasPosts == false {
+            let noItems = [StreamCellItem(jsonable: user, type: .noPosts)]
+            destination?.replacePlaceholder(type: .profilePosts, items: noItems) {}
         }
     }
 
@@ -72,25 +72,25 @@ public final class ProfileGenerator: StreamGenerator {
 private extension ProfileGenerator {
 
     func setPlaceHolders() {
-        let header = StreamCellItem(type: .ProfileHeaderGhost, placeholderType: .ProfileHeader)
+        let header = StreamCellItem(type: .profileHeaderGhost, placeholderType: .profileHeader)
         header.calculatedCellHeights.oneColumn = ProfileHeaderGhostCell.Size.height
         header.calculatedCellHeights.multiColumn = ProfileHeaderGhostCell.Size.height
-        destination?.setPlaceholders([
+        destination?.setPlaceholders(items: [
             header,
-            StreamCellItem(type: .Placeholder, placeholderType: .ProfilePosts)
+            StreamCellItem(type: .placeholder, placeholderType: .profilePosts)
         ])
     }
 
-    func setInitialUser(doneOperation: AsyncOperation) {
+    func setInitialUser(_ doneOperation: AsyncOperation) {
         guard let user = user else { return }
 
-        destination?.setPrimaryJSONAble(user)
-        destination?.replacePlaceholder(.ProfileHeader, items: headerItems()) {}
+        destination?.setPrimary(jsonable: user)
+        destination?.replacePlaceholder(type: .profileHeader, items: headerItems()) {}
         doneOperation.run()
     }
 
-    func loadUser(doneOperation: AsyncOperation, reload: Bool = false) {
-        guard !doneOperation.finished || reload else { return }
+    func loadUser(_ doneOperation: AsyncOperation, reload: Bool = false) {
+        guard !doneOperation.isFinished || reload else { return }
 
         // load the user with no posts
         StreamService().loadUser(
@@ -101,8 +101,8 @@ private extension ProfileGenerator {
                 guard sself.loadingToken.isValidInitialPageLoadingToken(sself.localToken) else { return }
 
                 sself.user = user
-                sself.destination?.setPrimaryJSONAble(user)
-                sself.destination?.replacePlaceholder(.ProfileHeader, items: sself.headerItems()) {}
+                sself.destination?.setPrimary(jsonable: user)
+                sself.destination?.replacePlaceholder(type: .profileHeader, items: sself.headerItems()) {}
                 doneOperation.run()
             },
             failure: { [weak self] _ in
@@ -112,12 +112,12 @@ private extension ProfileGenerator {
         })
     }
 
-    func loadUserPosts(doneOperation: AsyncOperation) {
+    func loadUserPosts(_ doneOperation: AsyncOperation) {
         let displayPostsOperation = AsyncOperation()
         displayPostsOperation.addDependency(doneOperation)
         queue.addOperation(displayPostsOperation)
 
-        self.destination?.replacePlaceholder(.ProfilePosts, items: [StreamCellItem(type: .StreamLoading)]) {}
+        self.destination?.replacePlaceholder(type: .profilePosts, items: [StreamCellItem(type: .streamLoading)]) {}
 
         StreamService().loadUserPosts(
             userParam,
@@ -125,27 +125,27 @@ private extension ProfileGenerator {
                 guard let sself = self else { return }
                 guard sself.loadingToken.isValidInitialPageLoadingToken(sself.localToken) else { return }
 
-                sself.destination?.setPagingConfig(responseConfig)
+                sself.destination?.setPagingConfig(responseConfig: responseConfig)
                 sself.posts = posts
-                let userPostItems = sself.parse(posts)
+                let userPostItems = sself.parse(jsonables: posts)
                 displayPostsOperation.run {
                     inForeground {
                         if userPostItems.count == 0 {
                             sself.hasPosts = false
                             let user: User = sself.user ?? User.empty(id: sself.userParam)
-                            let noItems = [StreamCellItem(jsonable: user, type: .NoPosts)]
-                            sself.destination?.replacePlaceholder(.ProfilePosts, items: noItems) {
+                            let noItems = [StreamCellItem(jsonable: user, type: .noPosts)]
+                            sself.destination?.replacePlaceholder(type: .profilePosts, items: noItems) {
                                 sself.destination?.pagingEnabled = false
                             }
-                            sself.destination?.replacePlaceholder(.ProfileHeader, items: sself.headerItems()) {}
+                            sself.destination?.replacePlaceholder(type: .profileHeader, items: sself.headerItems()) {}
                         }
                         else {
                             let updateHeaderItems = sself.hasPosts == false
                             sself.hasPosts = true
                             if updateHeaderItems {
-                                sself.destination?.replacePlaceholder(.ProfileHeader, items: sself.headerItems()) {}
+                                sself.destination?.replacePlaceholder(type: .profileHeader, items: sself.headerItems()) {}
                             }
-                            sself.destination?.replacePlaceholder(.ProfilePosts, items: userPostItems) {
+                            sself.destination?.replacePlaceholder(type: .profilePosts, items: userPostItems) {
                                 sself.destination?.pagingEnabled = true
                             }
                         }

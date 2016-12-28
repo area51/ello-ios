@@ -12,7 +12,7 @@ public final class ElloComment: JSONAble, Authorable, Groupable {
 
     // active record
     public let id: String
-    public let createdAt: NSDate
+    public let createdAt: Date
     // required
     public let authorId: String
     public let postId: String
@@ -25,13 +25,13 @@ public final class ElloComment: JSONAble, Authorable, Groupable {
         return getLinkArray("assets") as? [Asset]
     }
     public var author: User? {
-        return ElloLinkedStore.sharedInstance.getObject(self.authorId, type: .UsersType) as? User
+        return ElloLinkedStore.sharedInstance.getObject(self.authorId, type: .usersType) as? User
     }
     public var parentPost: Post? {
-        return ElloLinkedStore.sharedInstance.getObject(self.postId, type: .PostsType) as? Post
+        return ElloLinkedStore.sharedInstance.getObject(self.postId, type: .postsType) as? Post
     }
     public var loadedFromPost: Post? {
-        return (ElloLinkedStore.sharedInstance.getObject(self.loadedFromPostId, type: .PostsType) as? Post) ?? parentPost
+        return (ElloLinkedStore.sharedInstance.getObject(self.loadedFromPostId, type: .postsType) as? Post) ?? parentPost
     }
     // computed properties
     public var groupId: String { return "Post-\(postId)" }
@@ -41,7 +41,7 @@ public final class ElloComment: JSONAble, Authorable, Groupable {
 // MARK: Initialization
 
     public init(id: String,
-        createdAt: NSDate,
+        createdAt: Date,
         authorId: String,
         postId: String,
         content: [Regionable])
@@ -75,7 +75,7 @@ public final class ElloComment: JSONAble, Authorable, Groupable {
         super.init(coder: decoder.coder)
     }
 
-    public override func encodeWithCoder(encoder: NSCoder) {
+    public override func encode(with encoder: NSCoder) {
         let coder = Coder(encoder)
         // active record
         coder.encodeObject(id, forKey: "id")
@@ -88,22 +88,22 @@ public final class ElloComment: JSONAble, Authorable, Groupable {
         // optional
         coder.encodeObject(body, forKey: "body")
         coder.encodeObject(summary, forKey: "summary")
-        super.encodeWithCoder(coder.coder)
+        super.encode(with: coder.coder)
     }
 
 // MARK: JSONAble
 
-    override class public func fromJSON(data: [String: AnyObject]) -> JSONAble {
+    override class public func fromJSON(_ data: [String: AnyObject]) -> JSONAble {
         let json = JSON(data)
-        Crashlytics.sharedInstance().setObjectValue(json.rawString(), forKey: CrashlyticsKey.CommentFromJSON.rawValue)
+        Crashlytics.sharedInstance().setObjectValue(json.rawString(), forKey: CrashlyticsKey.commentFromJSON.rawValue)
         // create comment
-        var createdAt: NSDate
-        if let date = json["created_at"].stringValue.toNSDate() {
+        var createdAt: Date
+        if let date = json["created_at"].stringValue.toDate() {
             // good to go
             createdAt = date
         }
         else {
-            createdAt = NSDate()
+            createdAt = Date()
             // send data to segment to try to get more data about this
             Tracker.sharedTracker.createdAtCrash("Comment", json: json.rawString())
         }
@@ -124,10 +124,10 @@ public final class ElloComment: JSONAble, Authorable, Groupable {
         return comment
     }
 
-    public class func newCommentForPost(post: Post, currentUser: User) -> ElloComment {
+    public class func newCommentForPost(_ post: Post, currentUser: User) -> ElloComment {
         let comment = ElloComment(
-            id: NSUUID().UUIDString,
-            createdAt: NSDate(),
+            id: UUID().uuidString,
+            createdAt: Date(),
             authorId: currentUser.id,
             postId: post.id,
             content: [Regionable]()

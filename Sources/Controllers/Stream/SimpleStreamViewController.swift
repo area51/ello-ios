@@ -4,8 +4,8 @@
 
 import Foundation
 
-public class SimpleStreamViewController: StreamableViewController {
-    override public func trackerName() -> String {
+open class SimpleStreamViewController: StreamableViewController {
+    override open func trackerName() -> String {
         return "\(endpoint.description)ViewController"
     }
 
@@ -22,10 +22,10 @@ public class SimpleStreamViewController: StreamableViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .whiteColor()
-        let streamKind = StreamKind.SimpleStream(endpoint: endpoint, title: title ?? "")
+        view.backgroundColor = .white
+        let streamKind = StreamKind.simpleStream(endpoint: endpoint, title: title ?? "")
 
         setupNavigationBar()
         setupNavigationItems(streamKind: streamKind)
@@ -41,14 +41,14 @@ public class SimpleStreamViewController: StreamableViewController {
         return view
     }
 
-    override public func didSetCurrentUser() {
-        if isViewLoaded() {
+    override open func didSetCurrentUser() {
+        if isViewLoaded {
             streamViewController.currentUser = currentUser
         }
         super.didSetCurrentUser()
     }
 
-    override public func showNavBars(scrollToBottom: Bool) {
+    override open func showNavBars(_ scrollToBottom: Bool) {
         super.showNavBars(scrollToBottom)
         positionNavBar(navigationBar, visible: true)
         updateInsets()
@@ -58,7 +58,7 @@ public class SimpleStreamViewController: StreamableViewController {
         }
     }
 
-    override public func hideNavBars() {
+    override open func hideNavBars() {
         super.hideNavBars()
         positionNavBar(navigationBar, visible: false)
         updateInsets()
@@ -66,17 +66,17 @@ public class SimpleStreamViewController: StreamableViewController {
 
     // MARK: Private
 
-    private func updateInsets() {
+    fileprivate func updateInsets() {
         updateInsets(navBar: navigationBar, streamController: streamViewController)
     }
 
-    private func setupNavigationBar() {
+    fileprivate func setupNavigationBar() {
         navigationBar = ElloNavigationBar(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: ElloNavigationBar.Size.height))
-        navigationBar.autoresizingMask = [.FlexibleBottomMargin, .FlexibleWidth]
+        navigationBar.autoresizingMask = [.flexibleBottomMargin, .flexibleWidth]
         view.addSubview(navigationBar)
     }
 
-    private func setupNavigationItems(streamKind streamKind: StreamKind) {
+    fileprivate func setupNavigationItems(streamKind: StreamKind) {
         let backItem = UIBarButtonItem.backChevron(withController: self)
         elloNavigationItem.leftBarButtonItems = [backItem]
         elloNavigationItem.fixNavBarItemPadding()

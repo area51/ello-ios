@@ -7,7 +7,7 @@ import Keys
 
 
 public protocol KeychainType {
-    var pushToken: NSData? { get set }
+    var pushToken: Data? { get set }
     var authToken: String? { get set }
     var refreshAuthToken: String? { get set }
     var authTokenType: String? { get set }
@@ -32,7 +32,7 @@ public struct ElloKeychain: KeychainType {
         keychain = Keychain(service: "co.ello.Ello", accessGroup: "\(appIdentifierPrefix).co.ello.Ello")
     }
 
-    public var pushToken: NSData? {
+    public var pushToken: Data? {
         get { return keychain[data: PushToken] }
         set { keychain[data: PushToken] = newValue }
     }
@@ -65,8 +65,8 @@ public struct ElloKeychain: KeychainType {
     public var isPasswordBased: Bool? {
         get {
             if let tryData = try? keychain.getData(AuthTokenAuthenticated),
-                data = tryData,
-                number = NSKeyedUnarchiver.unarchiveObjectWithData(data) as? NSNumber
+                let data = tryData,
+                let number = NSKeyedUnarchiver.unarchiveObject(with: data) as? NSNumber
             {
                 return number.boolValue
             }
@@ -75,8 +75,8 @@ public struct ElloKeychain: KeychainType {
         set {
             do {
                 if let newValue = newValue {
-                    let boolAsNumber = NSNumber(bool: newValue)
-                    let data = NSKeyedArchiver.archivedDataWithRootObject(boolAsNumber)
+                    let boolAsNumber = NSNumber(value: newValue as Bool)
+                    let data = NSKeyedArchiver.archivedData(withRootObject: boolAsNumber)
                     try keychain.set(data, key: AuthTokenAuthenticated)
                 }
                 else {
@@ -92,7 +92,7 @@ public struct ElloKeychain: KeychainType {
 
 extension Keychain {
 
-    public func updateIfNeeded(value: String, key: String) throws {
+    public func updateIfNeeded(_ value: String, key: String) throws {
         if self[key] != value {
             try self.set(value, key: key)
         }

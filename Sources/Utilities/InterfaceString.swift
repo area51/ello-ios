@@ -95,8 +95,8 @@ public struct InterfaceString {
                 buildVersion = "specs"
             }
             else {
-                marketingVersion = (NSBundle.mainBundle().infoDictionary?["CFBundleShortVersionString"] as? String) ?? "???"
-                buildVersion = (NSBundle.mainBundle().infoDictionary?["CFBundleVersion"] as? String) ?? "???"
+                marketingVersion = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? "???"
+                buildVersion = (Bundle.main.infoDictionary?["CFBundleVersion"] as? String) ?? "???"
              }
             return NSLocalizedString("Ello v\(marketingVersion) b\(buildVersion)", comment: "version number")
         }()

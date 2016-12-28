@@ -8,7 +8,7 @@ import Foundation
 public struct ProfileNamesPresenter {
 
     public static func configure(
-        view: ProfileNamesView,
+        _ view: ProfileNamesView,
         user: User,
         currentUser: User?)
     {

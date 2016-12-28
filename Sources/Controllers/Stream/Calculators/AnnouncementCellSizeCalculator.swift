@@ -2,19 +2,19 @@
 ///  AnnouncementCellSizeCalculator.swift
 //
 
-public class AnnouncementCellSizeCalculator {
+open class AnnouncementCellSizeCalculator {
     var originalWidth: CGFloat = 0
 
-    private typealias CellJob = (cellItems: [StreamCellItem], width: CGFloat, completion: ElloEmptyCompletion)
-    private var cellJobs: [CellJob] = []
-    private var cellItems: [StreamCellItem] = []
-    private var completion: ElloEmptyCompletion = {}
+    fileprivate typealias CellJob = (cellItems: [StreamCellItem], width: CGFloat, completion: ElloEmptyCompletion)
+    fileprivate var cellJobs: [CellJob] = []
+    fileprivate var cellItems: [StreamCellItem] = []
+    fileprivate var completion: ElloEmptyCompletion = {}
 
     public init() {}
 
 // MARK: Public
 
-    public static func calculateAnnouncementHeight(announcement: Announcement, cellWidth: CGFloat) -> CGFloat {
+    open static func calculateAnnouncementHeight(_ announcement: Announcement, cellWidth: CGFloat) -> CGFloat {
         let attributedTitle = NSAttributedString(label: announcement.header, style: .BoldWhite)
         let attributedBody = NSAttributedString(label: announcement.body, style: .White)
         let attributedCTA = NSAttributedString(button: announcement.ctaCaption, style: .WhiteUnderlined)
@@ -31,7 +31,7 @@ public class AnnouncementCellSizeCalculator {
         return calcHeight
     }
 
-    public func processCells(cellItems: [StreamCellItem], withWidth width: CGFloat, completion: ElloEmptyCompletion) {
+    open func processCells(_ cellItems: [StreamCellItem], withWidth width: CGFloat, completion: @escaping ElloEmptyCompletion) {
         let job: CellJob = (cellItems: cellItems, width: width, completion: completion)
         cellJobs.append(job)
         if cellJobs.count == 1 {
@@ -41,10 +41,10 @@ public class AnnouncementCellSizeCalculator {
 
 // MARK: Private
 
-    private func processJob(job: CellJob) {
+    fileprivate func processJob(_ job: CellJob) {
         self.completion = {
             if self.cellJobs.count > 0 {
-                self.cellJobs.removeAtIndex(0)
+                self.cellJobs.remove(at: 0)
             }
             job.completion()
             if let nextJob = self.cellJobs.safeValue(0) {
@@ -56,7 +56,7 @@ public class AnnouncementCellSizeCalculator {
         loadNext()
     }
 
-    private func loadNext() {
+    fileprivate func loadNext() {
         if let item = self.cellItems.safeValue(0) {
             if let announcement = item.jsonable as? Announcement {
                 assignCellHeight(AnnouncementCellSizeCalculator.calculateAnnouncementHeight(announcement, cellWidth: originalWidth))
@@ -70,9 +70,9 @@ public class AnnouncementCellSizeCalculator {
         }
     }
 
-    private func assignCellHeight(_ height: CGFloat) {
+    fileprivate func assignCellHeight(_ height: CGFloat) {
         if let cellItem = self.cellItems.safeValue(0) {
-            self.cellItems.removeAtIndex(0)
+            self.cellItems.remove(at: 0)
             cellItem.calculatedCellHeights.oneColumn = height
             cellItem.calculatedCellHeights.multiColumn = height
         }

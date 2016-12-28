@@ -4,7 +4,7 @@
 
 extension OmnibarScreen: BuyButtonLinkControllerDelegate {
 
-    public func submitBuyButtonLink(url: NSURL) {
+    public func submitBuyButtonLink(_ url: URL) {
         buyButtonURL = url
         regionsTableView.reloadData()
     }

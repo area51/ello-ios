@@ -16,11 +16,11 @@ public final class Profile: JSONAble {
 
     // active record
     public let id: String
-    public let createdAt: NSDate
+    public let createdAt: Date
     // required
     public let shortBio: String
     public let email: String
-    public let confirmedAt: NSDate
+    public let confirmedAt: Date
     public var isPublic: Bool
     public var mutedCount: Int
     public var blockedCount: Int
@@ -55,10 +55,10 @@ public final class Profile: JSONAble {
 
     public init(
         id: String,
-        createdAt: NSDate,
+        createdAt: Date,
         shortBio: String,
         email: String,
-        confirmedAt: NSDate,
+        confirmedAt: Date,
         isPublic: Bool,
         mutedCount: Int,
         blockedCount: Int,
@@ -186,7 +186,7 @@ public final class Profile: JSONAble {
         super.init(coder: decoder.coder)
     }
 
-    public override func encodeWithCoder(encoder: NSCoder) {
+    public override func encode(with encoder: NSCoder) {
         let coder = Coder(encoder)
         // active record
         coder.encodeObject(id, forKey: "id")
@@ -224,21 +224,21 @@ public final class Profile: JSONAble {
         coder.encodeObject(notifyOfCommentsOnPostWatchViaPush, forKey: "notifyOfCommentsOnPostWatchViaPush")
         coder.encodeObject(notifyOfCommentsOnPostWatchViaEmail, forKey: "notifyOfCommentsOnPostWatchViaEmail")
         coder.encodeObject(discoverable, forKey: "discoverable")
-        super.encodeWithCoder(coder.coder)
+        super.encode(with: coder.coder)
     }
 
 // MARK: JSONAble
 
-    override public class func fromJSON(data: [String: AnyObject]) -> JSONAble {
+    override public class func fromJSON(_ data: [String: AnyObject]) -> JSONAble {
         let json = JSON(data)
-        Crashlytics.sharedInstance().setObjectValue(json.rawString(), forKey: CrashlyticsKey.ProfileFromJSON.rawValue)
+        Crashlytics.sharedInstance().setObjectValue(json.rawString(), forKey: CrashlyticsKey.profileFromJSON.rawValue)
         // create profile
         let profile = Profile(
-            id: json["id"].stringValue ?? "",
-            createdAt: (json["created_at"].stringValue.toNSDate() ?? NSDate()),
+            id: json["id"].string ?? "",
+            createdAt: (json["created_at"].stringValue.toDate() ?? Date()),
             shortBio: json["short_bio"].stringValue,
             email: json["email"].stringValue,
-            confirmedAt: (json["confirmed_at"].stringValue.toNSDate() ?? NSDate()),
+            confirmedAt: (json["confirmed_at"].stringValue.toDate() ?? Date()),
             isPublic: json["is_public"].boolValue,
             mutedCount: json["muted_count"].intValue,
             blockedCount: json["blocked_count"].intValue,

@@ -3,27 +3,53 @@
 //
 
 import Foundation
-
-public protocol PostbarDelegate: class {
-    func viewsButtonTapped(indexPath: NSIndexPath)
-    func commentsButtonTapped(cell: StreamFooterCell, imageLabelControl: ImageLabelControl)
-    func deleteCommentButtonTapped(indexPath: NSIndexPath)
-    func editCommentButtonTapped(indexPath: NSIndexPath)
-    func lovesButtonTapped(cell: StreamFooterCell?, indexPath: NSIndexPath)
-    func repostButtonTapped(indexPath: NSIndexPath)
-    func shareButtonTapped(indexPath: NSIndexPath, sourceView: UIView)
-    func flagCommentButtonTapped(indexPath: NSIndexPath)
-    func replyToCommentButtonTapped(indexPath: NSIndexPath)
-    func replyToAllButtonTapped(indexPath: NSIndexPath)
-    func watchPostTapped(watching: Bool, cell: StreamCreateCommentCell, indexPath: NSIndexPath)
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+// Xcode modifies these regardless of changing them
+// swiftlint:disable colon
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
 }
 
-public class PostbarController: PostbarDelegate {
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
+// swiftlint:enable colon
+public protocol PostbarDelegate: class {
+    func viewsButtonTapped(_ indexPath: IndexPath)
+    func commentsButtonTapped(_ cell: StreamFooterCell, imageLabelControl: ImageLabelControl)
+    func deleteCommentButtonTapped(_ indexPath: IndexPath)
+    func editCommentButtonTapped(_ indexPath: IndexPath)
+    func lovesButtonTapped(_ cell: StreamFooterCell?, indexPath: IndexPath)
+    func repostButtonTapped(_ indexPath: IndexPath)
+    func shareButtonTapped(_ indexPath: IndexPath, sourceView: UIView)
+    func flagCommentButtonTapped(_ indexPath: IndexPath)
+    func replyToCommentButtonTapped(_ indexPath: IndexPath)
+    func replyToAllButtonTapped(_ indexPath: IndexPath)
+    func watchPostTapped(_ watching: Bool, cell: StreamCreateCommentCell, indexPath: IndexPath)
+}
+
+open class PostbarController: PostbarDelegate {
 
     weak var presentingController: StreamViewController?
-    public var collectionView: UICollectionView
-    public let dataSource: StreamDataSource
-    public var currentUser: User?
+    open var collectionView: UICollectionView
+    open let dataSource: StreamDataSource
+    open var currentUser: User?
 
     // on the post detail screen, the comments don't show/hide
     var toggleableComments: Bool = true
@@ -36,7 +62,7 @@ public class PostbarController: PostbarDelegate {
 
     // MARK:
 
-    public func viewsButtonTapped(indexPath: NSIndexPath) {
+    open func viewsButtonTapped(_ indexPath: IndexPath) {
         if let post = postForIndexPath(indexPath) {
             Tracker.sharedTracker.viewsButtonTapped(post: post)
             // This is a bit dirty, we should not call a method on a compositionally held
@@ -45,10 +71,10 @@ public class PostbarController: PostbarDelegate {
         }
     }
 
-    public func commentsButtonTapped(cell: StreamFooterCell, imageLabelControl: ImageLabelControl) {
+    open func commentsButtonTapped(_ cell: StreamFooterCell, imageLabelControl: ImageLabelControl) {
         guard !dataSource.streamKind.isGridView else {
             cell.cancelCommentLoading()
-            if let indexPath = collectionView.indexPathForCell(cell) {
+            if let indexPath = collectionView.indexPath(for: cell) {
                 self.viewsButtonTapped(indexPath)
             }
             return
@@ -63,24 +89,24 @@ public class PostbarController: PostbarDelegate {
             return
         }
 
-        if let indexPath = collectionView.indexPathForCell(cell),
-            item = dataSource.visibleStreamCellItem(at: indexPath),
-            post = item.jsonable as? Post
+        if let indexPath = collectionView.indexPath(for: cell),
+            let item = dataSource.visibleStreamCellItem(at: indexPath),
+            let post = item.jsonable as? Post
         {
-            imageLabelControl.selected = cell.commentsOpened
-            cell.commentsControl.enabled = false
+            imageLabelControl.isSelected = cell.commentsOpened
+            cell.commentsControl.isEnabled = false
 
             if !cell.commentsOpened {
-                let indexPaths = self.dataSource.removeCommentsForPost(post)
-                self.collectionView.reloadData() // deleteItemsAtIndexPaths(indexPaths)
-                item.state = .Collapsed
-                imageLabelControl.enabled = true
+                _ = self.dataSource.removeCommentsFor(post: post)
+                self.collectionView.reloadData()
+                item.state = .collapsed
+                imageLabelControl.isEnabled = true
                 imageLabelControl.finishAnimation()
-                imageLabelControl.highlighted = false
+                imageLabelControl.isHighlighted = false
             }
             else {
-                item.state = .Loading
-                imageLabelControl.highlighted = true
+                item.state = .loading
+                imageLabelControl.isHighlighted = true
                 imageLabelControl.animate()
                 let streamService = StreamService()
                 streamService.loadMoreCommentsForPost(
@@ -88,23 +114,23 @@ public class PostbarController: PostbarDelegate {
                     streamKind: dataSource.streamKind,
                     success: { (comments, responseConfig) in
                         if let updatedIndexPath = self.dataSource.indexPathForItem(item) {
-                            item.state = .Expanded
+                            item.state = .expanded
                             imageLabelControl.finishAnimation()
-                            let nextIndexPath = NSIndexPath(forItem: updatedIndexPath.row + 1, inSection: updatedIndexPath.section)
+                            let nextIndexPath = IndexPath(item: updatedIndexPath.row + 1, section: updatedIndexPath.section)
                             self.commentLoadSuccess(post, comments: comments, indexPath: nextIndexPath, cell: cell)
                         }
                     },
                     failure: { _ in
-                        item.state = .Collapsed
+                        item.state = .collapsed
                         imageLabelControl.finishAnimation()
                         cell.cancelCommentLoading()
                         print("comment load failure")
                     },
                     noContent: {
-                        item.state = .Expanded
+                        item.state = .expanded
                         imageLabelControl.finishAnimation()
                         if let updatedIndexPath = self.dataSource.indexPathForItem(item) {
-                            let nextIndexPath = NSIndexPath(forItem: updatedIndexPath.row + 1, inSection: updatedIndexPath.section)
+                            let nextIndexPath = IndexPath(item: updatedIndexPath.row + 1, section: updatedIndexPath.section)
                             self.commentLoadSuccess(post, comments: [], indexPath: nextIndexPath, cell: cell)
                         }
                     })
@@ -115,62 +141,62 @@ public class PostbarController: PostbarDelegate {
         }
     }
 
-    public func deleteCommentButtonTapped(indexPath: NSIndexPath) {
+    open func deleteCommentButtonTapped(_ indexPath: IndexPath) {
         let message = InterfaceString.Post.DeleteCommentConfirm
         let alertController = AlertViewController(message: message)
 
-        let yesAction = AlertAction(title: InterfaceString.Yes, style: .Dark) {
+        let yesAction = AlertAction(title: InterfaceString.Yes, style: .dark) {
             action in
             if let comment = self.commentForIndexPath(indexPath) {
                 // comment deleted
-                postNotification(CommentChangedNotification, value: (comment, .Delete))
+                postNotification(CommentChangedNotification, value: (comment, .delete))
                 // post comment count updated
                 ContentChange.updateCommentCount(comment, delta: -1)
                 PostService().deleteComment(comment.postId, commentId: comment.id,
-                    success: nil,
+                    success: {},
                     failure: { (error, statusCode)  in
                         // TODO: add error handling
                         print("failed to delete comment, error: \(error.elloErrorMessage ?? error.localizedDescription)")
                     })
             }
         }
-        let noAction = AlertAction(title: InterfaceString.No, style: .Light, handler: .None)
+        let noAction = AlertAction(title: InterfaceString.No, style: .light, handler: .none)
 
         alertController.addAction(yesAction)
         alertController.addAction(noAction)
 
         logPresentingAlert(presentingController?.readableClassName() ?? "PostbarController")
-        presentingController?.presentViewController(alertController, animated: true, completion: .None)
+        presentingController?.present(alertController, animated: true, completion: .none)
     }
 
-    public func editCommentButtonTapped(indexPath: NSIndexPath) {
+    open func editCommentButtonTapped(_ indexPath: IndexPath) {
         // This is a bit dirty, we should not call a method on a compositionally held
         // controller's createPostDelegate. Can this use the responder chain when we have
         // parameters to pass?
         if let comment = self.commentForIndexPath(indexPath),
-            presentingController = presentingController
+            let presentingController = presentingController
         {
             presentingController.createPostDelegate?.editComment(comment, fromController: presentingController)
         }
     }
 
-    public func lovesButtonTapped(cell: StreamFooterCell?, indexPath: NSIndexPath) {
+    open func lovesButtonTapped(_ cell: StreamFooterCell?, indexPath: IndexPath) {
         if let post = self.postForIndexPath(indexPath) {
             Tracker.sharedTracker.postLoved(post)
-            cell?.lovesControl.userInteractionEnabled = false
+            cell?.lovesControl.isUserInteractionEnabled = false
             if post.loved { unlovePost(post, cell: cell) }
             else { lovePost(post, cell: cell) }
         }
     }
 
-    private func unlovePost(post: Post, cell: StreamFooterCell?) {
+    fileprivate func unlovePost(_ post: Post, cell: StreamFooterCell?) {
         Tracker.sharedTracker.postUnloved(post)
         if let count = post.lovesCount {
             post.lovesCount = count - 1
             post.loved = false
-            postNotification(PostChangedNotification, value: (post, .Loved))
+            postNotification(PostChangedNotification, value: (post, .loved))
         }
-        if let user = currentUser, userLoveCount = user.lovesCount {
+        if let user = currentUser, let userLoveCount = user.lovesCount {
             user.lovesCount = userLoveCount - 1
             postNotification(CurrentUserChangedNotification, value: user)
         }
@@ -178,48 +204,48 @@ public class PostbarController: PostbarDelegate {
         service.unlovePost(
             postId: post.id,
             success: {
-                cell?.lovesControl.userInteractionEnabled = true
+                cell?.lovesControl.isUserInteractionEnabled = true
             },
             failure: { error, statusCode in
-                cell?.lovesControl.userInteractionEnabled = true
+                cell?.lovesControl.isUserInteractionEnabled = true
                 print("failed to unlove post \(post.id), error: \(error.elloErrorMessage ?? error.localizedDescription)")
             })
     }
 
-    private func lovePost(post: Post, cell: StreamFooterCell?) {
+    fileprivate func lovePost(_ post: Post, cell: StreamFooterCell?) {
         Tracker.sharedTracker.postLoved(post)
         if let count = post.lovesCount {
             post.lovesCount = count + 1
             post.loved = true
-            postNotification(PostChangedNotification, value: (post, .Loved))
+            postNotification(PostChangedNotification, value: (post, .loved))
         }
-        if let user = currentUser, userLoveCount = user.lovesCount {
+        if let user = currentUser, let userLoveCount = user.lovesCount {
             user.lovesCount = userLoveCount + 1
             postNotification(CurrentUserChangedNotification, value: user)
         }
         LovesService().lovePost(
             postId: post.id,
             success: { (love, responseConfig) in
-                postNotification(JSONAbleChangedNotification, value: (love, .Create))
-                cell?.lovesControl.userInteractionEnabled = true
+                postNotification(JSONAbleChangedNotification, value: (love, .create))
+                cell?.lovesControl.isUserInteractionEnabled = true
             },
             failure: { error, statusCode in
-                cell?.lovesControl.userInteractionEnabled = true
+                cell?.lovesControl.isUserInteractionEnabled = true
                 print("failed to love post \(post.id), error: \(error.elloErrorMessage ?? error.localizedDescription)")
             })
     }
 
-    public func repostButtonTapped(indexPath: NSIndexPath) {
+    open func repostButtonTapped(_ indexPath: IndexPath) {
         if let post = self.postForIndexPath(indexPath) {
             Tracker.sharedTracker.postReposted(post)
             let message = InterfaceString.Post.RepostConfirm
             let alertController = AlertViewController(message: message)
             alertController.autoDismiss = false
 
-            let yesAction = AlertAction(title: InterfaceString.Yes, style: .Dark) { action in
+            let yesAction = AlertAction(title: InterfaceString.Yes, style: .dark) { action in
                 self.createRepost(post, alertController: alertController)
             }
-            let noAction = AlertAction(title: InterfaceString.No, style: .Light) { action in
+            let noAction = AlertAction(title: InterfaceString.No, style: .light) { action in
                 alertController.dismiss()
             }
 
@@ -227,11 +253,11 @@ public class PostbarController: PostbarDelegate {
             alertController.addAction(noAction)
 
             logPresentingAlert(presentingController?.readableClassName() ?? "PostbarController")
-            presentingController?.presentViewController(alertController, animated: true, completion: .None)
+            presentingController?.present(alertController, animated: true, completion: .none)
         }
     }
 
-    private func createRepost(post: Post, alertController: AlertViewController)
+    fileprivate func createRepost(_ post: Post, alertController: AlertViewController)
     {
         alertController.resetActions()
         alertController.dismissable = false
@@ -242,13 +268,13 @@ public class PostbarController: PostbarDelegate {
         spinnerContainer.addSubview(spinner)
         alertController.contentView = spinnerContainer
         spinner.animateLogo()
-        if let user = currentUser, userPostsCount = user.postsCount {
+        if let user = currentUser, let userPostsCount = user.postsCount {
             user.postsCount = userPostsCount + 1
             postNotification(CurrentUserChangedNotification, value: user)
         }
         RePostService().repost(post: post,
             success: { repost in
-                postNotification(PostChangedNotification, value: (repost, .Create))
+                postNotification(PostChangedNotification, value: (repost, .create))
                 alertController.contentView = nil
                 alertController.message = InterfaceString.Post.RepostSuccess
                 delay(1) {
@@ -259,40 +285,40 @@ public class PostbarController: PostbarDelegate {
                 alertController.message = InterfaceString.Post.RepostError
                 alertController.autoDismiss = true
                 alertController.dismissable = true
-                let okAction = AlertAction(title: InterfaceString.OK, style: .Light, handler: .None)
+                let okAction = AlertAction(title: InterfaceString.OK, style: .light, handler: .none)
                 alertController.addAction(okAction)
             })
     }
 
-    public func shareButtonTapped(indexPath: NSIndexPath, sourceView: UIView) {
+    open func shareButtonTapped(_ indexPath: IndexPath, sourceView: UIView) {
         if let post = dataSource.postForIndexPath(indexPath),
-            shareLink = post.shareLink,
-            shareURL = NSURL(string: shareLink)
+            let shareLink = post.shareLink,
+            let shareURL = URL(string: shareLink)
         {
             Tracker.sharedTracker.postShared(post)
             let activityVC = UIActivityViewController(activityItems: [shareURL], applicationActivities: [SafariActivity()])
-            if UI_USER_INTERFACE_IDIOM() == .Phone {
-                activityVC.modalPresentationStyle = .FullScreen
+            if UI_USER_INTERFACE_IDIOM() == .phone {
+                activityVC.modalPresentationStyle = .fullScreen
                 logPresentingAlert(presentingController?.readableClassName() ?? "PostbarController")
-                presentingController?.presentViewController(activityVC, animated: true) { }
+                presentingController?.present(activityVC, animated: true) { }
             }
             else {
-                activityVC.modalPresentationStyle = .Popover
+                activityVC.modalPresentationStyle = .popover
                 activityVC.popoverPresentationController?.sourceView = sourceView
                 logPresentingAlert(presentingController?.readableClassName() ?? "PostbarController")
-                presentingController?.presentViewController(activityVC, animated: true) { }
+                presentingController?.present(activityVC, animated: true) { }
             }
         }
     }
 
-    public func flagCommentButtonTapped(indexPath: NSIndexPath) {
+    open func flagCommentButtonTapped(_ indexPath: IndexPath) {
         if let comment = commentForIndexPath(indexPath),
-            presentingController = presentingController
+            let presentingController = presentingController
         {
             let flagger = ContentFlagger(
                 presentingController: presentingController,
                 flaggableId: comment.id,
-                contentType: .Comment,
+                contentType: .comment,
                 commentPostId: comment.postId
             )
 
@@ -300,27 +326,27 @@ public class PostbarController: PostbarDelegate {
         }
     }
 
-    public func replyToCommentButtonTapped(indexPath: NSIndexPath) {
+    open func replyToCommentButtonTapped(_ indexPath: IndexPath) {
         if let comment = commentForIndexPath(indexPath) {
             // This is a bit dirty, we should not call a method on a compositionally held
             // controller's createPostDelegate. Can this use the responder chain when we have
             // parameters to pass?
             if let presentingController = presentingController,
-                post = comment.loadedFromPost,
-                atName = comment.author?.atName
+                let post = comment.loadedFromPost,
+                let atName = comment.author?.atName
             {
                 presentingController.createPostDelegate?.createComment(post, text: "\(atName) ", fromController: presentingController)
             }
         }
     }
 
-    public func replyToAllButtonTapped(indexPath: NSIndexPath) {
+    open func replyToAllButtonTapped(_ indexPath: IndexPath) {
         // This is a bit dirty, we should not call a method on a compositionally held
         // controller's createPostDelegate. Can this use the responder chain when we have
         // parameters to pass?
         if let comment = commentForIndexPath(indexPath),
-            presentingController = presentingController,
-            post = comment.loadedFromPost
+            let presentingController = presentingController,
+            let post = comment.loadedFromPost
         {
             PostService().loadReplyAll(post.id, success: { usernames in
                 let usernamesText = usernames.reduce("") { memo, username in
@@ -333,48 +359,48 @@ public class PostbarController: PostbarDelegate {
         }
     }
 
-    public func watchPostTapped(watching: Bool, cell: StreamCreateCommentCell, indexPath: NSIndexPath) {
+    open func watchPostTapped(_ watching: Bool, cell: StreamCreateCommentCell, indexPath: IndexPath) {
         guard let
             comment = dataSource.commentForIndexPath(indexPath),
-            post = comment.parentPost
+            let post = comment.parentPost
         else { return }
 
         cell.watching = watching
-        cell.userInteractionEnabled = false
+        cell.isUserInteractionEnabled = false
         PostService().toggleWatchPost(post, watching: watching)
             .onSuccess { post in
-                cell.userInteractionEnabled = true
-                postNotification(PostChangedNotification, value: (post, .Watching))
+                cell.isUserInteractionEnabled = true
+                postNotification(PostChangedNotification, value: (post, .watching))
             }
             .onFail { error in
-                cell.userInteractionEnabled = true
+                cell.isUserInteractionEnabled = true
                 cell.watching = !watching
             }
     }
 
 // MARK: - Private
 
-    private func postForIndexPath(indexPath: NSIndexPath) -> Post? {
+    fileprivate func postForIndexPath(_ indexPath: IndexPath) -> Post? {
         return dataSource.postForIndexPath(indexPath)
     }
 
-    private func commentForIndexPath(indexPath: NSIndexPath) -> ElloComment? {
+    fileprivate func commentForIndexPath(_ indexPath: IndexPath) -> ElloComment? {
         return dataSource.commentForIndexPath(indexPath)
     }
 
-    private func commentLoadSuccess(post: Post, comments jsonables: [JSONAble], indexPath: NSIndexPath, cell: StreamFooterCell) {
+    fileprivate func commentLoadSuccess(_ post: Post, comments jsonables: [JSONAble], indexPath: IndexPath, cell: StreamFooterCell) {
         self.appendCreateCommentItem(post, at: indexPath)
-        let commentsStartingIndexPath = NSIndexPath(forRow: indexPath.row + 1, inSection: indexPath.section)
+        let commentsStartingIndexPath = IndexPath(row: indexPath.row + 1, section: indexPath.section)
 
-        var items = StreamCellItemParser().parse(jsonables, streamKind: StreamKind.Following, currentUser: currentUser)
+        var items = StreamCellItemParser().parse(jsonables, streamKind: StreamKind.following, currentUser: currentUser)
 
         if let currentUser = currentUser {
             let newComment = ElloComment.newCommentForPost(post, currentUser: currentUser)
-            if post.commentsCount > ElloAPI.PostComments(postId: "").parameters!["per_page"] as? Int {
-                items.append(StreamCellItem(jsonable: jsonables.last ?? newComment, type: .SeeMoreComments))
+            if post.commentsCount > ElloAPI.postComments(postId: "").parameters!["per_page"] as? Int {
+                items.append(StreamCellItem(jsonable: jsonables.last ?? newComment, type: .seeMoreComments))
             }
             else {
-                items.append(StreamCellItem(jsonable: newComment, type: .Spacer(height: 10.0)))
+                items.append(StreamCellItem(jsonable: newComment, type: .spacer(height: 10.0)))
             }
         }
 
@@ -382,7 +408,7 @@ public class PostbarController: PostbarDelegate {
             withWidth: self.collectionView.frame.width,
             startingIndexPath: commentsStartingIndexPath) { (indexPaths) in
                 self.collectionView.reloadData() // insertItemsAtIndexPaths(indexPaths)
-                cell.commentsControl.enabled = true
+                cell.commentsControl.isEnabled = true
 
                 if indexPaths.count == 1 && jsonables.count == 0 {
                     self.presentingController?.createCommentTapped(post)
@@ -390,18 +416,18 @@ public class PostbarController: PostbarDelegate {
             }
     }
 
-    private func appendCreateCommentItem(post: Post, at indexPath: NSIndexPath) {
+    fileprivate func appendCreateCommentItem(_ post: Post, at indexPath: IndexPath) {
         if let currentUser = currentUser {
             let comment = ElloComment.newCommentForPost(post, currentUser: currentUser)
-            let createCommentItem = StreamCellItem(jsonable: comment, type: .CreateComment)
+            let createCommentItem = StreamCellItem(jsonable: comment, type: .createComment)
 
             let items = [createCommentItem]
             self.dataSource.insertStreamCellItems(items, startingIndexPath: indexPath)
-            self.collectionView.reloadData() // insertItemsAtIndexPaths([indexPath])
+            self.collectionView.reloadData() // insertItemsAtIndexPaths([indexPath]) //
         }
     }
 
-    private func commentLoadFailure(error: NSError, statusCode: Int?) {
+    fileprivate func commentLoadFailure(_ error: NSError, statusCode: Int?) {
     }
 
 }

@@ -10,7 +10,7 @@ class ResponseConfigSpec: QuickSpec {
                 it("returns true") {
                     let config = ResponseConfig()
                     config.totalPagesRemaining = "0"
-                    config.nextQueryItems = ["Foo"]
+                    config.nextQueryItems = ["Foo" as AnyObject]
 
                     expect(config.isOutOfData()).to(beTrue())
                 }
@@ -19,8 +19,8 @@ class ResponseConfigSpec: QuickSpec {
             context("when the number of remaining pages is nil") {
                 it("returns true") {
                     let config = ResponseConfig()
-                    config.totalPagesRemaining = .None
-                    config.nextQueryItems = ["Foo"]
+                    config.totalPagesRemaining = .none
+                    config.nextQueryItems = ["Foo" as AnyObject]
 
                     expect(config.isOutOfData()).to(beTrue())
                 }
@@ -40,7 +40,7 @@ class ResponseConfigSpec: QuickSpec {
                 it("returns true") {
                     let config = ResponseConfig()
                     config.totalPagesRemaining = "1"
-                    config.nextQueryItems = .None
+                    config.nextQueryItems = .none
 
                     expect(config.isOutOfData()).to(beTrue())
                 }
@@ -50,7 +50,7 @@ class ResponseConfigSpec: QuickSpec {
                 it("returns false") {
                     let config = ResponseConfig()
                     config.totalPagesRemaining = "1"
-                    config.nextQueryItems = ["Foo"]
+                    config.nextQueryItems = ["Foo" as AnyObject]
 
                     expect(config.isOutOfData()).to(beFalse())
                 }

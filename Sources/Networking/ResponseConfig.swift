@@ -4,8 +4,8 @@
 
 import Foundation
 
-public class ResponseConfig: CustomStringConvertible {
-    public var description: String {
+open class ResponseConfig: CustomStringConvertible {
+    open var description: String {
         let descripArray = [
             "ResponseConfig:",
             "nextQueryItems: \(nextQueryItems)",
@@ -16,24 +16,24 @@ public class ResponseConfig: CustomStringConvertible {
             "totalCount: \(totalCount)",
             "totalPagesRemaining: \(totalPagesRemaining)"
         ]
-        return descripArray.joinWithSeparator("\n\t")
+        return descripArray.joined(separator: "\n\t")
     }
-    public var nextQueryItems: [AnyObject]? // before (older)
-    public var prevQueryItems: [AnyObject]? // after (newer)
-    public var firstQueryItems: [AnyObject]? // first page
-    public var lastQueryItems: [AnyObject]? // last page
-    public var totalCount: String?
-    public var totalPages: String?
-    public var totalPagesRemaining: String?
-    public var statusCode: Int?
-    public var lastModified: String?
-    public var isFinalValue: Bool
+    open var nextQueryItems: [AnyObject]? // before (older)
+    open var prevQueryItems: [AnyObject]? // after (newer)
+    open var firstQueryItems: [AnyObject]? // first page
+    open var lastQueryItems: [AnyObject]? // last page
+    open var totalCount: String?
+    open var totalPages: String?
+    open var totalPagesRemaining: String?
+    open var statusCode: Int?
+    open var lastModified: String?
+    open var isFinalValue: Bool
 
     public init(isFinalValue: Bool = true) {
         self.isFinalValue = isFinalValue
     }
 
-    public func isOutOfData() -> Bool {
+    open func isOutOfData() -> Bool {
 
         return totalPagesRemaining == "0"
             || totalPagesRemaining == nil

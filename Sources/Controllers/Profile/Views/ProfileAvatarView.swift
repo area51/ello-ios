@@ -2,7 +2,7 @@
 ///  ProfileAvatarView.swift
 //
 
-public class ProfileAvatarView: ProfileBaseView {
+open class ProfileAvatarView: ProfileBaseView {
 
     public struct Size {
         static let avatarSize: CGFloat = 180
@@ -14,16 +14,16 @@ public class ProfileAvatarView: ProfileBaseView {
         static let badgeHeight: CGFloat = 44
     }
 
-    public var avatarImage: UIImage? {
+    open var avatarImage: UIImage? {
         get { return avatarImageView.image }
         set { avatarImageView.image = newValue }
     }
 
-    public var avatarURL: NSURL? {
+    open var avatarURL: URL? {
         get { return _avatarURL }
         set {
             _avatarURL = newValue
-            avatarImageView.pin_setImageFromURL(_avatarURL) { _ in
+            avatarImageView.pin_setImage(from: _avatarURL) { _ in
                 // we may need to notify the cell of this
                 // previously we hid the loader here
             }
@@ -31,16 +31,16 @@ public class ProfileAvatarView: ProfileBaseView {
     }
 
     // temporarily move badge button here. Remove once Total Views is available
-    private let badgeButton = UIButton()
+    fileprivate let badgeButton = UIButton()
 
-    public var badgeVisible: Bool {
-        set { badgeButton.hidden = !newValue }
-        get { return !badgeButton.hidden }
+    open var badgeVisible: Bool {
+        set { badgeButton.isHidden = !newValue }
+        get { return !badgeButton.isHidden }
     }
 
-    private let avatarImageView = FLAnimatedImageView()
-    private let whiteBar = UIView()
-    private var _avatarURL: NSURL?
+    fileprivate let avatarImageView = FLAnimatedImageView()
+    fileprivate let whiteBar = UIView()
+    fileprivate var _avatarURL: URL?
 
     var onHeightMismatch: OnHeightMismatch?
 }
@@ -48,15 +48,15 @@ public class ProfileAvatarView: ProfileBaseView {
 extension ProfileAvatarView {
 
     override func style() {
-        backgroundColor = .clearColor()
+        backgroundColor = .clear
         avatarImageView.backgroundColor = .greyF2()
         avatarImageView.clipsToBounds = true
-        whiteBar.backgroundColor = .whiteColor()
-        badgeButton.setImages(.BadgeCheck)
+        whiteBar.backgroundColor = .white
+        badgeButton.setImages(.badgeCheck)
     }
 
     override func bindActions() {
-        badgeButton.addTarget(self, action: #selector(badgeTapped), forControlEvents: .TouchUpInside)
+        badgeButton.addTarget(self, action: #selector(badgeTapped), for: .touchUpInside)
     }
 
     override func setText() {}
@@ -68,27 +68,27 @@ extension ProfileAvatarView {
         addSubview(avatarImageView)
         addSubview(badgeButton)
 
-        avatarImageView.snp_makeConstraints { make in
+        avatarImageView.snp.makeConstraints { make in
             make.width.height.equalTo(Size.avatarSize)
             make.centerX.equalTo(self)
             make.bottom.equalTo(self)
         }
 
-        whiteBar.snp_makeConstraints { make in
+        whiteBar.snp.makeConstraints { make in
             make.leading.trailing.equalTo(self)
             make.height.equalTo(Size.whiteBarHeight)
-            make.bottom.equalTo(self.snp_bottom)
+            make.bottom.equalTo(self.snp.bottom)
         }
 
-        badgeButton.snp_makeConstraints { make in
-            make.top.equalTo(whiteBar.snp_top).offset(Size.badgeMarginTop)
+        badgeButton.snp.makeConstraints { make in
+            make.top.equalTo(whiteBar.snp.top).offset(Size.badgeMarginTop)
             make.trailing.equalTo(self).inset(Size.badgeMarginTrailing)
             make.width.equalTo(Size.badgeWidth)
             make.width.equalTo(Size.badgeWidth)
         }
     }
 
-    override public func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
         avatarImageView.layer.cornerRadius = Size.avatarSize / 2
 
@@ -109,7 +109,7 @@ extension ProfileAvatarView {
     func badgeTapped() {
         guard let cell: UICollectionViewCell = self.findParentView() else { return }
 
-        let responder = targetForAction(#selector(ProfileHeaderResponder.onCategoryBadgeTapped(_:)), withSender: self) as? ProfileHeaderResponder
+        let responder = target(forAction: #selector(ProfileHeaderResponder.onCategoryBadgeTapped(_:)), withSender: self) as? ProfileHeaderResponder
         responder?.onCategoryBadgeTapped(cell)
     }
 }

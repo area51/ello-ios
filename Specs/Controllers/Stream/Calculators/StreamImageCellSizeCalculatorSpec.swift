@@ -2,6 +2,7 @@
 ///  StreamImageCellSizeCalculatorSpec.swift
 //
 
+@testable
 import Ello
 import Foundation
 import Quick

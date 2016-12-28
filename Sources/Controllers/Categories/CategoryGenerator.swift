@@ -3,14 +3,14 @@
 //
 
 public protocol CategoryStreamDestination: StreamDestination {
-    func setCategories(categories: [Category])
+    func set(categories: [Category])
 }
 
 public final class CategoryGenerator: StreamGenerator {
 
     public var currentUser: User?
     public var streamKind: StreamKind
-    weak private var categoryStreamDestination: CategoryStreamDestination?
+    weak fileprivate var categoryStreamDestination: CategoryStreamDestination?
     weak public var destination: StreamDestination? {
         get { return categoryStreamDestination }
         set {
@@ -19,27 +19,27 @@ public final class CategoryGenerator: StreamGenerator {
         }
     }
 
-    private var category: Category?
-    private var categories: [Category]?
-    private var slug: String
-    private var pagePromotional: PagePromotional?
-    private var posts: [Post]?
-    private var hasPosts: Bool?
-    private var localToken: String!
-    private var loadingToken = LoadingToken()
+    fileprivate var category: Category?
+    fileprivate var categories: [Category]?
+    fileprivate var slug: String
+    fileprivate var pagePromotional: PagePromotional?
+    fileprivate var posts: [Post]?
+    fileprivate var hasPosts: Bool?
+    fileprivate var localToken: String!
+    fileprivate var loadingToken = LoadingToken()
 
-    private let queue = NSOperationQueue()
+    fileprivate let queue = OperationQueue()
 
     func headerItems() -> [StreamCellItem] {
         var items: [StreamCellItem] = []
 
         if usesPagePromo() {
             if let pagePromotional = pagePromotional {
-                items += [StreamCellItem(jsonable: pagePromotional, type: .PagePromotionalHeader)]
+                items += [StreamCellItem(jsonable: pagePromotional, type: .pagePromotionalHeader)]
             }
         }
-        else if let category = self.category where category.hasPromotionalData {
-            items += [StreamCellItem(jsonable: category, type: .CategoryPromotionalHeader)]
+        else if let category = self.category, category.hasPromotionalData {
+            items += [StreamCellItem(jsonable: category, type: .categoryPromotionalHeader)]
         }
 
         return items
@@ -57,14 +57,14 @@ public final class CategoryGenerator: StreamGenerator {
         self.destination = destination
     }
 
-    public func reset(streamKind streamKind: StreamKind, category: Category, pagePromotional: PagePromotional?) {
+    public func reset(streamKind: StreamKind, category: Category, pagePromotional: PagePromotional?) {
         self.streamKind = streamKind
         self.category = category
         self.slug = category.slug
         self.pagePromotional = nil
     }
 
-    public func load(reload reload: Bool = false) {
+    public func load(reload: Bool = false) {
         if reload {
             pagePromotional = nil
         }
@@ -85,7 +85,7 @@ public final class CategoryGenerator: StreamGenerator {
 
     public func toggleGrid() {
         guard let posts = posts else { return }
-        destination?.replacePlaceholder(.CategoryPosts, items: parse(posts)) {}
+        destination?.replacePlaceholder(type: .categoryPosts, items: parse(jsonables: posts)) {}
     }
 
 }
@@ -93,13 +93,13 @@ public final class CategoryGenerator: StreamGenerator {
 private extension CategoryGenerator {
 
     func setPlaceHolders() {
-        destination?.setPlaceholders([
-            StreamCellItem(type: .Placeholder, placeholderType: .CategoryHeader),
-            StreamCellItem(type: .Placeholder, placeholderType: .CategoryPosts)
+        destination?.setPlaceholders(items: [
+            StreamCellItem(type: .placeholder, placeholderType: .categoryHeader),
+            StreamCellItem(type: .placeholder, placeholderType: .categoryPosts)
         ])
     }
 
-    func setInitialJSONAble(doneOperation: AsyncOperation) {
+    func setInitialJSONAble(_ doneOperation: AsyncOperation) {
         guard let category = category else { return }
 
         let jsonable: JSONAble?
@@ -111,8 +111,8 @@ private extension CategoryGenerator {
         }
 
         if let jsonable = jsonable {
-            destination?.setPrimaryJSONAble(jsonable)
-            destination?.replacePlaceholder(.CategoryHeader, items: headerItems()) {}
+            destination?.setPrimary(jsonable: jsonable)
+            destination?.replacePlaceholder(type: .categoryHeader, items: headerItems()) {}
             doneOperation.run()
         }
     }
@@ -131,8 +131,8 @@ private extension CategoryGenerator {
         return category.usesPagePromo
     }
 
-    func loadCategory(doneOperation: AsyncOperation, reload: Bool = false) {
-        guard !doneOperation.finished || reload else { return }
+    func loadCategory(_ doneOperation: AsyncOperation, reload: Bool = false) {
+        guard !doneOperation.isFinished || reload else { return }
         guard !usesPagePromo() else { return }
 
         CategoryService().loadCategory(slug)
@@ -140,8 +140,8 @@ private extension CategoryGenerator {
                 guard let sself = self else { return }
                 guard sself.loadingToken.isValidInitialPageLoadingToken(sself.localToken) else { return }
                 sself.category = category
-                sself.destination?.setPrimaryJSONAble(category)
-                sself.destination?.replacePlaceholder(.CategoryHeader, items: sself.headerItems()) {}
+                sself.destination?.setPrimary(jsonable: category)
+                sself.destination?.replacePlaceholder(type: .categoryHeader, items: sself.headerItems()) {}
                 doneOperation.run()
             }
             .onFail { [weak self] _ in
@@ -151,7 +151,7 @@ private extension CategoryGenerator {
             }
     }
 
-    func loadPagePromotional(doneOperation: AsyncOperation) {
+    func loadPagePromotional(_ doneOperation: AsyncOperation) {
         guard usesPagePromo() else { return }
 
         PagePromotionalService().loadPagePromotionals()
@@ -161,9 +161,9 @@ private extension CategoryGenerator {
 
                 if let pagePromotional = promotionals?.randomItem() {
                     sself.pagePromotional = pagePromotional
-                    sself.destination?.setPrimaryJSONAble(pagePromotional)
+                    sself.destination?.setPrimary(jsonable: pagePromotional)
                 }
-                sself.destination?.replacePlaceholder(.CategoryHeader, items: sself.headerItems()) {}
+                sself.destination?.replacePlaceholder(type: .categoryHeader, items: sself.headerItems()) {}
                 doneOperation.run()
             }
             .onFail { [weak self] _ in
@@ -178,24 +178,24 @@ private extension CategoryGenerator {
             .onSuccess { [weak self] categories in
                 guard let sself = self else { return }
                 sself.categories = categories
-                sself.categoryStreamDestination?.setCategories(categories)
+                sself.categoryStreamDestination?.set(categories: categories)
             }.ignoreFailures()
     }
 
-    func loadCategoryPosts(doneOperation: AsyncOperation) {
+    func loadCategoryPosts(_ doneOperation: AsyncOperation) {
         let displayPostsOperation = AsyncOperation()
         displayPostsOperation.addDependency(doneOperation)
         queue.addOperation(displayPostsOperation)
 
-        self.destination?.replacePlaceholder(.CategoryPosts, items: [StreamCellItem(type: .StreamLoading)]) {}
+        self.destination?.replacePlaceholder(type: .categoryPosts, items: [StreamCellItem(type: .streamLoading)]) {}
 
         var apiEndpoint: ElloAPI?
         if usesPagePromo() {
             guard let discoverType = DiscoverType.fromURL(slug) else { return }
-            apiEndpoint = .Discover(type: discoverType)
+            apiEndpoint = .discover(type: discoverType)
         }
         else {
-            apiEndpoint = .CategoryPosts(slug: slug)
+            apiEndpoint = .categoryPosts(slug: slug)
         }
 
         guard let endpoint = apiEndpoint else { return }
@@ -207,21 +207,21 @@ private extension CategoryGenerator {
                 guard let sself = self else { return }
                 guard sself.loadingToken.isValidInitialPageLoadingToken(sself.localToken) else { return }
 
-                sself.destination?.setPagingConfig(responseConfig)
+                sself.destination?.setPagingConfig(responseConfig: responseConfig)
                 sself.posts = jsonables as? [Post]
-                let items = sself.parse(jsonables)
+                let items = sself.parse(jsonables: jsonables)
                 displayPostsOperation.run {
                     inForeground {
                         if items.count == 0 {
                             sself.hasPosts = false
-                            let noItems = [StreamCellItem(type: .NoPosts)]
-                            sself.destination?.replacePlaceholder(.CategoryPosts, items: noItems) {
+                            let noItems = [StreamCellItem(type: .noPosts)]
+                            sself.destination?.replacePlaceholder(type: .categoryPosts, items: noItems) {
                                 sself.destination?.pagingEnabled = false
                             }
-                            sself.destination?.replacePlaceholder(.CategoryHeader, items: sself.headerItems()) {}
+                            sself.destination?.replacePlaceholder(type: .categoryHeader, items: sself.headerItems()) {}
                         }
                         else {
-                            sself.destination?.replacePlaceholder(.CategoryPosts, items: items) {
+                            sself.destination?.replacePlaceholder(type: .categoryPosts, items: items) {
                                 sself.destination?.pagingEnabled = true
                             }
                         }
@@ -233,8 +233,8 @@ private extension CategoryGenerator {
                 sself.queue.cancelAllOperations()
             }, noContent: { [weak self] in
                 guard let sself = self else { return }
-                let noContentItem = StreamCellItem(type: .EmptyStream(height: 282))
-                sself.destination?.replacePlaceholder(.CategoryPosts, items: [noContentItem]) {}
+                let noContentItem = StreamCellItem(type: .emptyStream(height: 282))
+                sself.destination?.replacePlaceholder(type: .categoryPosts, items: [noContentItem]) {}
                 sself.destination?.primaryJSONAbleNotFound()
                 sself.queue.cancelAllOperations()
         })

@@ -12,7 +12,7 @@ let AttachmentVersion = 1
 public final class Attachment: JSONAble {
 
     // required
-    public let url: NSURL
+    public let url: URL
     // optional
     public var size: Int?
     public var width: Int?
@@ -22,7 +22,7 @@ public final class Attachment: JSONAble {
 
 // MARK: Initialization
 
-    public init(url: NSURL) {
+    public init(url: URL) {
         self.url = url
         super.init(version: AttachmentVersion)
     }
@@ -42,7 +42,7 @@ public final class Attachment: JSONAble {
         super.init(coder: decoder.coder)
     }
 
-    public override func encodeWithCoder(encoder: NSCoder) {
+    public override func encode(with encoder: NSCoder) {
         let coder = Coder(encoder)
         // required
         coder.encodeObject(url, forKey: "url")
@@ -52,20 +52,20 @@ public final class Attachment: JSONAble {
         coder.encodeObject(size, forKey: "size")
         coder.encodeObject(type, forKey: "type")
         coder.encodeObject(image, forKey: "image")
-        super.encodeWithCoder(coder.coder)
+        super.encode(with: coder.coder)
     }
 
 // MARK: JSONAble
 
-    override class public func fromJSON(data: [String: AnyObject]) -> JSONAble {
+    override class public func fromJSON(_ data: [String: AnyObject]) -> JSONAble {
         let json = JSON(data)
-        Crashlytics.sharedInstance().setObjectValue(json.rawString(), forKey: CrashlyticsKey.AttachmentFromJSON.rawValue)
+        Crashlytics.sharedInstance().setObjectValue(json.rawString(), forKey: CrashlyticsKey.attachmentFromJSON.rawValue)
         var url = json["url"].stringValue
         if url.hasPrefix("//") {
             url = "https:\(url)"
         }
         // create attachment
-        let attachment = Attachment(url: NSURL(string: url)!)
+        let attachment = Attachment(url: URL(string: url)!)
         // optional
         attachment.size = json["metadata"]["size"].int
         attachment.width = json["metadata"]["width"].int

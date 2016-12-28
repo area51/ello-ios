@@ -2,6 +2,7 @@
 ///  DynamicSettingCellPresenterSpec.swift
 //
 
+@testable
 import Ello
 import Quick
 import Nimble
@@ -23,9 +24,9 @@ class DynamicSettingCellPresenterSpec: QuickSpec {
                     expect(cell.titleLabel.text) == setting.label
                     expect(cell.descriptionLabel.text) == setting.info
                     expect(cell.toggleButton.value) == false
-                    expect(cell.toggleButton.hidden) == false
-                    expect(cell.toggleButton.enabled) == true
-                    expect(cell.deleteButton.hidden) == true
+                    expect(cell.toggleButton.isHidden) == false
+                    expect(cell.toggleButton.isEnabled) == true
+                    expect(cell.deleteButton.isHidden) == true
                 }
 
                 it("configures the cell from the setting and uses the profile setting") {
@@ -41,9 +42,9 @@ class DynamicSettingCellPresenterSpec: QuickSpec {
                     expect(cell.titleLabel.text) == setting.label
                     expect(cell.descriptionLabel.text) == setting.info
                     expect(cell.toggleButton.value) == true
-                    expect(cell.toggleButton.hidden) == false
-                    expect(cell.toggleButton.enabled) == true
-                    expect(cell.deleteButton.hidden) == true
+                    expect(cell.toggleButton.isHidden) == false
+                    expect(cell.toggleButton.isEnabled) == true
+                    expect(cell.deleteButton.isHidden) == true
                 }
 
                 it("configures the cell from the setting and disables if dependent is false") {
@@ -60,10 +61,10 @@ class DynamicSettingCellPresenterSpec: QuickSpec {
                     expect(cell.titleLabel.text) == setting.label
                     expect(cell.descriptionLabel.text) == setting.info
                     expect(cell.toggleButton.value) == true
-                    expect(cell.toggleButton.hidden) == false
-                    expect(cell.contentView.hidden) == true
+                    expect(cell.toggleButton.isHidden) == false
+                    expect(cell.contentView.isHidden) == true
                     expect(isVisible) == false
-                    expect(cell.deleteButton.hidden) == true
+                    expect(cell.deleteButton.isHidden) == true
                 }
 
                 it("configures the cell from the setting and enables if dependent is true") {
@@ -80,10 +81,10 @@ class DynamicSettingCellPresenterSpec: QuickSpec {
                     expect(cell.titleLabel.text) == setting.label
                     expect(cell.descriptionLabel.text) == setting.info
                     expect(cell.toggleButton.value) == false
-                    expect(cell.toggleButton.hidden) == false
-                    expect(cell.contentView.hidden) == false
+                    expect(cell.toggleButton.isHidden) == false
+                    expect(cell.contentView.isHidden) == false
                     expect(isVisible) == true
-                    expect(cell.deleteButton.hidden) == true
+                    expect(cell.deleteButton.isHidden) == true
                 }
 
                 it("configures the cell from the setting and disables if conflicted is true") {
@@ -99,10 +100,10 @@ class DynamicSettingCellPresenterSpec: QuickSpec {
                     expect(cell.titleLabel.text) == setting.label
                     expect(cell.descriptionLabel.text) == setting.info
                     expect(cell.toggleButton.value) == true
-                    expect(cell.toggleButton.hidden) == false
-                    expect(cell.contentView.hidden) == true
+                    expect(cell.toggleButton.isHidden) == false
+                    expect(cell.contentView.isHidden) == true
                     expect(isVisible) == false
-                    expect(cell.deleteButton.hidden) == true
+                    expect(cell.deleteButton.isHidden) == true
                 }
 
                 it("configures the cell from the setting and enables if conflicted if false") {
@@ -118,10 +119,10 @@ class DynamicSettingCellPresenterSpec: QuickSpec {
                     expect(cell.titleLabel.text) == setting.label
                     expect(cell.descriptionLabel.text) == setting.info
                     expect(cell.toggleButton.value) == false
-                    expect(cell.toggleButton.hidden) == false
-                    expect(cell.contentView.hidden) == false
+                    expect(cell.toggleButton.isHidden) == false
+                    expect(cell.contentView.isHidden) == false
                     expect(isVisible) == true
-                    expect(cell.deleteButton.hidden) == true
+                    expect(cell.deleteButton.isHidden) == true
                 }
 
                 it("configures the cell from the setting and disables if conflicted") {
@@ -137,10 +138,10 @@ class DynamicSettingCellPresenterSpec: QuickSpec {
                     expect(cell.titleLabel.text) == setting.label
                     expect(cell.descriptionLabel.text) == setting.info
                     expect(cell.toggleButton.value) == true
-                    expect(cell.toggleButton.hidden) == false
-                    expect(cell.contentView.hidden) == false
+                    expect(cell.toggleButton.isHidden) == false
+                    expect(cell.contentView.isHidden) == false
                     expect(isVisible) == true
-                    expect(cell.deleteButton.hidden) == true
+                    expect(cell.deleteButton.isHidden) == true
                 }
 
                 it("configures the cell from the setting and enables if not conflicted") {
@@ -156,10 +157,10 @@ class DynamicSettingCellPresenterSpec: QuickSpec {
                     expect(cell.titleLabel.text) == setting.label
                     expect(cell.descriptionLabel.text) == setting.info
                     expect(cell.toggleButton.value) == false
-                    expect(cell.toggleButton.hidden) == false
-                    expect(cell.contentView.hidden) == true
+                    expect(cell.toggleButton.isHidden) == false
+                    expect(cell.contentView.isHidden) == true
                     expect(isVisible) == false
-                    expect(cell.deleteButton.hidden) == true
+                    expect(cell.deleteButton.isHidden) == true
                 }
             }
 
@@ -175,8 +176,8 @@ class DynamicSettingCellPresenterSpec: QuickSpec {
 
                     expect(cell.titleLabel.text) == setting.label
                     expect(cell.descriptionLabel.text) == setting.info
-                    expect(cell.toggleButton.hidden) == true
-                    expect(cell.deleteButton.hidden) == false
+                    expect(cell.toggleButton.isHidden) == true
+                    expect(cell.deleteButton.isHidden) == false
                 }
             }
         }

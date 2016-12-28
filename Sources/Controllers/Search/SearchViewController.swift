@@ -2,22 +2,22 @@
 ///  SearchViewController.swift
 //
 
-public class SearchViewController: StreamableViewController {
+open class SearchViewController: StreamableViewController {
     var searchText: String?
 
     var _mockScreen: SearchScreenProtocol?
-    public var screen: SearchScreenProtocol {
+    open var screen: SearchScreenProtocol {
         set(screen) { _mockScreen = screen }
         get { return _mockScreen ?? self.view as! SearchScreenProtocol }
     }
 
-    override public func loadView() {
-        let screen = SearchScreen(frame: UIScreen.mainScreen().bounds, isSearchView: true)
+    override open func loadView() {
+        let screen = SearchScreen(frame: UIScreen.main.bounds, isSearchView: true)
         self.view = screen
         screen.delegate = self
     }
 
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         streamViewController.pullToRefreshEnabled = false
         screen.gridListItem = UIBarButtonItem.gridListItem(delegate: streamViewController, isGridView: streamViewController.streamKind.isGridView)
@@ -25,7 +25,7 @@ public class SearchViewController: StreamableViewController {
         updateInsets()
     }
 
-    public func searchForPosts(terms: String) {
+    open func searchForPosts(_ terms: String) {
         screen.searchField.text = terms
         screen.searchForText()
     }
@@ -34,7 +34,7 @@ public class SearchViewController: StreamableViewController {
         return screen.viewForStream()
     }
 
-    override func showNavBars(scrollToBottom: Bool) {
+    override func showNavBars(_ scrollToBottom: Bool) {
         super.showNavBars(scrollToBottom)
         positionNavBar(screen.navigationBar, visible: true)
         screen.showNavBars()
@@ -52,7 +52,7 @@ public class SearchViewController: StreamableViewController {
         updateInsets()
     }
 
-    private func updateInsets() {
+    fileprivate func updateInsets() {
         updateInsets(navBar: screen.searchControlsContainer, streamController: streamViewController)
     }
 
@@ -61,7 +61,7 @@ public class SearchViewController: StreamableViewController {
 extension SearchViewController: SearchScreenDelegate {
 
     public func searchCanceled() {
-        navigationController?.popViewControllerAnimated(true)
+       _ = navigationController?.popViewController(animated: true)
     }
 
     public func searchFieldCleared() {
@@ -73,7 +73,7 @@ extension SearchViewController: SearchScreenDelegate {
         screen.hasGridViewToggle = false
     }
 
-    public func searchFieldChanged(text: String, isPostSearch: Bool) {
+    public func searchFieldChanged(_ text: String, isPostSearch: Bool) {
         loadEndpoint(text, isPostSearch: isPostSearch)
     }
 
@@ -81,25 +81,25 @@ extension SearchViewController: SearchScreenDelegate {
         streamViewController.hideNoResults()
     }
 
-    public func toggleChanged(text: String, isPostSearch: Bool) {
+    public func toggleChanged(_ text: String, isPostSearch: Bool) {
         searchShouldReset()
         loadEndpoint(text, isPostSearch: isPostSearch, checkSearchText: false)
     }
 
     public func findFriendsTapped() {
-        let responder = targetForAction(#selector(InviteResponder.onInviteFriends), withSender: self) as? InviteResponder
+        let responder = target(forAction: #selector(InviteResponder.onInviteFriends), withSender: self) as? InviteResponder
         responder?.onInviteFriends()
     }
 
-    private func loadEndpoint(text: String, isPostSearch: Bool, checkSearchText: Bool = true) {
+    fileprivate func loadEndpoint(_ text: String, isPostSearch: Bool, checkSearchText: Bool = true) {
         if text.characters.count < 2 { return }  // just.. no (and the server doesn't guard against empty/short searches)
         if checkSearchText && searchText == text { return }  // a search is already in progress for this text
         streamViewController.hideNoResults()
         trackSearch(text, isPostSearch: isPostSearch)
         searchText = text
-        let endpoint = isPostSearch ? ElloAPI.SearchForPosts(terms: text) : ElloAPI.SearchForUsers(terms: text)
+        let endpoint = isPostSearch ? ElloAPI.searchForPosts(terms: text) : ElloAPI.searchForUsers(terms: text)
         streamViewController.noResultsMessages = (title: InterfaceString.Search.NoMatches, body: InterfaceString.Search.TryAgain)
-        let streamKind = StreamKind.SimpleStream(endpoint: endpoint, title: "")
+        let streamKind = StreamKind.simpleStream(endpoint: endpoint, title: "")
         screen.hasGridViewToggle = streamKind.hasGridViewToggle
         streamViewController.streamKind = streamKind
         streamViewController.removeAllCellItems()
@@ -107,7 +107,7 @@ extension SearchViewController: SearchScreenDelegate {
         streamViewController.loadInitialPage()
     }
 
-    public func trackSearch(text: String, isPostSearch: Bool) {
+    public func trackSearch(_ text: String, isPostSearch: Bool) {
         if isPostSearch {
             if text.hasPrefix("#") {
                 Tracker.sharedTracker.searchFor("hashtags")

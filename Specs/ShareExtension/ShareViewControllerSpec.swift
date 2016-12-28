@@ -2,6 +2,7 @@
 ///  ShareViewControllerSpec.swift
 //
 
+@testable
 import Ello
 import Quick
 import Nimble
@@ -46,7 +47,7 @@ class ShareViewControllerSpec: QuickSpec {
 
                 context("logged in") {
                     beforeEach {
-                        let data = ElloAPI.AnonymousCredentials.sampleData
+                        let data = ElloAPI.anonymousCredentials.sampleData
                         ElloProvider.shared.authenticated(isPasswordBased: true)
                         AuthToken.storeToken(data, isPasswordBased: true, email: "hi@everyone.com", password: "123456")
                     }

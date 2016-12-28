@@ -7,19 +7,19 @@ import Foundation
 public struct StreamToggleCellPresenter {
 
     static func configure(
-        cell: UICollectionViewCell,
+        _ cell: UICollectionViewCell,
         streamCellItem: StreamCellItem,
         streamKind: StreamKind,
-        indexPath: NSIndexPath,
+        indexPath: IndexPath,
         currentUser: User?)
     {
         guard let
             cell = cell as? StreamToggleCell,
-            post = streamCellItem.jsonable as? Post
+            let post = streamCellItem.jsonable as? Post
         else { return }
 
         let message: String
-        if streamCellItem.state == .Collapsed {
+        if streamCellItem.state == .collapsed {
             message = InterfaceString.NSFW.Show
         }
         else {

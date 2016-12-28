@@ -65,25 +65,20 @@ public struct AuthToken {
         set { keychain.password = newValue }
     }
 
-    public static func storeToken(data: NSData, isPasswordBased: Bool, email: String? = nil, password: String? = nil) {
+    public static func storeToken(_ data: Data, isPasswordBased: Bool, email: String? = nil, password: String? = nil) {
         var authToken = AuthToken()
         authToken.isPasswordBased = isPasswordBased
 
-        do {
-            let json = try JSON(data: data)
-            if let email = email {
-                authToken.username = email
-            }
-            if let password = password {
-                authToken.password = password
-            }
-            authToken.token = json["access_token"].stringValue
-            authToken.type = json["token_type"].stringValue
-            authToken.refreshToken = json["refresh_token"].stringValue
+        let json = JSON(data: data)
+        if let email = email {
+            authToken.username = email
         }
-        catch {
-            log("token JSON failure", object: "failed to create JSON and store authToken")
+        if let password = password {
+            authToken.password = password
         }
+        authToken.token = json["access_token"].stringValue
+        authToken.type = json["token_type"].stringValue
+        authToken.refreshToken = json["refresh_token"].stringValue
     }
 
     static func reset() {

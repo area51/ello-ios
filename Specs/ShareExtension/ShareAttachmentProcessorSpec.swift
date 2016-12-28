@@ -2,6 +2,7 @@
 ///  ShareAttachmentProcessorSpec.swift
 //
 
+@testable
 import Ello
 import Quick
 import Nimble
@@ -17,7 +18,7 @@ class ShareAttachmentProcessorSpec: QuickSpec {
             super.init(item: item, typeIdentifier: typeIdentifier)
         }
 
-        override func loadItemForTypeIdentifier(typeIdentifier: String, options: [NSObject : AnyObject]?, completionHandler: NSItemProviderCompletionHandler?) {
+        override func loadItem(forTypeIdentifier typeIdentifier: String, options: [AnyHashable: Any]?, completionHandler: NSItemProvider.CompletionHandler?) {
             if typeIdentifier == self.typeIdentifier {
                 completionHandler?(item, nil)
             }
@@ -39,28 +40,28 @@ class ShareAttachmentProcessorSpec: QuickSpec {
 
             describe("preview(_:callback)") {
 
-                var fileURL: NSURL?
-                if let url = NSURL(string: NSTemporaryDirectory()) {
-                    fileURL = url.URLByAppendingPathComponent("ShareAttachmentProcessorSpec")
+                var fileURL: URL?
+                if let url = URL(string: NSTemporaryDirectory()) {
+                    fileURL = url.appendingPathComponent("ShareAttachmentProcessorSpec") as URL?
                 }
 
                 afterEach {
-                    do { try NSFileManager.defaultManager().removeItemAtPath(fileURL?.path ?? "") }
+                    do { try FileManager.default.removeItem(atPath: fileURL?.path ?? "") }
                     catch { }
                 }
 
                 it("loads url items") {
                     let extensionItem = NSExtensionItem()
-                    let image = UIImage(named: "specs-avatar", inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil)!
+                    let image = UIImage(named: "specs-avatar", in: Bundle(for: type(of: self)), compatibleWith: nil)!
                     let imageAsData = UIImagePNGRepresentation(image)
                     if let fileURL = fileURL {
-                        imageAsData?.writeToFile(fileURL.path!, atomically: true)
+                        try! imageAsData?.write(to: fileURL, options: [.atomic])
                     }
 
                     extensionItem.attachments = [
-                        FakeItemProvider(item: NSURL(string: "https://ello.co"), typeIdentifier: String(kUTTypeURL)),
-                        FakeItemProvider(item: "hello", typeIdentifier: String(kUTTypeText)),
-                        FakeItemProvider(item: fileURL, typeIdentifier: String(kUTTypeImage))
+                        FakeItemProvider(item: URL(string: "https://ello.co") as NSSecureCoding?, typeIdentifier: String(kUTTypeURL)),
+                        FakeItemProvider(item: "hello" as NSSecureCoding?, typeIdentifier: String(kUTTypeText)),
+                        FakeItemProvider(item: fileURL as NSSecureCoding?, typeIdentifier: String(kUTTypeImage))
                     ]
 
                     let urlPreview = ExtensionItemPreview(text: "https://ello.co")
@@ -79,8 +80,8 @@ class ShareAttachmentProcessorSpec: QuickSpec {
                     let extensionItem = NSExtensionItem()
 
                     extensionItem.attachments = [
-                        FakeItemProvider(item: NSURL(string: "https://ello.co"), typeIdentifier: String(kUTTypeURL)),
-                        FakeItemProvider(item: "https://ello.co", typeIdentifier: String(kUTTypeText))
+                        FakeItemProvider(item: URL(string: "https://ello.co") as NSSecureCoding?, typeIdentifier: String(kUTTypeURL)),
+                        FakeItemProvider(item: "https://ello.co" as NSSecureCoding?, typeIdentifier: String(kUTTypeText))
                     ]
 
                     let urlPreview = ExtensionItemPreview(text: "https://ello.co")
@@ -98,8 +99,8 @@ class ShareAttachmentProcessorSpec: QuickSpec {
                     let extensionItem = NSExtensionItem()
 
                     extensionItem.attachments = [
-                        FakeItemProvider(item: NSURL(string: "https://ello.co"), typeIdentifier: String(kUTTypeURL)),
-                        FakeItemProvider(item: "https://ello.co", typeIdentifier: String(kUTTypeText))
+                        FakeItemProvider(item: URL(string: "https://ello.co") as NSSecureCoding?, typeIdentifier: String(kUTTypeURL)),
+                        FakeItemProvider(item: "https://ello.co" as NSSecureCoding?, typeIdentifier: String(kUTTypeText))
                     ]
 
                     it("returns true if content text is present and extension item is nil") {

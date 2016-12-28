@@ -34,14 +34,14 @@ public final class UserAvatarCellModel: JSONAble {
         super.init(coder: decoder.coder)
     }
 
-    public override func encodeWithCoder(encoder: NSCoder) {
+    public override func encode(with encoder: NSCoder) {
         let coder = Coder(encoder)
         coder.encodeObject(icon, forKey: "icon")
         coder.encodeObject(seeMoreTitle, forKey: "seeMoreTitle")
-        super.encodeWithCoder(coder.coder)
+        super.encode(with: coder.coder)
     }
 
-    override public class func fromJSON(data: [String: AnyObject]) -> JSONAble {
+    override public class func fromJSON(_ data: [String: AnyObject]) -> JSONAble {
         return UserAvatarCellModel(
             icon: InterfaceImage(rawValue: (data["icon"] as? String) ?? "hearts")!,
             seeMoreTitle: (data["seeMoreTitle"] as? String) ?? ""

@@ -4,8 +4,8 @@
 
 @objc
 public protocol ImageLabelAnimatable {
-    optional func animate()
-    optional func finishAnimation()
+    @objc optional func animate()
+    @objc optional func finishAnimation()
     var enabled: Bool { get set }
     var selected: Bool { get set }
     var highlighted: Bool { get set }

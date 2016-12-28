@@ -3,28 +3,28 @@
 //
 
 public protocol BuyButtonLinkControllerDelegate: class {
-    func submitBuyButtonLink(url: NSURL)
+    func submitBuyButtonLink(_ url: URL)
     func clearBuyButtonLink()
 }
 
-public class BuyButtonLinkViewController: UIViewController {
+open class BuyButtonLinkViewController: UIViewController {
     var screen: BuyButtonLinkScreen { return self.view as! BuyButtonLinkScreen }
-    var buyButtonURL: NSURL?
+    var buyButtonURL: URL?
     weak var delegate: BuyButtonLinkControllerDelegate?
 
-    required public init(buyButtonURL: NSURL?) {
+    required public init(buyButtonURL: URL?) {
         self.buyButtonURL = buyButtonURL
         super.init(nibName: nil, bundle: nil)
 
-        modalPresentationStyle = .Custom
-        modalTransitionStyle = .CrossDissolve
+        modalPresentationStyle = .custom
+        modalTransitionStyle = .crossDissolve
     }
 
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override public func loadView() {
+    override open func loadView() {
         let screen = BuyButtonLinkScreen()
         screen.buyButtonURL = buyButtonURL
         screen.delegate = self
@@ -36,10 +36,10 @@ public class BuyButtonLinkViewController: UIViewController {
 extension BuyButtonLinkViewController: BuyButtonLinkDelegate {
 
     public func closeModal() {
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 
-    public func submitLink(url: NSURL) {
+    public func submitLink(_ url: URL) {
         delegate?.submitBuyButtonLink(url)
     }
 

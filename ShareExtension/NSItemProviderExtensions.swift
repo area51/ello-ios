@@ -18,19 +18,19 @@ public extension NSItemProvider {
         return self.hasItemConformingToTypeIdentifier(String(kUTTypeText))
     }
 
-    public func loadText(options: [NSObject : AnyObject]?, completion: NSItemProviderCompletionHandler?) {
-        self.loadItemForTypeIdentifier(String(kUTTypeText), options: options, completionHandler: completion)
+    public func loadText(_ options: [AnyHashable: Any]?, completion: NSItemProvider.CompletionHandler?) {
+        self.loadItem(forTypeIdentifier: String(kUTTypeText), options: options, completionHandler: completion)
     }
 
-    public func loadURL(options: [NSObject : AnyObject]?, completion: NSItemProviderCompletionHandler?) {
-        self.loadItemForTypeIdentifier(String(kUTTypeURL), options: options, completionHandler: completion)
+    public func loadURL(_ options: [AnyHashable: Any]?, completion: NSItemProvider.CompletionHandler?) {
+        self.loadItem(forTypeIdentifier: String(kUTTypeURL), options: options, completionHandler: completion)
     }
 
-    public func loadPreview(options: [NSObject : AnyObject]!, completion: NSItemProviderCompletionHandler!) {
-        self.loadPreviewImageWithOptions(options, completionHandler: completion)
+    public func loadPreview(_ options: [AnyHashable: Any]!, completion: NSItemProvider.CompletionHandler!) {
+        self.loadPreviewImage(options: options, completionHandler: completion)
     }
 
-    public func loadImage(options: [NSObject : AnyObject]!, completion: NSItemProviderCompletionHandler!) {
-        self.loadItemForTypeIdentifier(String(kUTTypeImage), options: options, completionHandler: completion)
+    public func loadImage(_ options: [AnyHashable: Any]!, completion: NSItemProvider.CompletionHandler!) {
+        self.loadItem(forTypeIdentifier: String(kUTTypeImage), options: options, completionHandler: completion)
     }
 }

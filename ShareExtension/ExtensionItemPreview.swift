@@ -6,11 +6,11 @@ import UIKit
 
 public struct ExtensionItemPreview {
     public let image: UIImage?
-    public let imagePath: NSURL?
+    public let imagePath: URL?
     public let text: String?
-    public let gifData: NSData?
+    public let gifData: Data?
 
-    public init(image: UIImage? = nil, imagePath: NSURL? = nil, text: String? = nil, gifData: NSData? = nil) {
+    public init(image: UIImage? = nil, imagePath: URL? = nil, text: String? = nil, gifData: Data? = nil) {
         self.image = image
         self.imagePath = imagePath
         self.text = text

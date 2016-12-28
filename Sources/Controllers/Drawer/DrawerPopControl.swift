@@ -2,16 +2,16 @@
 ///  DrawerPopControl.swift
 //
 
-public class DrawerPopControl: UIControl {
+open class DrawerPopControl: UIControl {
     var presentingController: UIViewController?
 
     public init() {
         super.init(frame: .zero)
-        addTarget(self, action: #selector(DrawerPopControl.pop), forControlEvents: .TouchDown)
+        addTarget(self, action: #selector(DrawerPopControl.pop), for: .touchDown)
     }
 
     func pop() {
-        presentingController?.dismissViewControllerAnimated(true, completion: nil)
+        presentingController?.dismiss(animated: true, completion: nil)
     }
 
     required public init?(coder aDecoder: NSCoder) {

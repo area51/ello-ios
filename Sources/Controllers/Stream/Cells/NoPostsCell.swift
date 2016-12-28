@@ -2,13 +2,13 @@
 ///  NoPostsCell.swift
 //
 
-public class NoPostsCell: UICollectionViewCell {
+open class NoPostsCell: UICollectionViewCell {
     static let reuseIdentifier = "NoPostsCell"
 
     @IBOutlet weak var noPostsHeader: UILabel!
     @IBOutlet weak var noPostsBody: UILabel!
 
-    public var isCurrentUser: Bool = false {
+    open var isCurrentUser: Bool = false {
         didSet { updateText() }
     }
 

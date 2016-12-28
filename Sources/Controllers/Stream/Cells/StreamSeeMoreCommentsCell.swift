@@ -5,21 +5,21 @@
 import Foundation
 
 
-public class StreamSeeMoreCommentsCell: UICollectionViewCell {
+open class StreamSeeMoreCommentsCell: UICollectionViewCell {
     static let reuseIdentifier = "StreamSeeMoreCommentsCell"
 
-    @IBOutlet weak public var buttonContainer: UIView!
-    @IBOutlet weak public var seeMoreButton: UIButton!
+    @IBOutlet weak open var buttonContainer: UIView!
+    @IBOutlet weak open var seeMoreButton: UIButton!
 
-    override public func awakeFromNib() {
+    override open func awakeFromNib() {
         super.awakeFromNib()
         style()
     }
 
-    private func style() {
+    fileprivate func style() {
         buttonContainer.backgroundColor = .greyA()
-        seeMoreButton.setTitleColor(UIColor.greyA(), forState: UIControlState.Normal)
-        seeMoreButton.backgroundColor = .whiteColor()
+        seeMoreButton.setTitleColor(UIColor.greyA(), for: .normal)
+        seeMoreButton.backgroundColor = .white
         seeMoreButton.titleLabel?.font = .defaultFont()
     }
 

@@ -8,7 +8,7 @@ import Foundation
 public struct ProfileLinksPresenter {
 
     public static func configure(
-        view: ProfileLinksView,
+        _ view: ProfileLinksView,
         user: User,
         currentUser: User?)
     {

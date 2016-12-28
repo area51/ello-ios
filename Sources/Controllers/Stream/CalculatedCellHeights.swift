@@ -7,33 +7,33 @@ public typealias OnCalculatedCellHeightsMismatch = (CalculatedCellHeights) -> Vo
 
 public struct CalculatedCellHeights {
     public enum Prop {
-        case OneColumn
-        case MultiColumn
-        case WebContent
-        case ProfileAvatar
-        case ProfileNames
-        case ProfileTotalCount
-        case ProfileStats
-        case ProfileBio
-        case ProfileLocation
-        case ProfileLinks
+        case oneColumn
+        case multiColumn
+        case webContent
+        case profileAvatar
+        case profileNames
+        case profileTotalCount
+        case profileStats
+        case profileBio
+        case profileLocation
+        case profileLinks
     }
 
-    mutating func assign(prop: Prop, height: CGFloat) {
+    mutating func assign(_ prop: Prop, height: CGFloat) {
         switch prop {
-        case .ProfileAvatar:
+        case .profileAvatar:
             profileAvatar = height
-        case .ProfileNames:
+        case .profileNames:
             profileNames = height
-        case .ProfileTotalCount:
+        case .profileTotalCount:
             profileTotalCount = height
-        case .ProfileStats:
+        case .profileStats:
             profileStats = height
-        case .ProfileBio:
+        case .profileBio:
             profileBio = height
-        case .ProfileLocation:
+        case .profileLocation:
             profileLocation = height
-        case .ProfileLinks:
+        case .profileLinks:
             profileLinks = height
         default: break
         }

@@ -2,6 +2,7 @@
 ///  DateFormattingSpec.swift
 //
 
+@testable
 import Ello
 import Quick
 import Nimble
@@ -9,11 +10,11 @@ import Nimble
 // GROSS, thanks Apple for making it hard to change Locale for testing purposes
 extension NSLocale {
     public class func defaultToArab() {
-        method_exchangeImplementations(class_getClassMethod(self, #selector(NSLocale.currentLocale)), class_getClassMethod(self, #selector(NSLocale.ello_currentLocale)))
+        method_exchangeImplementations(class_getClassMethod(self, #selector(getter: NSLocale.current)), class_getClassMethod(self, #selector(NSLocale.ello_currentLocale)))
     }
 
     public class func defaultToNormal() {
-        method_exchangeImplementations(class_getClassMethod(self, #selector(NSLocale.ello_currentLocale)), class_getClassMethod(self, #selector(NSLocale.currentLocale)))
+        method_exchangeImplementations(class_getClassMethod(self, #selector(NSLocale.ello_currentLocale)), class_getClassMethod(self, #selector(getter: NSLocale.current)))
     }
 
     // MARK: - Method Swizzling
@@ -27,21 +28,21 @@ extension NSLocale {
 class DateFormattingSpec: QuickSpec {
     override func spec() {
 
-        describe("NSString.toNSDate()") {
+        describe("NSString.toDate()") {
 
             context("HTTP Date") {
 
-                it("returns an NSDate from an http data string") {
-                    let sep_30_1978 = NSDate(timeIntervalSince1970: 275961600)
-                    expect("Sat, 30 Sep 1978 00:00:00 GMT".toNSDate(HTTPDateFormatter)) == sep_30_1978
+                it("returns an Date from an http data string") {
+                    let sep_30_1978 = Date(timeIntervalSince1970: 275961600)
+                    expect("Sat, 30 Sep 1978 00:00:00 GMT".toDate(HTTPDateFormatter)) == sep_30_1978
                 }
             }
 
             context("database date") {
 
-                it("returns an NSDate from a server formatted string") {
-                    let sep_30_1978 = NSDate(timeIntervalSince1970: 275961600)
-                    expect("1978-09-30T00:00:00.000Z".toNSDate()) == sep_30_1978
+                it("returns an Date from a server formatted string") {
+                    let sep_30_1978 = Date(timeIntervalSince1970: 275961600)
+                    expect("1978-09-30T00:00:00.000Z".toDate()) == sep_30_1978
                 }
             }
         }
@@ -51,7 +52,7 @@ class DateFormattingSpec: QuickSpec {
             context("arabic locale") {
                 it("outputs the correct string") {
                     NSLocale.defaultToArab()
-                    let sep_30_1978 = NSDate(timeIntervalSince1970: 275961600)
+                    let sep_30_1978 = Date(timeIntervalSince1970: 275961600)
 
                     expect(sep_30_1978.toServerDateString()) == "1978-09-30T00:00:00.000Z"
 
@@ -61,7 +62,7 @@ class DateFormattingSpec: QuickSpec {
 
             context("non arabic locale") {
                 it("outputs the correct string") {
-                    let sep_30_1978 = NSDate(timeIntervalSince1970: 275961600)
+                    let sep_30_1978 = Date(timeIntervalSince1970: 275961600)
 
                     expect(sep_30_1978.toServerDateString()) == "1978-09-30T00:00:00.000Z"
                 }
@@ -74,7 +75,7 @@ class DateFormattingSpec: QuickSpec {
             context("arabic locale") {
                 it("outputs the correct string") {
                     NSLocale.defaultToArab()
-                    let sep_30_1978 = NSDate(timeIntervalSince1970: 275961600)
+                    let sep_30_1978 = Date(timeIntervalSince1970: 275961600)
 
                     expect(sep_30_1978.toHTTPDateString()) == "Sat, 30 Sep 1978 00:00:00 GMT"
 
@@ -84,7 +85,7 @@ class DateFormattingSpec: QuickSpec {
 
             context("non arabic locale") {
                 it("outputs the correct string") {
-                    let sep_30_1978 = NSDate(timeIntervalSince1970: 275961600)
+                    let sep_30_1978 = Date(timeIntervalSince1970: 275961600)
 
                     expect(sep_30_1978.toHTTPDateString()) == "Sat, 30 Sep 1978 00:00:00 GMT"
                 }

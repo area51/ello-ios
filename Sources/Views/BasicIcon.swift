@@ -4,15 +4,15 @@
 
 import Foundation
 
-public class BasicIcon: UIView {
+open class BasicIcon: UIView {
 
-    private var _enabled = false
-    private var _selected = false
-    private var _highlighted = false
+    fileprivate var _enabled = false
+    fileprivate var _selected = false
+    fileprivate var _highlighted = false
 
-    private let normalIconView: UIView
-    private let selectedIconView: UIView
-    private let disabledIconView: UIView?
+    fileprivate let normalIconView: UIView
+    fileprivate let selectedIconView: UIView
+    fileprivate let disabledIconView: UIView?
 
     // MARK: Initializers
 
@@ -30,11 +30,11 @@ public class BasicIcon: UIView {
         super.init(frame: frame)
         addSubview(self.normalIconView)
         addSubview(self.selectedIconView)
-        self.selectedIconView.hidden = true
+        self.selectedIconView.isHidden = true
 
         if let view = disabledIconView {
             addSubview(view)
-            view.hidden = true
+            view.isHidden = true
         }
     }
 
@@ -43,15 +43,15 @@ public class BasicIcon: UIView {
     }
 
     // MARK: Private
-    func updateIcon(selected selected: Bool, enabled: Bool) {
+    func updateIcon(selected: Bool, enabled: Bool) {
         if let disabledIconView = disabledIconView {
-            normalIconView.hidden = !(enabled && !selected)
-            selectedIconView.hidden = !(enabled && selected)
-            disabledIconView.hidden = enabled
+            normalIconView.isHidden = !(enabled && !selected)
+            selectedIconView.isHidden = !(enabled && selected)
+            disabledIconView.isHidden = enabled
         }
         else {
-            normalIconView.hidden = selected
-            selectedIconView.hidden = !selected
+            normalIconView.isHidden = selected
+            selectedIconView.isHidden = !selected
         }
     }
 }

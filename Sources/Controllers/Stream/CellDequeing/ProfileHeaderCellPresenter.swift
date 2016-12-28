@@ -8,15 +8,15 @@ import Foundation
 public struct ProfileHeaderCellPresenter {
 
     public static func configure(
-        cell: UICollectionViewCell,
+        _ cell: UICollectionViewCell,
         streamCellItem: StreamCellItem,
         streamKind: StreamKind,
-        indexPath: NSIndexPath,
+        indexPath: IndexPath,
         currentUser: User?)
     {
         guard let
             cell = cell as? ProfileHeaderCell,
-            user = streamCellItem.jsonable as? User
+            let user = streamCellItem.jsonable as? User
         else { return }
 
         cell.onHeightMismatch = { calculatedCellHeights in

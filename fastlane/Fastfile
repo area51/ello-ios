@@ -93,6 +93,10 @@ end
 ######################### PRIVATE LANES #########################
 
 private_lane :switch_to_prod do
+  `bundle exec rake generate:prod_keys`
+end
+
+private_lane :switch_to_staging do
   `bundle exec rake generate:staging_keys`
 end
 

@@ -3,9 +3,9 @@
 //
 
 public enum OnboardingStep: Int {
-    case Categories = 0
-    case CreateProfile
-    case InviteFriends
+    case categories = 0
+    case createProfile
+    case inviteFriends
 }
 
 public protocol OnboardingDelegate: class {
@@ -19,12 +19,12 @@ public protocol OnboardingScreenProtocol: class {
     var hasAbortButton: Bool { get set }
     var canGoNext: Bool { get set }
     var prompt: String? { get set }
-    func styleFor(step step: OnboardingStep)
+    func styleFor(step: OnboardingStep)
 }
 
 public protocol OnboardingStepController: class {
     var onboardingViewController: OnboardingViewController? { get set }
     var onboardingData: OnboardingData! { get set }
-    func onboardingWillProceed(abort: Bool, proceedClosure: (success: OnboardingViewController.OnboardingProceed) -> Void)
+    func onboardingWillProceed(abort: Bool, proceedClosure: @escaping (_ success: OnboardingViewController.OnboardingProceed) -> Void)
     func onboardingStepBegin()
 }

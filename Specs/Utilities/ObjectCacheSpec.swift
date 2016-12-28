@@ -2,9 +2,28 @@
 ///  InviteControllerSpec.swift
 //
 
+@testable
 import Ello
 import Quick
 import Nimble
+
+public class FakePersistentLayer: PersistentLayer {
+    var object: [Any]?
+
+    init() { }
+
+    public func setObject(_ value: Any?, forKey: String) {
+        object = value as? [String]
+    }
+
+    public func objectForKey(_ defaultName: String) -> Any? {
+        return object ?? []
+    }
+
+    public func removeObjectForKey(_ defaultName: String) {
+        object = nil
+    }
+}
 
 
 class ObjectCacheSpec: QuickSpec {
@@ -15,10 +34,10 @@ class ObjectCacheSpec: QuickSpec {
                 expect(cache.name) == "test"
             }
 
-            it("sets NSUserDefaults as the default persistent layer") {
+            it("sets UserDefaults as the default persistent layer") {
                 let cache = ObjectCache<NSString>(name: "test")
                 cache.append("hello")
-                expect(GroupDefaults.objectForKey("test") as? [String]) == ["hello"]
+                expect(GroupDefaults.object(forKey: "test") as? [String]) == ["hello"]
             }
         }
 
@@ -34,7 +53,7 @@ class ObjectCacheSpec: QuickSpec {
                 let layer = FakePersistentLayer()
                 let cache = ObjectCache<NSString>(name: "test", persistentLayer: layer)
                 cache.append("something")
-                expect(layer.object?.first) == "something"
+                expect(layer.object?.first as? String) == "something"
             }
         }
 
@@ -53,7 +72,7 @@ class ObjectCacheSpec: QuickSpec {
                 layer.object = ["something", "else"]
                 let cache = ObjectCache<NSString>(name: "test", persistentLayer: layer)
                 cache.load()
-                expect(cache.cache) == layer.object
+                expect(cache.cache) == layer.object as? [NSString]
             }
         }
     }

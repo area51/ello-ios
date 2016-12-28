@@ -2,16 +2,16 @@
 ///  AddFriendsViewController.swift
 //
 
-public class AddFriendsViewController: StreamableViewController {
+open class AddFriendsViewController: StreamableViewController {
 
     let addressBook: AddressBookProtocol
 
     var _mockScreen: SearchScreenProtocol?
-    public var screen: SearchScreenProtocol {
+    open var screen: SearchScreenProtocol {
         set(screen) { _mockScreen = screen }
         get { return _mockScreen ?? self.view as! SearchScreen }
     }
-    public var searchScreen: SearchScreen!
+    open var searchScreen: SearchScreen!
 
     required public init(addressBook: AddressBookProtocol) {
         self.addressBook = addressBook
@@ -24,8 +24,8 @@ public class AddFriendsViewController: StreamableViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override public func loadView() {
-        searchScreen = SearchScreen(frame: UIScreen.mainScreen().bounds,
+    override open func loadView() {
+        searchScreen = SearchScreen(frame: UIScreen.main.bounds,
             isSearchView: false,
             navBarTitle: InterfaceString.Friends.FindAndInvite,
             fieldPlaceholderText: InterfaceString.Friends.SearchPrompt)
@@ -33,14 +33,14 @@ public class AddFriendsViewController: StreamableViewController {
         searchScreen.delegate = self
     }
 
-    override public func viewWillAppear(animated: Bool) {
+    override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         screen.hasBackButton = (navigationController != nil)
     }
 
-    override public func viewDidAppear(animated: Bool) {
+    override open func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if isMovingToParentViewController() || presentingViewController != nil {
+        if isMovingToParentViewController || presentingViewController != nil {
             showNavBars(false)
             updateInsets()
             ElloHUD.showLoadingHudInView(streamViewController.view)
@@ -52,7 +52,7 @@ public class AddFriendsViewController: StreamableViewController {
         return screen.viewForStream()
     }
 
-    override func showNavBars(scrollToBottom: Bool) {
+    override func showNavBars(_ scrollToBottom: Bool) {
         super.showNavBars(scrollToBottom)
         if let ss = self.view as? SearchScreen {
             positionNavBar(ss.navigationBar, visible: true)
@@ -74,20 +74,20 @@ public class AddFriendsViewController: StreamableViewController {
         updateInsets()
     }
 
-    private func updateInsets() {
+    fileprivate func updateInsets() {
         if let ss = self.view as? SearchScreen {
             updateInsets(navBar: ss.navigationBar, streamController: streamViewController, tabBarVisible: false)
         }
     }
 
-    public func setContacts(contacts: [(LocalPerson, User?)]) {
+    open func setContacts(_ contacts: [(LocalPerson, User?)]) {
         let items = AddressBookHelpers.process(contacts, currentUser: currentUser)
         streamViewController.appendStreamCellItems(items)
     }
 
     // MARK: - Private
 
-    private func findFriendsFromContacts() {
+    fileprivate func findFriendsFromContacts() {
         InviteService().find(addressBook,
             currentUser: self.currentUser,
             success: { mixedContacts in
@@ -96,7 +96,7 @@ public class AddFriendsViewController: StreamableViewController {
                 self.streamViewController.doneLoading()
             },
             failure: { _ in
-                let mixedContacts: [(LocalPerson, User?)] = self.addressBook.localPeople.map { ($0, .None) }
+                let mixedContacts: [(LocalPerson, User?)] = self.addressBook.localPeople.map { ($0, .none) }
                 self.setContacts(mixedContacts)
                 self.streamViewController.doneLoading()
             })
@@ -107,10 +107,10 @@ extension AddFriendsViewController: SearchScreenDelegate {
 
     public func searchCanceled() {
         if let navigationController = navigationController {
-            navigationController.popViewControllerAnimated(true)
+            _ = navigationController.popViewController(animated: true)
         }
         else {
-            dismissViewControllerAnimated(true, completion: nil)
+            dismiss(animated: true, completion: nil)
         }
     }
 
@@ -118,7 +118,7 @@ extension AddFriendsViewController: SearchScreenDelegate {
         streamViewController.streamFilter = nil
     }
 
-    public func searchFieldChanged(text: String, isPostSearch: Bool) {
+    public func searchFieldChanged(_ text: String, isPostSearch: Bool) {
         streamViewController.streamFilter = AddressBookHelpers.searchFilter(text)
     }
 
@@ -126,7 +126,7 @@ extension AddFriendsViewController: SearchScreenDelegate {
         // noop
     }
 
-    public func toggleChanged(text: String, isPostSearch: Bool) {
+    public func toggleChanged(_ text: String, isPostSearch: Bool) {
         // do nothing as this should not be visible
     }
 

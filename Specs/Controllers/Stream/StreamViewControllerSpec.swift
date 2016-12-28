@@ -2,6 +2,7 @@
 ///  StreamViewControllerSpec.swift
 //
 
+@testable
 import Ello
 import Quick
 import Nimble
@@ -112,7 +113,7 @@ class StreamViewControllerSpec: QuickSpec {
 
             beforeEach {
                 controller = StreamViewController.instantiateFromStoryboard()
-                controller.streamKind = StreamKind.Following
+                controller.streamKind = StreamKind.following
                 showController(controller)
                 controller.streamService.loadStream(endpoint: controller.streamKind.endpoint, streamKind: nil,
                     success: { (jsonables, responseConfig) in
@@ -126,13 +127,13 @@ class StreamViewControllerSpec: QuickSpec {
             }
 
             it("loads the next page of results when scrolled within 300 of the bottom") {
-                expect(controller.collectionView.numberOfItemsInSection(0)).toEventually(equal(3))
+                expect(controller.collectionView.numberOfItems(inSection: 0)).toEventually(equal(3))
                 // controller.collectionView.contentOffset = CGPoint(x: 0, y: 0)
                 // expect(controller.collectionView.numberOfItemsInSection(0)) == 6
             }
 
             it("does not load the next page of results when not scrolled within 300 of the bottom") {
-                expect(controller.collectionView.numberOfItemsInSection(0)).toEventually(equal(3))
+                expect(controller.collectionView.numberOfItems(inSection: 0)).toEventually(equal(3))
             }
         }
 
@@ -164,7 +165,7 @@ class StreamViewControllerSpec: QuickSpec {
                             link = url
                         }
 
-                        controller.webLinkTapped(ElloURI.External, data: "http://www.example.com")
+                        controller.webLinkTapped(type: ElloURI.external, data: "http://www.example.com")
                         expect(link) == "http://www.example.com"
                     }
 
@@ -188,8 +189,7 @@ class StreamViewControllerSpec: QuickSpec {
                 describe("pullToRefreshViewShouldStartLoading(_:)") {
 
                     it("returns true") {
-                        let shouldStartLoading = controller.pullToRefreshViewShouldStartLoading(controller.pullToRefreshView)
-
+                        let shouldStartLoading = controller.pull(toRefreshViewShouldStartLoading: controller.pullToRefreshView)
                         expect(shouldStartLoading).to(beTrue())
                     }
                 }
@@ -206,10 +206,10 @@ class StreamViewControllerSpec: QuickSpec {
 
                 beforeEach {
                     let service = StreamService()
-                    service.loadUser(ElloAPI.FriendStream,
+                    service.loadUser(ElloAPI.friendStream,
                         streamKind: nil,
                         success: { (user, responseConfig) in
-                        controller.appendUnsizedCellItems(StreamCellItemParser().parse(user.posts!, streamKind: .Following), withWidth: nil)
+                        controller.appendUnsizedCellItems(StreamCellItemParser().parse(user.posts!, streamKind: .following), withWidth: nil)
                     }, failure: { _ in })
                 }
 
@@ -220,8 +220,8 @@ class StreamViewControllerSpec: QuickSpec {
                 describe("userTappedAuthor(_:)") {
 
                     xit("presents a ProfileViewController") {
-                        let cell = controller.collectionView.cellForItemAtIndexPath(NSIndexPath(forItem: 0, inSection: 0))
-                        controller.userTappedAuthor(cell!)
+                        let cell = controller.collectionView.cellForItem(at: IndexPath(item: 0, section: 0))
+                        controller.userTappedAuthor(cell: cell!)
 
                         expect(controller.navigationController?.topViewController).to(beAKindOf(ProfileViewController.self))
                     }

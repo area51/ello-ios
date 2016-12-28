@@ -8,7 +8,7 @@ import Foundation
 public struct ProfileBioPresenter {
 
     public static func configure(
-        view: ProfileBioView,
+        _ view: ProfileBioView,
         user: User,
         currentUser: User?)
     {

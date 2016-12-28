@@ -6,7 +6,7 @@ import FLAnimatedImage
 import SnapKit
 
 
-public class StreamCreateCommentCell: UICollectionViewCell {
+open class StreamCreateCommentCell: UICollectionViewCell {
     static let reuseIdentifier = "StreamCreateCommentCell"
 
     public struct Size {
@@ -32,13 +32,13 @@ public class StreamCreateCommentCell: UICollectionViewCell {
 
     var watching = false {
         didSet {
-            watchButton.setImage(.Watch, imageStyle: watching ? .Green : .Normal, forState: .Normal)
+            watchButton.setImage(.watch, imageStyle: watching ? .green : .normal, for: .normal)
         }
     }
-    var avatarURL: NSURL? {
+    var avatarURL: URL? {
         willSet(value) {
             if let avatarURL = value {
-                avatarView.pin_setImageFromURL(avatarURL)
+                avatarView.pin_setImage(from: avatarURL)
             }
             else {
                 avatarView.pin_cancelImageDownload()
@@ -46,15 +46,15 @@ public class StreamCreateCommentCell: UICollectionViewCell {
             }
         }
     }
-    var watchVisibility: InteractionVisibility = .Hidden {
+    var watchVisibility: InteractionVisibility = .hidden {
         didSet {
-            watchButton.hidden = (watchVisibility != .Enabled)
+            watchButton.isHidden = (watchVisibility != .enabled)
             updateCreateButtonConstraints()
         }
     }
-    var replyAllVisibility: InteractionVisibility = .Hidden {
+    var replyAllVisibility: InteractionVisibility = .hidden {
         didSet {
-            replyAllButton.hidden = (replyAllVisibility != .Enabled)
+            replyAllButton.isHidden = (replyAllVisibility != .enabled)
             updateCreateButtonConstraints()
         }
     }
@@ -75,64 +75,64 @@ public class StreamCreateCommentCell: UICollectionViewCell {
         arrange()
     }
 
-    private func style() {
-        contentView.backgroundColor = .whiteColor()
-        avatarView.backgroundColor = .blackColor()
+    fileprivate func style() {
+        contentView.backgroundColor = .white
+        avatarView.backgroundColor = .black
         avatarView.clipsToBounds = true
-        replyAllButton.setImage(.ReplyAll, imageStyle: .Normal, forState: .Normal)
-        replyAllButton.setImage(.ReplyAll, imageStyle: .Selected, forState: .Highlighted)
-        watchButton.setImage(.Watch, imageStyle: .Normal, forState: .Normal)
-        watchButton.contentMode = .Center
+        replyAllButton.setImage(.replyAll, imageStyle: .normal, for: .normal)
+        replyAllButton.setImage(.replyAll, imageStyle: .selected, for: .highlighted)
+        watchButton.setImage(.watch, imageStyle: .normal, for: .normal)
+        watchButton.contentMode = .center
         createCommentLabel.text = InterfaceString.Post.CreateComment
         createCommentLabel.font = .defaultFont()
-        createCommentLabel.textColor = .whiteColor()
-        createCommentLabel.textAlignment = .Left
+        createCommentLabel.textColor = .white
+        createCommentLabel.textAlignment = .left
     }
 
-    private func bindActions() {
-        replyAllButton.addTarget(self, action: #selector(replyAllTapped), forControlEvents: .TouchUpInside)
-        watchButton.addTarget(self, action: #selector(watchTapped), forControlEvents: .TouchUpInside)
+    fileprivate func bindActions() {
+        replyAllButton.addTarget(self, action: #selector(replyAllTapped), for: .touchUpInside)
+        watchButton.addTarget(self, action: #selector(watchTapped), for: .touchUpInside)
     }
 
-    private func arrange() {
+    fileprivate func arrange() {
         contentView.addSubview(replyAllButton)
         contentView.addSubview(avatarView)
         contentView.addSubview(createCommentBackground)
         contentView.addSubview(watchButton)
         createCommentBackground.addSubview(createCommentLabel)
 
-        avatarView.snp_makeConstraints { make in
+        avatarView.snp.makeConstraints { make in
             make.leading.equalTo(contentView).offset(Size.Margins.left)
             make.centerY.equalTo(contentView)
             make.width.height.equalTo(Size.AvatarSize)
         }
 
-        replyAllButton.snp_makeConstraints { make in
-            make.leading.equalTo(createCommentBackground.snp_trailing)
+        replyAllButton.snp.makeConstraints { make in
+            make.leading.equalTo(createCommentBackground.snp.trailing)
             make.trailing.equalTo(contentView).inset(Size.ReplyAllRightMargin)
             make.centerY.equalTo(contentView)
             make.width.height.equalTo(Size.ReplyButtonSize)
         }
 
-        watchButton.snp_makeConstraints { make in
+        watchButton.snp.makeConstraints { make in
             make.top.bottom.equalTo(contentView)
             make.trailing.equalTo(contentView).inset(Size.WatchMargin)
             make.width.equalTo(Size.WatchSize)
         }
 
-        createCommentBackground.snp_makeConstraints { make in
-            make.leading.equalTo(avatarView.snp_trailing).offset(Size.AvatarRightMargin)
+        createCommentBackground.snp.makeConstraints { make in
+            make.leading.equalTo(avatarView.snp.trailing).offset(Size.AvatarRightMargin)
             make.centerY.equalTo(contentView)
             make.height.equalTo(contentView).offset(-Size.Margins.top - Size.Margins.bottom)
             watchButtonHiddenConstraint = make.trailing.equalTo(contentView).inset(Size.Margins.right).constraint
-            replyAllButtonVisibleConstraint = make.trailing.equalTo(replyAllButton.snp_leading).constraint
-            replyAllButtonHiddenConstraint = make.trailing.equalTo(watchButton.snp_leading).offset(-Size.WatchMargin).constraint
+            replyAllButtonVisibleConstraint = make.trailing.equalTo(replyAllButton.snp.leading).constraint
+            replyAllButtonHiddenConstraint = make.trailing.equalTo(watchButton.snp.leading).offset(-Size.WatchMargin).constraint
         }
-        watchButtonHiddenConstraint.uninstall()
-        replyAllButtonVisibleConstraint.uninstall()
-        replyAllButtonHiddenConstraint.uninstall()
+        watchButtonHiddenConstraint.deactivate()
+        replyAllButtonVisibleConstraint.deactivate()
+        replyAllButtonHiddenConstraint.deactivate()
 
-        createCommentLabel.snp_makeConstraints { make in
+        createCommentLabel.snp.makeConstraints { make in
             make.top.bottom.trailing.equalTo(createCommentBackground)
             make.leading.equalTo(createCommentBackground).offset(Size.ButtonLabelMargin)
         }
@@ -142,35 +142,35 @@ public class StreamCreateCommentCell: UICollectionViewCell {
         layoutIfNeeded()
     }
 
-    override public func prepareForReuse() {
+    override open func prepareForReuse() {
         super.prepareForReuse()
         avatarView.pin_cancelImageDownload()
         watching = false
-        watchButtonHiddenConstraint.uninstall()
-        replyAllButtonVisibleConstraint.uninstall()
-        replyAllButtonHiddenConstraint.uninstall()
+        watchButtonHiddenConstraint.deactivate()
+        replyAllButtonVisibleConstraint.deactivate()
+        replyAllButtonHiddenConstraint.deactivate()
     }
 
-    private func updateCreateButtonConstraints() {
-        if replyAllButton.hidden && watchButton.hidden {
-            watchButtonHiddenConstraint.install()
-            replyAllButtonVisibleConstraint.uninstall()
-            replyAllButtonHiddenConstraint.uninstall()
+    fileprivate func updateCreateButtonConstraints() {
+        if replyAllButton.isHidden && watchButton.isHidden {
+            watchButtonHiddenConstraint.activate()
+            replyAllButtonVisibleConstraint.deactivate()
+            replyAllButtonHiddenConstraint.deactivate()
         }
-        else if replyAllButton.hidden {
-            watchButtonHiddenConstraint.uninstall()
-            replyAllButtonVisibleConstraint.uninstall()
-            replyAllButtonHiddenConstraint.install()
+        else if replyAllButton.isHidden {
+            watchButtonHiddenConstraint.deactivate()
+            replyAllButtonVisibleConstraint.deactivate()
+            replyAllButtonHiddenConstraint.activate()
         }
         else {
-            watchButtonHiddenConstraint.uninstall()
-            replyAllButtonVisibleConstraint.install()
-            replyAllButtonHiddenConstraint.uninstall()
+            watchButtonHiddenConstraint.deactivate()
+            replyAllButtonVisibleConstraint.activate()
+            replyAllButtonHiddenConstraint.deactivate()
         }
         setNeedsLayout()
     }
 
-    override public func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
         avatarView.setNeedsLayout()
         avatarView.layoutIfNeeded()

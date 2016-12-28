@@ -2,6 +2,7 @@
 ///  TextRegionSpec.swift
 //
 
+@testable
 import Ello
 import Quick
 import Nimble
@@ -24,13 +25,13 @@ class TextRegionSpec: QuickSpec {
         context("NSCoding") {
 
             var filePath = ""
-            if let url = NSURL(string: NSFileManager.ElloDocumentsDir()) {
-                filePath = url.URLByAppendingPathComponent("TextRegionSpec")!.absoluteString!
+            if let url = URL(string: FileManager.ElloDocumentsDir()) {
+                filePath = url.appendingPathComponent("TextRegionSpec").absoluteString
             }
 
             afterEach {
                 do {
-                    try NSFileManager.defaultManager().removeItemAtPath(filePath)
+                    try FileManager.default.removeItem(atPath: filePath)
                 }
                 catch {
 
@@ -56,7 +57,7 @@ class TextRegionSpec: QuickSpec {
                     ])
 
                     NSKeyedArchiver.archiveRootObject(region, toFile: filePath)
-                    let unArchivedRegion = NSKeyedUnarchiver.unarchiveObjectWithFile(filePath) as! TextRegion
+                    let unArchivedRegion = NSKeyedUnarchiver.unarchiveObject(withFile: filePath) as! TextRegion
 
                     expect(unArchivedRegion).toNot(beNil())
                     expect(unArchivedRegion.version) == 1

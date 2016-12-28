@@ -2,6 +2,7 @@
 ///  ElloLinkedStoreSpec.swift
 //
 
+@testable
 import Ello
 import Quick
 import Nimble

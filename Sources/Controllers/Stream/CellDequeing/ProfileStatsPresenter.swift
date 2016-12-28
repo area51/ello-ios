@@ -8,7 +8,7 @@ import Foundation
 public struct ProfileStatsPresenter {
 
     public static func configure(
-        view: ProfileStatsView,
+        _ view: ProfileStatsView,
         user: User,
         currentUser: User?)
     {
@@ -16,7 +16,7 @@ public struct ProfileStatsPresenter {
         view.followingCount = (user.followingCount ?? 0).numberToHuman(rounding: 2, showZero: true)
         if let
             string = user.followersCount,
-            followersCount = Int(string)
+            let followersCount = Int(string)
         {
             view.followersCount = followersCount.numberToHuman(rounding: 2, showZero: true)
         }

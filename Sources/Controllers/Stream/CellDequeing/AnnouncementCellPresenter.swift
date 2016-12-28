@@ -5,15 +5,15 @@
 public struct AnnouncementCellPresenter {
 
     static func configure(
-        cell: UICollectionViewCell,
+        _ cell: UICollectionViewCell,
         streamCellItem: StreamCellItem,
         streamKind: StreamKind,
-        indexPath: NSIndexPath,
+        indexPath: IndexPath,
         currentUser: User?)
     {
         guard let
             cell = cell as? AnnouncementCell,
-            announcement = streamCellItem.jsonable as? Announcement
+            let announcement = streamCellItem.jsonable as? Announcement
         else { return }
 
         var config = AnnouncementCell.Config()

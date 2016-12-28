@@ -6,8 +6,8 @@ import Foundation
 import SnapKit
 
 
-public class BlockUserModalViewController: BaseElloViewController, BlockUserModalDelegate {
-    weak public var relationshipDelegate: RelationshipDelegate?
+open class BlockUserModalViewController: BaseElloViewController, BlockUserModalDelegate {
+    weak open var relationshipDelegate: RelationshipDelegate?
 
     let config: BlockUserModalConfig
     var relationshipPriority: RelationshipPriority { return config.relationshipPriority }
@@ -21,40 +21,40 @@ public class BlockUserModalViewController: BaseElloViewController, BlockUserModa
         self.config = config
         super.init(nibName: nil, bundle: nil)
 
-        modalPresentationStyle = .Custom
-        modalTransitionStyle = .CrossDissolve
+        modalPresentationStyle = .custom
+        modalTransitionStyle = .crossDissolve
     }
 
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override public func loadView() {
+    override open func loadView() {
         let screen = BlockUserModalScreen(config: config)
         self.view = screen
     }
 
-    override public func viewDidAppear(animated: Bool) {
+    override open func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if let superView = self.view.superview {
             self.view.center = superView.center
         }
     }
 
-    public func updateRelationship(newRelationship: RelationshipPriority) {
+    open func updateRelationship(_ newRelationship: RelationshipPriority) {
         guard let currentUserId = currentUser?.id else {
             closeModal()
             return
         }
 
         switch newRelationship {
-            case .Block: Tracker.sharedTracker.userBlocked(userId)
-            case .Mute: Tracker.sharedTracker.userMuted(userId)
-            case .Inactive:
-                if relationshipPriority == .Block {
+            case .block: Tracker.sharedTracker.userBlocked(userId)
+            case .mute: Tracker.sharedTracker.userMuted(userId)
+            case .inactive:
+                if relationshipPriority == .block {
                     Tracker.sharedTracker.userUnblocked(userId)
                 }
-                else if relationshipPriority == .Mute {
+                else if relationshipPriority == .mute {
                     Tracker.sharedTracker.userUnmuted(userId)
                 }
             default: break
@@ -63,21 +63,21 @@ public class BlockUserModalViewController: BaseElloViewController, BlockUserModa
         relationshipDelegate?.updateRelationship(currentUserId, userId: userId, prev: relationshipPriority, relationshipPriority: newRelationship) {
             (status, relationship, isFinalValue) in
             switch status {
-            case .Success:
-                self.changeClosure(relationshipPriority: newRelationship)
+            case .success:
+                self.changeClosure(newRelationship)
                 self.closeModal()
-            case .Failure:
-                self.changeClosure(relationshipPriority: self.relationshipPriority)
+            case .failure:
+                self.changeClosure(self.relationshipPriority)
             }
         }
     }
 
-    public func flagTapped() {
+    open func flagTapped() {
         if let presentingViewController = presentingViewController {
             let flagger = ContentFlagger(
                 presentingController: presentingViewController,
                 flaggableId: userId,
-                contentType: .User
+                contentType: .user
             )
 
             closeModalAndThen {
@@ -86,13 +86,13 @@ public class BlockUserModalViewController: BaseElloViewController, BlockUserModa
         }
     }
 
-    public func closeModal() {
+    open func closeModal() {
         closeModalAndThen {}
     }
 
-    public func closeModalAndThen(completion: BasicBlock) {
+    open func closeModalAndThen(_ completion: @escaping BasicBlock) {
         Tracker.sharedTracker.userBlockCanceled(userId)
-        self.dismissViewControllerAnimated(true, completion: completion)
+        self.dismiss(animated: true, completion: completion)
     }
 
 }

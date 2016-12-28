@@ -3,21 +3,21 @@
 //
 
 public protocol PostTappedDelegate: class {
-    func postTapped(post: Post)
-    func postTapped(post: Post, scrollToComment: ElloComment?)
-    func postTapped(postId postId: String)
+    func postTapped(_ post: Post)
+    func postTapped(_ post: Post, scrollToComment: ElloComment?)
+    func postTapped(postId: String)
 }
 
 public protocol UserTappedDelegate: class {
-    func userTapped(user: User)
-    func userParamTapped(param: String, username: String?)
+    func userTapped(_ user: User)
+    func userParamTapped(_ param: String, username: String?)
 }
 
 public protocol CreatePostDelegate: class {
-    func createPost(text text: String?, fromController: UIViewController)
-    func createComment(post: Post, text: String?, fromController: UIViewController)
-    func editComment(comment: ElloComment, fromController: UIViewController)
-    func editPost(post: Post, fromController: UIViewController)
+    func createPost(text: String?, fromController: UIViewController)
+    func createComment(_ post: Post, text: String?, fromController: UIViewController)
+    func editComment(_ comment: ElloComment, fromController: UIViewController)
+    func editPost(_ post: Post, fromController: UIViewController)
 }
 
 @objc
@@ -25,10 +25,10 @@ public protocol InviteResponder: NSObjectProtocol {
     func onInviteFriends()
 }
 
-public class StreamableViewController: BaseElloViewController, PostTappedDelegate {
+open class StreamableViewController: BaseElloViewController, PostTappedDelegate {
     @IBOutlet weak var viewContainer: UIView!
-    private var showing = false
-    public let streamViewController = StreamViewController.instantiateFromStoryboard()
+    fileprivate var showing = false
+    open let streamViewController = StreamViewController.instantiateFromStoryboard()
 
     func setupStreamController() {
         streamViewController.currentUser = currentUser
@@ -37,13 +37,13 @@ public class StreamableViewController: BaseElloViewController, PostTappedDelegat
         streamViewController.postTappedDelegate = self
         streamViewController.createPostDelegate = self
 
-        streamViewController.willMoveToParentViewController(self)
+        streamViewController.willMove(toParentViewController: self)
         let containerForStream = viewForStream()
         containerForStream.addSubview(streamViewController.view)
         streamViewController.view.frame = containerForStream.bounds
-        streamViewController.view.autoresizingMask = [.FlexibleHeight, .FlexibleWidth]
+        streamViewController.view.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         addChildViewController(streamViewController)
-        streamViewController.didMoveToParentViewController(self)
+        streamViewController.didMove(toParentViewController: self)
     }
 
     var scrollLogic: ElloScrollLogic!
@@ -52,23 +52,23 @@ public class StreamableViewController: BaseElloViewController, PostTappedDelegat
         return viewContainer
     }
 
-    override public func viewWillAppear(animated: Bool) {
+    override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         showing = true
         willPresentStreamable(tabBarVisible())
     }
 
-    public override func viewWillDisappear(animated: Bool) {
+    open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         showing = false
     }
 
-    override public func viewDidLayoutSubviews() {
+    override open func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         willPresentStreamable(tabBarVisible())
     }
 
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
 
         setupStreamController()
@@ -78,8 +78,8 @@ public class StreamableViewController: BaseElloViewController, PostTappedDelegat
         )
     }
 
-    private func willPresentStreamable(navBarsVisible: Bool) {
-        UIApplication.sharedApplication().setStatusBarHidden(!navBarsVisible, withAnimation: .Slide)
+    fileprivate func willPresentStreamable(_ navBarsVisible: Bool) {
+        postNotification(StatusBarNotifications.statusBarShouldChange, value: (!navBarsVisible, .slide))
         UIView.setAnimationsEnabled(false)
         if navBarsVisible {
             showNavBars(false)
@@ -96,7 +96,7 @@ public class StreamableViewController: BaseElloViewController, PostTappedDelegat
         return !hidden
     }
 
-    func updateInsets(navBar navBar: UIView?, streamController controller: StreamViewController, tabBarVisible visible: Bool? = nil) {
+    func updateInsets(navBar: UIView?, streamController controller: StreamViewController, tabBarVisible visible: Bool? = nil) {
         let topInset = max(0, navBar?.frame.maxY ?? 0)
         let bottomInset: CGFloat
         if visible ?? tabBarVisible() {
@@ -110,7 +110,7 @@ public class StreamableViewController: BaseElloViewController, PostTappedDelegat
         controller.contentInset.bottom = bottomInset
     }
 
-    func positionNavBar(navBar: UIView, visible: Bool, withConstraint navigationBarTopConstraint: NSLayoutConstraint? = nil, animated: Bool = true) {
+    func positionNavBar(_ navBar: UIView, visible: Bool, withConstraint navigationBarTopConstraint: NSLayoutConstraint? = nil, animated: Bool = true) {
         let upAmount: CGFloat
         if visible {
             upAmount = 0
@@ -127,11 +127,11 @@ public class StreamableViewController: BaseElloViewController, PostTappedDelegat
         }
 
         if showing {
-            UIApplication.sharedApplication().setStatusBarHidden(!visible, withAnimation: .None)
+            postNotification(StatusBarNotifications.statusBarShouldChange, value: (!visible, .slide))
         }
     }
 
-    func showNavBars(scrollToBottom: Bool) {
+    func showNavBars(_ scrollToBottom: Bool) {
         if let tabBarController = self.elloTabBarController {
             tabBarController.setTabBarHidden(false, animated: true)
         }
@@ -143,32 +143,32 @@ public class StreamableViewController: BaseElloViewController, PostTappedDelegat
         }
     }
 
-    func scrollToBottom(controller: StreamViewController) {
+    func scrollToBottom(_ controller: StreamViewController) {
         if let scrollView = streamViewController.collectionView {
             let contentOffsetY: CGFloat = scrollView.contentSize.height - scrollView.frame.size.height
             if contentOffsetY > 0 {
-                scrollView.scrollEnabled = false
+                scrollView.isScrollEnabled = false
                 scrollView.setContentOffset(CGPoint(x: 0, y: contentOffsetY), animated: true)
-                scrollView.scrollEnabled = true
+                scrollView.isScrollEnabled = true
             }
         }
     }
 
 // MARK: PostTappedDelegate
 
-    public func postTapped(post: Post) {
+    open func postTapped(_ post: Post) {
         self.postTapped(postId: post.id, scrollToComment: nil)
     }
 
-    public func postTapped(post: Post, scrollToComment lastComment: ElloComment?) {
+    open func postTapped(_ post: Post, scrollToComment lastComment: ElloComment?) {
         self.postTapped(postId: post.id, scrollToComment: lastComment)
     }
 
-    public func postTapped(postId postId: String) {
+    open func postTapped(postId: String) {
         self.postTapped(postId: postId, scrollToComment: nil)
     }
 
-    private func postTapped(postId postId: String, scrollToComment lastComment: ElloComment?) {
+    fileprivate func postTapped(postId: String, scrollToComment lastComment: ElloComment?) {
         let vc = PostDetailViewController(postParam: postId)
         vc.scrollToComment = lastComment
         vc.currentUser = currentUser
@@ -178,12 +178,12 @@ public class StreamableViewController: BaseElloViewController, PostTappedDelegat
 
 // MARK: UserTappedDelegate
 extension StreamableViewController: UserTappedDelegate {
-    public func userTapped(user: User) {
-        guard user.relationshipPriority != .Block else { return }
+    public func userTapped(_ user: User) {
+        guard user.relationshipPriority != .block else { return }
         userParamTapped(user.id, username: user.username)
     }
 
-    public func userParamTapped(param: String, username: String?) {
+    public func userParamTapped(_ param: String, username: String?) {
         guard !DeepLinking.alreadyOnUserProfile(navVC: navigationController, userParam: param)
             else { return }
 
@@ -193,11 +193,12 @@ extension StreamableViewController: UserTappedDelegate {
         self.navigationController?.pushViewController(vc, animated: true)
     }
 
-    private func alreadyOnUserProfile(user: User) -> Bool {
-        if let profileVC = self.navigationController?.topViewController as? ProfileViewController {
+    fileprivate func alreadyOnUserProfile(_ user: User) -> Bool {
+        if let profileVC = self.navigationController?.topViewController as? ProfileViewController,
             let param = profileVC.userParam
-            if param[param.startIndex] == "~" {
-                let usernamePart = param[param.startIndex.advancedBy(1)..<param.endIndex]
+        {
+            if param.hasPrefix("~") {
+                let usernamePart = param.substring(from: param.index(after: param.startIndex))
                 return user.username == usernamePart
             }
             else {
@@ -210,57 +211,57 @@ extension StreamableViewController: UserTappedDelegate {
 
 // MARK: CreatePostDelegate
 extension StreamableViewController: CreatePostDelegate {
-    public func createPost(text text: String?, fromController: UIViewController) {
+    public func createPost(text: String?, fromController: UIViewController) {
         let vc = OmnibarViewController(defaultText: text)
         vc.currentUser = self.currentUser
         vc.onPostSuccess { _ in
-            self.navigationController?.popViewControllerAnimated(true)
+            _ = self.navigationController?.popViewController(animated: true)
         }
         self.navigationController?.pushViewController(vc, animated: true)
     }
 
-    public func createComment(post: Post, text: String?, fromController: UIViewController) {
+    public func createComment(_ post: Post, text: String?, fromController: UIViewController) {
         let vc = OmnibarViewController(parentPost: post, defaultText: text)
         vc.currentUser = self.currentUser
         vc.onCommentSuccess { _ in
-            self.navigationController?.popViewControllerAnimated(true)
+            _ = self.navigationController?.popViewController(animated: true)
         }
         self.navigationController?.pushViewController(vc, animated: true)
     }
 
-    public func editComment(comment: ElloComment, fromController: UIViewController) {
+    public func editComment(_ comment: ElloComment, fromController: UIViewController) {
         if OmnibarViewController.canEditRegions(comment.content) {
             let vc = OmnibarViewController(editComment: comment)
             vc.currentUser = self.currentUser
             vc.onCommentSuccess { _ in
-                self.navigationController?.popViewControllerAnimated(true)
+                _ = self.navigationController?.popViewController(animated: true)
             }
             self.navigationController?.pushViewController(vc, animated: true)
         }
         else {
             let message = InterfaceString.Post.CannotEditComment
             let alertController = AlertViewController(message: message)
-            let action = AlertAction(title: InterfaceString.ThatIsOK, style: .Dark, handler: nil)
+            let action = AlertAction(title: InterfaceString.ThatIsOK, style: .dark, handler: nil)
             alertController.addAction(action)
-            self.presentViewController(alertController, animated: true, completion: nil)
+            self.present(alertController, animated: true, completion: nil)
         }
     }
 
-    public func editPost(post: Post, fromController: UIViewController) {
+    public func editPost(_ post: Post, fromController: UIViewController) {
         if OmnibarViewController.canEditRegions(post.content) {
             let vc = OmnibarViewController(editPost: post)
             vc.currentUser = self.currentUser
             vc.onPostSuccess() { _ in
-                self.navigationController?.popViewControllerAnimated(true)
+                _ = self.navigationController?.popViewController(animated: true)
             }
             self.navigationController?.pushViewController(vc, animated: true)
         }
         else {
             let message = InterfaceString.Post.CannotEditPost
             let alertController = AlertViewController(message: message)
-            let action = AlertAction(title: InterfaceString.ThatIsOK, style: .Dark, handler: nil)
+            let action = AlertAction(title: InterfaceString.ThatIsOK, style: .dark, handler: nil)
             alertController.addAction(action)
-            self.presentViewController(alertController, animated: true, completion: nil)
+            self.present(alertController, animated: true, completion: nil)
         }
     }
 }
@@ -294,7 +295,7 @@ extension StreamableViewController: InviteResponder {
         Tracker.sharedTracker.inviteFriendsTapped()
         AddressBookController.promptForAddressBookAccess(fromController: self, completion: { result in
             switch result {
-            case let .Success(addressBook):
+            case let .success(addressBook):
                 Tracker.sharedTracker.contactAccessPreferenceChanged(true)
                 let vc = AddFriendsViewController(addressBook: addressBook)
                 vc.currentUser = self.currentUser
@@ -302,21 +303,21 @@ extension StreamableViewController: InviteResponder {
                     navigationController.pushViewController(vc, animated: true)
                 }
                 else {
-                    self.presentViewController(vc, animated: true, completion: nil)
+                    self.present(vc, animated: true, completion: nil)
                 }
-            case let .Failure(addressBookError):
-                guard addressBookError != .Cancelled else { return }
+            case let .failure(addressBookError):
+                guard addressBookError != .cancelled else { return }
 
                 Tracker.sharedTracker.contactAccessPreferenceChanged(false)
                 let message = addressBookError.rawValue
                 let alertController = AlertViewController(
-                    message: NSString.localizedStringWithFormat(InterfaceString.Friends.ImportErrorTemplate, message) as String
+                    message: NSString.localizedStringWithFormat(InterfaceString.Friends.ImportErrorTemplate as NSString, message) as String
                 )
 
-                let action = AlertAction(title: InterfaceString.OK, style: .Dark, handler: .None)
+                let action = AlertAction(title: InterfaceString.OK, style: .dark, handler: .none)
                 alertController.addAction(action)
 
-                self.presentViewController(alertController, animated: true, completion: .None)
+                self.present(alertController, animated: true, completion: .none)
             }
         })
     }

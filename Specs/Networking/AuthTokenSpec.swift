@@ -63,7 +63,7 @@ class AuthTokenSpec: QuickSpec {
             }
 
             context("storeToken(_:isPasswordBased:email:password:)") {
-                let data = ElloAPI.AnonymousCredentials.sampleData
+                let data = ElloAPI.anonymousCredentials.sampleData
                 var token: AuthToken!
 
                 beforeEach {

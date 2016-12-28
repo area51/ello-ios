@@ -2,8 +2,8 @@
 ///  OmnibarCacheData.swift
 //
 
-public class OmnibarCacheData: NSObject, NSCoding {
-    public var regions: [NSObject]
+open class OmnibarCacheData: NSObject, NSCoding {
+    open var regions: [NSObject]
 
     public override init() {
         regions = [NSObject]()
@@ -12,8 +12,8 @@ public class OmnibarCacheData: NSObject, NSCoding {
 
 // MARK: NSCoding
 
-    public func encodeWithCoder(encoder: NSCoder) {
-        encoder.encodeObject(regions, forKey: "regions")
+    open func encode(with encoder: NSCoder) {
+        encoder.encode(regions, forKey: "regions")
     }
 
     required public init?(coder: NSCoder) {

@@ -4,11 +4,11 @@
 
 
 public struct ExternalLink {
-    public let url: NSURL
+    public let url: URL
     public let text: String
-    public let iconURL: NSURL?
+    public let iconURL: URL?
 
-    public init(url: NSURL, text: String, iconURL: NSURL? = nil) {
+    public init(url: URL, text: String, iconURL: URL? = nil) {
         self.url = url
         self.text = text
         self.iconURL = iconURL
@@ -16,18 +16,18 @@ public struct ExternalLink {
 }
 
 public extension ExternalLink {
-    static func fromDict(link: [String: String]) -> ExternalLink? {
+    static func fromDict(_ link: [String: String]) -> ExternalLink? {
         guard let
             urlStr = link["url"],
-            url = NSURL(string: urlStr),
-            text = link["text"]
+            let url = URL(string: urlStr),
+            let text = link["text"]
         else {
             return nil
         }
 
-        let iconURL: NSURL?
+        let iconURL: URL?
         if let iconURLStr = link["icon"] {
-            iconURL = NSURL(string: iconURLStr)
+            iconURL = URL(string: iconURLStr)
         }
         else {
             iconURL = nil
@@ -37,11 +37,11 @@ public extension ExternalLink {
 
     func toDict() -> [String: String] {
         var retVal: [String: String] = [
-            "url": url.absoluteString ?? "",
+            "url": url.absoluteString,
             "text": text
         ]
         if let iconURL = iconURL {
-            retVal["icon"] = iconURL.absoluteString ?? ""
+            retVal["icon"] = iconURL.absoluteString
         }
         return retVal
     }

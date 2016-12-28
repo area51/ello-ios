@@ -5,6 +5,6 @@
 
 @objc
 public protocol Authorable {
-    var createdAt: NSDate { get }
+    var createdAt: Date { get }
     var author: User? { get }
 }

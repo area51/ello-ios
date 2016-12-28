@@ -2,7 +2,8 @@
 ///  NewElloTabBarSpecs.swift
 //
 
-@testable import Ello
+@testable
+import Ello
 import Quick
 import Nimble
 import Nimble_Snapshots
@@ -22,13 +23,13 @@ class NewElloTabBarSpecs: QuickSpec {
                 let selectedDescription = description.stringByReplacingOccurrencesOfString("selected? ", withString: "selected ")
                 it(unselectedDescription) {
                     let subject = NewElloTabBar.ItemView(item: item)
-                    subject.frame = CGRect(origin: CGPointZero, size: subject.intrinsicContentSize())
+                    subject.frame = CGRect(origin: .zero, size: subject.intrinsicContentSize())
                     subject.selected = false
                     expect(subject).to(haveValidSnapshot())
                 }
                 it(selectedDescription) {
                     let subject = NewElloTabBar.ItemView(item: item)
-                    subject.frame = CGRect(origin: CGPointZero, size: subject.intrinsicContentSize())
+                    subject.frame = CGRect(origin: .zero, size: subject.intrinsicContentSize())
                     subject.selected = true
                     expect(subject).to(haveValidSnapshot())
                 }

@@ -2,7 +2,7 @@
 ///  OnePasswordButton.swift
 //
 
-public class OnePasswordButton: UIButton {
+open class OnePasswordButton: UIButton {
 
     required override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -15,8 +15,8 @@ public class OnePasswordButton: UIButton {
     }
 
     func sharedSetup() {
-        setImage(.OnePassword, imageStyle: .White, forState: .Normal)
-        contentMode = .Center
+        setImage(.onePassword, imageStyle: .white, for: .normal)
+        contentMode = .center
     }
 
 }

@@ -6,14 +6,14 @@ public final class NotificationsGenerator: StreamGenerator {
     public var currentUser: User?
     public var streamKind: StreamKind
 
-    private var notifications: [Activity] = []
-    private var announcements: [Announcement] = []
-    private var hasNotifications: Bool?
+    fileprivate var notifications: [Activity] = []
+    fileprivate var announcements: [Announcement] = []
+    fileprivate var hasNotifications: Bool?
 
     weak public var destination: StreamDestination?
 
-    private var localToken: String!
-    private var loadingToken = LoadingToken()
+    fileprivate var localToken: String!
+    fileprivate var loadingToken = LoadingToken()
 
     public init(
         currentUser: User?,
@@ -26,7 +26,7 @@ public final class NotificationsGenerator: StreamGenerator {
         self.localToken = loadingToken.resetInitialPageLoadingToken()
     }
 
-    public func load(reload reload: Bool = false) {
+    public func load(reload: Bool = false) {
         localToken = loadingToken.resetInitialPageLoadingToken()
 
         if reload {
@@ -44,9 +44,9 @@ public final class NotificationsGenerator: StreamGenerator {
     }
 
     func setPlaceHolders() {
-        destination?.setPlaceholders([
-            StreamCellItem(type: .Placeholder, placeholderType: .Announcements),
-            StreamCellItem(type: .Placeholder, placeholderType: .Notifications),
+        destination?.setPlaceholders(items: [
+            StreamCellItem(type: .placeholder, placeholderType: .announcements),
+            StreamCellItem(type: .placeholder, placeholderType: .notifications),
         ])
     }
 
@@ -59,8 +59,7 @@ public final class NotificationsGenerator: StreamGenerator {
     }
 
     func loadAnnouncements() {
-        guard case let .Notifications(category) = streamKind
-        where category == nil else {
+        guard case let .notifications(category) = streamKind, category == nil else {
             compareAndUpdateAnnouncements([])
             return
         }
@@ -77,16 +76,16 @@ public final class NotificationsGenerator: StreamGenerator {
             }
     }
 
-    private func compareAndUpdateAnnouncements(_ newAnnouncements: [Announcement]) {
+    fileprivate func compareAndUpdateAnnouncements(_ newAnnouncements: [Announcement]) {
         guard !announcementsAreSame(newAnnouncements) else { return }
 
         self.announcements = newAnnouncements
-        let announcementItems = StreamCellItemParser().parse(newAnnouncements, streamKind: .Announcements, currentUser: self.currentUser)
-        self.destination?.replacePlaceholder(.Announcements, items: announcementItems) {}
+        let announcementItems = StreamCellItemParser().parse(newAnnouncements, streamKind: .announcements, currentUser: self.currentUser)
+        self.destination?.replacePlaceholder(type: .announcements, items: announcementItems) {}
     }
 
-    func announcementsAreSame(newAnnouncements: [Announcement]) -> Bool {
-        return announcements.count == newAnnouncements.count && announcements.enumerate().all({ (index, announcement) in
+    func announcementsAreSame(_ newAnnouncements: [Announcement]) -> Bool {
+        return announcements.count == newAnnouncements.count && announcements.enumerated().all({ (index, announcement) in
             return announcement.id == newAnnouncements[index].id
         })
     }
@@ -101,19 +100,19 @@ public final class NotificationsGenerator: StreamGenerator {
 
                 sself.notifications = notifications
                 // setting primaryJSONAble also triggers the "done loading" code
-                sself.destination?.setPrimaryJSONAble(JSONAble(version: JSONAbleVersion))
-                sself.destination?.setPagingConfig(responseConfig)
+                sself.destination?.setPrimary(jsonable: JSONAble(version: JSONAbleVersion))
+                sself.destination?.setPagingConfig(responseConfig: responseConfig)
 
-                let notificationItems = sself.parse(notifications)
+                let notificationItems = sself.parse(jsonables: notifications)
                 if notificationItems.count == 0 {
                     sself.hasNotifications = false
-                    sself.destination?.replacePlaceholder(.Notifications, items: []) {
+                    sself.destination?.replacePlaceholder(type: .notifications, items: []) {
                         sself.destination?.pagingEnabled = false
                     }
                 }
                 else {
                     sself.hasNotifications = true
-                    sself.destination?.replacePlaceholder(.Notifications, items: notificationItems) {
+                    sself.destination?.replacePlaceholder(type: .notifications, items: notificationItems) {
                         sself.destination?.pagingEnabled = true
                     }
                 }

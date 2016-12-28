@@ -5,17 +5,17 @@
 import Foundation
 
 public protocol PersistentLayer {
-    func setObject(value: AnyObject?, forKey: String)
-    func objectForKey(defaultName: String) -> AnyObject?
-    func removeObjectForKey(defaultName: String)
+    func setObject(_ value: Any?, forKey: String)
+    func objectForKey(_ defaultName: String) -> Any?
+    func removeObjectForKey(_ defaultName: String)
 }
 
-extension NSUserDefaults: PersistentLayer { }
+extension UserDefaults: PersistentLayer { }
 
-public class ObjectCache<T: AnyObject> {
-    private let persistentLayer: PersistentLayer
-    public var cache: [T] = []
-    public let name: String
+open class ObjectCache<T: Any> {
+    fileprivate let persistentLayer: PersistentLayer
+    open var cache: [T] = []
+    open let name: String
 
     public init(name: String) {
         self.name = name
@@ -27,24 +27,24 @@ public class ObjectCache<T: AnyObject> {
         self.persistentLayer = persistentLayer
     }
 
-    public func append(item: T) {
+    open func append(_ item: T) {
         cache.append(item)
         persist()
     }
 
-    public func getAll() -> [T] {
+    open func getAll() -> [T] {
         return cache
     }
 
     func persist() {
-        persistentLayer.setObject(cache, forKey: name)
+        persistentLayer.setObject(cache as AnyObject?, forKey: name)
     }
 
-    public func load() {
+    open func load() {
         cache = persistentLayer.objectForKey(name) as? [T] ?? []
     }
 
-    public func clear() {
+    open func clear() {
         persistentLayer.removeObjectForKey(name)
     }
 }

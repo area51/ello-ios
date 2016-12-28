@@ -7,12 +7,11 @@ import FutureKit
 
 public struct ProfileLinksSizeCalculator {
 
-    public func calculate(item: StreamCellItem, maxWidth: CGFloat) -> Future<CGFloat> {
+    public func calculate(_ item: StreamCellItem, maxWidth: CGFloat) -> Future<CGFloat> {
         let promise = Promise<CGFloat>()
         guard let
             user = item.jsonable as? User,
-            externalLinks = user.externalLinksList
-        where externalLinks.count > 0
+            let externalLinks = user.externalLinksList, externalLinks.count > 0
         else {
             promise.completeWithSuccess(0)
             return promise.future
@@ -22,7 +21,7 @@ public struct ProfileLinksSizeCalculator {
         return promise.future
     }
 
-    public static func calculateHeight(externalLinks: [ExternalLink], maxWidth: CGFloat) -> CGFloat {
+    public static func calculateHeight(_ externalLinks: [ExternalLink], maxWidth: CGFloat) -> CGFloat {
         let iconsCount = externalLinks.filter({ $0.iconURL != nil }).count
         let (perRow, _) = ProfileLinksSizeCalculator.calculateIconsBoxWidth(externalLinks, maxWidth: maxWidth)
         let iconsRows = max(0, ceil(Double(iconsCount) / Double(perRow)))
@@ -33,7 +32,7 @@ public struct ProfileLinksSizeCalculator {
         return ProfileLinksView.Size.margins.top + ProfileLinksView.Size.margins.bottom + max(iconsHeight, linksHeight)
     }
 
-    public static func calculateIconsBoxWidth(externalLinks: [ExternalLink], maxWidth: CGFloat) -> (Int, CGFloat) {
+    public static func calculateIconsBoxWidth(_ externalLinks: [ExternalLink], maxWidth: CGFloat) -> (Int, CGFloat) {
         let iconsCount = externalLinks.filter({ $0.iconURL != nil }).count
         let textLinksCount = externalLinks.filter{$0.iconURL == nil && !$0.text.isEmpty}.count
         let cellWidth = max(0, maxWidth - ProfileLinksView.Size.margins.left - ProfileLinksView.Size.margins.right)

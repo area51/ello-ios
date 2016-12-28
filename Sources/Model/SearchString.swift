@@ -21,13 +21,13 @@ public final class SearchString: JSONAble {
         super.init(coder: coder)
     }
 
-    public override func encodeWithCoder(coder: NSCoder) {
+    public override func encode(with coder: NSCoder) {
         let encoder = Coder(coder)
         encoder.encodeObject(text, forKey: "text")
-        super.encodeWithCoder(coder)
+        super.encode(with: coder)
     }
 
-    override public class func fromJSON(data: [String: AnyObject]) -> JSONAble {
+    override public class func fromJSON(_ data: [String: AnyObject]) -> JSONAble {
         let json = JSON(data)
         return SearchString(text: json["text"].string ?? "")
     }

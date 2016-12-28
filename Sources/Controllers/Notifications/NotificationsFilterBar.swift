@@ -2,7 +2,7 @@
 ///  NotificationsFilterBar.swift
 //
 
-public class NotificationsFilterBar: UIView {
+open class NotificationsFilterBar: UIView {
 
     struct Size {
         static let height: CGFloat = 64
@@ -15,7 +15,7 @@ public class NotificationsFilterBar: UIView {
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .whiteColor()
+        backgroundColor = .white
 
         let blackBar = BlackBar(frame: CGRect(x: 0, y: 0, width: frame.width, height: 20))
         self.addSubview(blackBar)
@@ -23,10 +23,10 @@ public class NotificationsFilterBar: UIView {
 
     required public init?(coder: NSCoder) {
         super.init(coder: coder)
-        backgroundColor = .whiteColor()
+        backgroundColor = .white
     }
 
-    override public func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
 
         let buttons = self.buttons
@@ -42,9 +42,9 @@ public class NotificationsFilterBar: UIView {
         }
     }
 
-    public func selectButton(selectedButton: UIButton) {
+    open func selectButton(_ selectedButton: UIButton) {
         for button in buttons {
-            button.selected = button == selectedButton
+            button.isSelected = button == selectedButton
         }
     }
 }

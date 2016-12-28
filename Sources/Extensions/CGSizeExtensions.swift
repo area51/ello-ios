@@ -11,7 +11,7 @@ public extension CGSize {
         return CGSize(width: ceil(width), height: ceil(height))
     }
 
-    public func scaledSize(maxSize: CGSize) -> CGSize {
+    public func scaledSize(_ maxSize: CGSize) -> CGSize {
         var newSize = self
         if newSize.width > maxSize.width {
             let scale = maxSize.width / newSize.width

@@ -68,19 +68,19 @@ public final class Asset: JSONAble {
 
 // MARK: Initialization
 
-    public convenience init(url: NSURL) {
-        self.init(id: NSUUID().UUIDString)
+    public convenience init(url: URL) {
+        self.init(id: UUID().uuidString)
 
         let attachment = Attachment(url: url)
         self.optimized = attachment
     }
 
-    public convenience init(url: NSURL, gifData: NSData, posterImage: UIImage) {
-        self.init(id: NSUUID().UUIDString)
+    public convenience init(url: URL, gifData: Data, posterImage: UIImage) {
+        self.init(id: UUID().uuidString)
 
         let optimized = Attachment(url: url)
         optimized.type = "image/gif"
-        optimized.size = gifData.length
+        optimized.size = gifData.count
         optimized.width = Int(posterImage.size.width)
         optimized.height = Int(posterImage.size.height)
         self.optimized = optimized
@@ -92,8 +92,8 @@ public final class Asset: JSONAble {
         self.hdpi = hdpi
     }
 
-    public convenience init(url: NSURL, image: UIImage) {
-        self.init(id: NSUUID().UUIDString)
+    public convenience init(url: URL, image: UIImage) {
+        self.init(id: UUID().uuidString)
 
         let optimized = Attachment(url: url)
         optimized.width = Int(image.size.width)
@@ -130,7 +130,7 @@ public final class Asset: JSONAble {
         super.init(coder: decoder.coder)
     }
 
-    public override func encodeWithCoder(encoder: NSCoder) {
+    public override func encode(with encoder: NSCoder) {
         let coder = Coder(encoder)
         // required
         coder.encodeObject(id, forKey: "id")
@@ -146,18 +146,18 @@ public final class Asset: JSONAble {
         coder.encodeObject(large, forKey: "large")
         coder.encodeObject(regular, forKey: "regular")
         coder.encodeObject(small, forKey: "small")
-        super.encodeWithCoder(coder.coder)
+        super.encode(with: coder.coder)
     }
 
 // MARK: JSONAble
 
-    override class public func fromJSON(data: [String: AnyObject]) -> JSONAble {
+    override class public func fromJSON(_ data: [String: AnyObject]) -> JSONAble {
         let json = JSON(data)
-        Crashlytics.sharedInstance().setObjectValue(json.rawString(), forKey: CrashlyticsKey.AssetFromJSON.rawValue)
+        Crashlytics.sharedInstance().setObjectValue(json.rawString(), forKey: CrashlyticsKey.assetFromJSON.rawValue)
         return parseAsset(json["id"].stringValue, node: data["attachment"] as? [String: AnyObject])
     }
 
-    class public func parseAsset(id: String, node: [String: AnyObject]?) -> Asset {
+    class public func parseAsset(_ id: String, node: [String: AnyObject]?) -> Asset {
         let asset = Asset(id: id)
         // optional
         if let optimized = node?["optimized"] as? [String: AnyObject] {

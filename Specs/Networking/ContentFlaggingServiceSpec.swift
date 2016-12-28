@@ -2,6 +2,7 @@
 ///  ContentFlaggingServiceSpec.swift
 //
 
+@testable
 import Ello
 import Quick
 import Moya

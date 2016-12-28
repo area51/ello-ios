@@ -6,17 +6,17 @@
     var currentUser: User? { get set }
 }
 
-public class BaseElloViewController: UIViewController, ControllerThatMightHaveTheCurrentUser {
+open class BaseElloViewController: UIViewController, ControllerThatMightHaveTheCurrentUser {
 
-    public var elloNavigationItem = UINavigationItem()
+    open var elloNavigationItem = UINavigationItem()
 
-    override public var title: String? {
+    override open var title: String? {
         didSet {
             elloNavigationItem.title = title ?? ""
         }
     }
 
-    public var currentUser: User? {
+    open var currentUser: User? {
         didSet { didSetCurrentUser() }
     }
 
@@ -28,14 +28,14 @@ public class BaseElloViewController: UIViewController, ControllerThatMightHaveTh
         return findViewController { vc in vc is ElloTabBarController } as? ElloTabBarController
     }
 
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.fixNavBarItemPadding()
     }
 
-    override public func viewWillAppear(animated: Bool) {
+    override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        UIApplication.sharedApplication().statusBarStyle = .LightContent
+        UIApplication.shared.statusBarStyle = .lightContent
     }
 
     func didSetCurrentUser() {}
@@ -43,13 +43,12 @@ public class BaseElloViewController: UIViewController, ControllerThatMightHaveTh
     @IBAction
     func backTapped() {
         guard
-            let navigationController = navigationController
-        where navigationController.childViewControllers.count > 1 else { return }
+            let navigationController = navigationController, navigationController.childViewControllers.count > 1 else { return }
 
-        navigationController.popViewControllerAnimated(true)
+        _ = navigationController.popViewController(animated: true)
     }
 
-    public func isRootViewController() -> Bool {
+    open func isRootViewController() -> Bool {
         if let viewControllers = navigationController?.viewControllers {
             return (viewControllers[0] ) == self
         }

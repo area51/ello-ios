@@ -9,15 +9,15 @@ import SwiftyJSON
 let EmbedRegionVersion = 1
 
 public enum EmbedType: String {
-    case Codepen = "codepen"
-    case Dailymotion = "dailymotion"
-    case Mixcloud = "mixcloud"
-    case Soundcloud = "soundcloud"
-    case Youtube = "youtube"
-    case Vimeo = "vimeo"
-    case UStream = "ustream"
-    case Bandcamp = "bandcamp"
-    case Unknown = "unknown"
+    case codepen = "codepen"
+    case dailymotion = "dailymotion"
+    case mixcloud = "mixcloud"
+    case soundcloud = "soundcloud"
+    case youtube = "youtube"
+    case vimeo = "vimeo"
+    case uStream = "ustream"
+    case bandcamp = "bandcamp"
+    case unknown = "unknown"
 }
 
 @objc(EmbedRegion)
@@ -28,12 +28,12 @@ public final class EmbedRegion: JSONAble, Regionable {
     public let id: String
     // required
     public let service: EmbedType
-    public let url: NSURL
-    public let thumbnailSmallUrl: NSURL
-    public let thumbnailLargeUrl: NSURL
+    public let url: URL
+    public let thumbnailSmallUrl: URL
+    public let thumbnailLargeUrl: URL
     // computed
     public var isAudioEmbed: Bool {
-        return service == EmbedType.Mixcloud || service == EmbedType.Soundcloud || service == EmbedType.Bandcamp
+        return service == EmbedType.mixcloud || service == EmbedType.soundcloud || service == EmbedType.bandcamp
     }
 
     // MARK: Initialization
@@ -41,9 +41,9 @@ public final class EmbedRegion: JSONAble, Regionable {
     public init(
         id: String,
         service: EmbedType,
-        url: NSURL,
-        thumbnailSmallUrl: NSURL,
-        thumbnailLargeUrl: NSURL
+        url: URL,
+        thumbnailSmallUrl: URL,
+        thumbnailLargeUrl: URL
         )
     {
         self.id = id
@@ -63,14 +63,14 @@ public final class EmbedRegion: JSONAble, Regionable {
         // required
         self.isRepost = decoder.decodeKey("isRepost")
         let serviceRaw: String = decoder.decodeKey("serviceRaw")
-        self.service = EmbedType(rawValue: serviceRaw) ?? EmbedType.Unknown
+        self.service = EmbedType(rawValue: serviceRaw) ?? EmbedType.unknown
         self.url = decoder.decodeKey("url")
         self.thumbnailSmallUrl = decoder.decodeKey("thumbnailSmallUrl")
         self.thumbnailLargeUrl = decoder.decodeKey("thumbnailLargeUrl")
         super.init(coder: decoder.coder)
     }
 
-    public override func encodeWithCoder(encoder: NSCoder) {
+    public override func encode(with encoder: NSCoder) {
         let coder = Coder(encoder)
         // active record
         coder.encodeObject(id, forKey: "id")
@@ -80,23 +80,23 @@ public final class EmbedRegion: JSONAble, Regionable {
         coder.encodeObject(url, forKey: "url")
         coder.encodeObject(thumbnailSmallUrl, forKey: "thumbnailSmallUrl")
         coder.encodeObject(thumbnailLargeUrl, forKey: "thumbnailLargeUrl")
-        super.encodeWithCoder(coder.coder)
+        super.encode(with: coder.coder)
     }
 
     // MARK: JSONAble
 
-    override public class func fromJSON(data: [String: AnyObject]) -> JSONAble {
+    override public class func fromJSON(_ data: [String: AnyObject]) -> JSONAble {
         let json = JSON(data)
-        Crashlytics.sharedInstance().setObjectValue(json.rawString(), forKey: CrashlyticsKey.EmbedRegionFromJSON.rawValue)
+        Crashlytics.sharedInstance().setObjectValue(json.rawString(), forKey: CrashlyticsKey.embedRegionFromJSON.rawValue)
         // create region
         let embedRegion = EmbedRegion(
             id: json["data"]["id"].stringValue,
-            service: EmbedType(rawValue: json["data"]["service"].stringValue) ?? .Unknown,
-            url: NSURL(string: json["data"]["url"].stringValue) ?? NSURL(string: "https://ello.co/404")!,
-            thumbnailSmallUrl: NSURL(string: json["data"]["thumbnail_small_url"].stringValue) ?? NSURL(string: "https://ello.co/404/jibberish.jpg")!,
-            thumbnailLargeUrl: NSURL(string: json["data"]["thumbnail_large_url"].stringValue) ?? NSURL(string: "https://ello.co/404/jibberish.jpg")!
+            service: EmbedType(rawValue: json["data"]["service"].stringValue) ?? .unknown,
+            url: URL(string: json["data"]["url"].stringValue) ?? URL(string: "https://ello.co/404")!,
+            thumbnailSmallUrl: URL(string: json["data"]["thumbnail_small_url"].stringValue) ?? URL(string: "https://ello.co/404/jibberish.jpg")!,
+            thumbnailLargeUrl: URL(string: json["data"]["thumbnail_large_url"].stringValue) ?? URL(string: "https://ello.co/404/jibberish.jpg")!
         )
-        if embedRegion.url.URLString.hasPrefix("https://ello.co/404") || embedRegion.thumbnailSmallUrl.URLString.hasPrefix("https://ello.co/404") || embedRegion.thumbnailLargeUrl.URLString.hasPrefix("https://ello.co/404") {
+        if embedRegion.url.absoluteString.hasPrefix("https://ello.co/404") || embedRegion.thumbnailSmallUrl.absoluteString.hasPrefix("https://ello.co/404") || embedRegion.thumbnailLargeUrl.absoluteString.hasPrefix("https://ello.co/404") {
             // send data to segment to try to get more data about this
             Tracker.sharedTracker.createdAtCrash("EmbedRegion", json: json.rawString())
         }
@@ -105,26 +105,18 @@ public final class EmbedRegion: JSONAble, Regionable {
 
 // MARK: Regionable
 
-    public var kind: String { return RegionKind.Embed.rawValue }
+    public var kind: String { return RegionKind.embed.rawValue }
 
     public func coding() -> NSCoding {
         return self
     }
 
     public func toJSON() -> [String: AnyObject] {
-        if let url: String = self.url.absoluteString {
-            return [
-                "kind": self.kind,
-                "data": [
-                    "url": url
-                ],
-            ]
-        }
-        else {
-            return [
-                "kind": self.kind,
-                "data": [:]
-            ]
-        }
+        return [
+            "kind": self.kind as AnyObject,
+            "data": [
+                "url": self.url.absoluteString
+                ] as AnyObject,
+        ]
     }
 }

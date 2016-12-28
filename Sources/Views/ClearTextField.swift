@@ -2,39 +2,39 @@
 ///  ClearTextField.swift
 //
 
-public class ClearTextField: UITextField {
+open class ClearTextField: UITextField {
     struct Size {
         static let lineMargin: CGFloat = 5
     }
 
-    public let onePasswordButton = OnePasswordButton()
-    public var lineColor: UIColor? = .grey6() {
+    open let onePasswordButton = OnePasswordButton()
+    open var lineColor: UIColor? = .grey6() {
         didSet {
-            if !isFirstResponder() {
+            if !isFirstResponder {
                 line.backgroundColor = lineColor
             }
         }
     }
-    public var selectedLineColor: UIColor? = .whiteColor() {
+    open var selectedLineColor: UIColor? = .white {
         didSet {
-            if isFirstResponder() {
+            if isFirstResponder {
                 line.backgroundColor = selectedLineColor
             }
         }
     }
-    private var line = UIView()
-    public var hasOnePassword = false {
+    fileprivate var line = UIView()
+    open var hasOnePassword = false {
         didSet {
-            onePasswordButton.hidden = !hasOnePassword
+            onePasswordButton.isHidden = !hasOnePassword
             setNeedsLayout()
         }
     }
-    public var validationState: ValidationState = .None {
+    open var validationState: ValidationState = .none {
         didSet {
             rightView = UIImageView(image: validationState.imageRepresentation)
             // This nonsense below is to prevent the rightView
             // from animating into position from 0,0 and passing specs
-            rightView?.frame = rightViewRectForBounds(self.bounds)
+            rightView?.frame = rightViewRect(forBounds: self.bounds)
             setNeedsLayout()
             layoutIfNeeded()
         }
@@ -51,14 +51,14 @@ public class ClearTextField: UITextField {
     }
 
     func sharedSetup() {
-        backgroundColor = .clearColor()
+        backgroundColor = .clear
         font = .defaultFont(18)
-        textColor = .whiteColor()
-        rightViewMode = .Always
+        textColor = .white
+        rightViewMode = .always
 
         addSubview(onePasswordButton)
-        onePasswordButton.hidden = !hasOnePassword
-        onePasswordButton.snp_makeConstraints { make in
+        onePasswordButton.isHidden = !hasOnePassword
+        onePasswordButton.snp.makeConstraints { make in
             make.centerY.equalTo(self).offset(-Size.lineMargin / 2)
             make.trailing.equalTo(self)
             make.size.equalTo(CGSize.minButton)
@@ -66,49 +66,49 @@ public class ClearTextField: UITextField {
 
         addSubview(line)
         line.backgroundColor = lineColor
-        line.snp_makeConstraints { make in
+        line.snp.makeConstraints { make in
             make.leading.trailing.bottom.equalTo(self)
             make.height.equalTo(1)
         }
     }
 
-    override public func intrinsicContentSize() -> CGSize {
-        var size = super.intrinsicContentSize()
+    override open var intrinsicContentSize: CGSize {
+        var size = super.intrinsicContentSize
         if size.height != UIViewNoIntrinsicMetric {
             size.height += Size.lineMargin
         }
         return size
     }
 
-    override public func drawPlaceholderInRect(rect: CGRect) {
-        placeholder?.drawInRect(rect, withAttributes: [
+    override open func drawPlaceholder(in rect: CGRect) {
+        placeholder?.draw(in: rect, withAttributes: [
             NSFontAttributeName: UIFont.defaultFont(18),
-            NSForegroundColorAttributeName: UIColor.whiteColor(),
+            NSForegroundColorAttributeName: UIColor.white,
         ])
     }
 
-    override public func becomeFirstResponder() -> Bool {
+    override open func becomeFirstResponder() -> Bool {
         line.backgroundColor = selectedLineColor
         return super.becomeFirstResponder()
     }
 
-    override public func resignFirstResponder() -> Bool {
+    override open func resignFirstResponder() -> Bool {
         line.backgroundColor = lineColor
         return super.resignFirstResponder()
     }
 
 // MARK: Layout rects
 
-    override public func textRectForBounds(bounds: CGRect) -> CGRect {
+    override open func textRect(forBounds bounds: CGRect) -> CGRect {
         return rectForBounds(bounds)
     }
 
-    override public func editingRectForBounds(bounds: CGRect) -> CGRect {
+    override open func editingRect(forBounds bounds: CGRect) -> CGRect {
         return rectForBounds(bounds)
     }
 
-    override public func clearButtonRectForBounds(bounds: CGRect) -> CGRect {
-        var rect = super.clearButtonRectForBounds(bounds)
+    override open func clearButtonRect(forBounds bounds: CGRect) -> CGRect {
+        var rect = super.clearButtonRect(forBounds: bounds)
         rect.origin.x -= 10
         if hasOnePassword {
             rect.origin.x -= 44
@@ -116,8 +116,8 @@ public class ClearTextField: UITextField {
         return rect
     }
 
-    override public func rightViewRectForBounds(bounds: CGRect) -> CGRect {
-        var rect = super.rightViewRectForBounds(bounds)
+    override open func rightViewRect(forBounds bounds: CGRect) -> CGRect {
+        var rect = super.rightViewRect(forBounds: bounds)
         rect.origin.x -= 10
         if hasOnePassword {
             rect.origin.x -= 20
@@ -125,10 +125,10 @@ public class ClearTextField: UITextField {
         return rect
     }
 
-    private func rectForBounds(bounds: CGRect) -> CGRect {
-        var rect = bounds.shrinkLeft(15)
+    fileprivate func rectForBounds(_ bounds: CGRect) -> CGRect {
+        var rect = bounds.shrink(left: 15)
         if validationState.imageRepresentation != nil {
-            rect = rect.shrinkLeft(20)
+            rect = rect.shrink(left: 20)
         }
         return rect
     }
